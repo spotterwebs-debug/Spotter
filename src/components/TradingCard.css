@@ -1,0 +1,69 @@
+/* src/components/TradingCard.css */
+
+.trading-card-final {
+  width: 290px;
+  height: 410px;
+  background: linear-gradient(135deg, #f1c40f, #e67e22); /* Marco dorado coleccionable */
+  border-radius: 18px;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.card-inner-border {
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #fff;
+}
+
+/* Encabezado interno de la carta */
+.bg-gradient-header {
+  background: linear-gradient(90deg, #edf2f7, #cbd5e1);
+  border-bottom: 2px solid #a0aec0;
+  align-items: center;
+}
+
+/* Ventana fija para la imagen recortada */
+.card-image-box {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  background-color: #000;
+  border-bottom: 2px solid #cbd5e1;
+}
+
+.card-image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Bloque de datos inferior */
+.card-info-box {
+  flex: 1;
+  background-color: #f8fafc;
+  font-family: sans-serif;
+  line-height: 1.3;
+}
+
+.card-dato-curioso {
+  background-color: rgba(241, 196, 15, 0.15);
+  border-left: 3px solid #e67e22;
+}
+
+.card-dato-curioso p {
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
+/* Limita los textos largos para evitar roturas visuales */
+.line-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+}

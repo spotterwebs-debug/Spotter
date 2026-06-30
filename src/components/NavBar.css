@@ -1,0 +1,77 @@
+.spooter-navbar {
+  background-color: #ffffff;
+  padding: 1rem 0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* =========================================================
+   TAMAÑO DE LOGO (Efecto Zoom Protegido)
+   ========================================================= */
+
+/* 1. Casilla protectora del Header */
+.spooter-navbar .navbar-brand {
+  width: 140px;        
+  height: 45px;        
+  overflow: hidden;    
+  display: flex;
+  align-items: center;
+}
+
+/* 2. Zoom al logo real */
+.spooter-navbar .navbar-brand img {
+  width: 100%;
+  height: 130px;       
+  object-fit: cover;   
+  object-position: center; 
+}
+
+/* =========================================================
+   ENLACES Y NAVEGACIÓN (Escritorio)
+   ========================================================= */
+
+.navbar-nav {
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.spooter-navbar .nav-link {
+  color: #4a5568 !important;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.spooter-navbar .nav-link:hover {
+  color: #f1c40f !important;
+}
+
+.spooter-navbar .nav-link.active {
+  color: #f1c40f !important;
+  font-weight: 800;
+}
+
+/* =========================================================
+   DISEÑO MÓVIL (Menú Desplegable con Gradiente)
+   ========================================================= */
+
+@media (max-width: 991px) {
+  .navbar-collapse {
+    background: linear-gradient(135deg, #2f855a, #2b6cb0);
+    padding: 20px;
+    border-radius: 15px;
+    margin-top: 15px;
+  }
+
+  .navbar-collapse .nav-link {
+    color: #ffffff !important;
+    text-align: center;
+    padding: 10px 0;
+  }
+
+  .navbar-collapse .nav-link:hover {
+    color: #f1c40f !important;
+  }
+
+  .navbar-collapse .nav-link.active {
+    color: #f1c40f !important;
+  }
+}

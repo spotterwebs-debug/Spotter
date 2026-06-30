@@ -1,0 +1,72 @@
+/* --- Estilos base del Álbum --- */
+.album-container {
+  background-color: #1a202c; /* Color de respaldo si no carga la imagen */
+  position: relative;
+  min-height: 92vh;
+}
+
+/* Capa de contraste traslúcida */
+.album-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(26, 32, 44, 0.8); /* Filtro oscuro al 80% */
+  z-index: 1;
+}
+
+/* Texto brillante de aventura */
+.text-warning-glow {
+  color: #f1c40f;
+  text-shadow: 0 0 10px rgba(241, 196, 15, 0.5);
+  letter-spacing: 0.15em;
+}
+
+/* Animación sutil de entrada */
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- ESTILOS DEL MODAL (CardManager) --- */
+.custom-modal-overlay {
+  position: fixed; /* Saca el modal del flujo del álbum para que sea flotante */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85); /* Fondo muy oscuro para centrar la atención */
+  z-index: 10000; /* Siempre por encima de todo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.custom-modal-content {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 20px;
+  max-width: 350px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-card-wrapper {
+  transform: scale(1.05); /* Resalta la carta dentro del modal */
+  margin-bottom: 10px;
+}

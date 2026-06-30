@@ -1,0 +1,53 @@
+{
+  "fauna": [
+    { "raza": "Callejero Legendario", "personalidad": "Dormilón y guardián", "dato": "Le gustan las caricias pero solo por 3 segundos exactos." },
+    { "raza": "Cazador de Sombras", "personalidad": "Hiperactivo nocturno", "dato": "Tiene un doctorado en atrapar moscas invisibles." },
+    { "raza": "Atorrante de Vereda", "personalidad": "Extrovertido y mangueador", "dato": "Sabe exactamente qué vecino le da la mejor comida." },
+    { "raza": "Mirada Juzgadora", "personalidad": "Serio e intelectual", "dato": "Te observa desde la ventana cuestionando tus decisiones de vida." },
+    { "raza": "Acróbata del Tejado", "personalidad": "Valiente y escurridizo", "dato": "Capaz de saltar distancias que desafían las leyes de la física." },
+    { "raza": "Guardián de la Cuadra", "personalidad": "Alerta y territorial", "dato": "Le ladra al cartero con la fuerza de mil soles." },
+    { "raza": "Zampabollos", "personalidad": "Ansioso y mimoso", "dato": "Su habilidad especial es hacer ojos de lástima para conseguir galletas." },
+    { "raza": "Cantante de Madrugada", "personalidad": "Ruidoso y dramático", "dato": "Sintoniza sus mejores agudos a las 4:00 AM sin falta." },
+    { "raza": "Pelusa Voladora", "personalidad": "Distraído y pacífico", "dato": "Deja un rastro de su ADN en cada abrigo negro de la casa." },
+    { "raza": "Pichón Aventurero", "personalidad": "Curioso e intrépido", "dato": "Explora los límites del patio buscando tesoros ocultos." },
+    { "raza": "Velocista de Pasillo", "personalidad": "Eléctrico", "dato": "Corre a máxima velocidad en línea recta sin motivo aparente." },
+    { "raza": "Vigilante de Balcón", "personalidad": "Chismoso del barrio", "dato": "Sabe a qué hora llega y se va cada integrante del edificio." },
+    { "raza": "Mestizo Supremo", "personalidad": "Leal y todoterreno", "dato": "Posee una inmunidad genética digna de un superhéroe." },
+    { "raza": "Espía de Jardín", "personalidad": "Cauteloso y camuflado", "dato": "Se confunde entre las plantas para acechar ramitas secas." },
+    { "raza": "Duque del Sofá", "personalidad": "Aristocrático y vago", "dato": "Considera que los almohadones son de su propiedad exclusiva." }
+  ],
+  "plantas": [
+    { "caracteristica": "Hojas aterciopeladas", "lugar": "Balcón del living", "dato": "Sobrevive de milagro gracias al agua de lluvia." },
+    { "caracteristica": "Espinas defensivas", "lugar": "Ventana de la cocina", "dato": "Purifica el aire y pincha al que pase distraído." },
+    { "caracteristica": "Raíces rebeldes", "lugar": "Maceta del patio", "dato": "Está intentando romper la maceta para colonizar el suelo." },
+    { "caracteristica": "Floración exprés", "lugar": "Mesa de luz", "dato": "Saca una flor hermosa que dura solo 24 horas y desaparece." },
+    { "caracteristica": "Hojas colgantes", "lugar": "Estante alto", "dato": "Crece hacia abajo buscando dominar el territorio del piso." },
+    { "caracteristica": "Resistencia extrema", "lugar": "Pasillo oscuro", "dato": "No recibe luz del sol, pero se niega rotundamente a morir." },
+    { "caracteristica": "Buscadora de luz", "lugar": "Cerca del ventanal", "dato": "Se dobla de una manera casi irreal persiguiendo los rayos de sol." },
+    { "caracteristica": "Trampa sutil", "lugar": "Mesa ratona", "dato": "Cierra sus hojas si la tocas demasiado. No le gustan las visitas." },
+    { "caracteristica": "Tallo retorcido", "lugar": "Esquina del living", "dato": "Creció en forma de espiral buscando un diseño propio." },
+    { "caracteristica": "Hojas gigantes", "lugar": "Rincón húmedo", "dato": "Parece una planta sacada directamente de Parque Jurásico." },
+    { "caracteristica": "Aroma relajante", "lugar": "Ventana del baño", "dato": "Desprende un perfume fresco cada vez que el ambiente se llena de vapor." },
+    { "caracteristica": "Brote sorpresa", "lugar": "Maceta olvidada", "dato": "Nadie sabe quién la plantó, pero apareció una mañana de primavera." },
+    { "caracteristica": "Hojas variegadas", "lugar": "Escritorio", "dato": "Sus manchas blancas parecen pintadas a mano con un pincel." },
+    { "caracteristica": "Tronco trenzado", "lugar": "Entrada de la casa", "dato": "Da una bienvenida elegante a cualquiera que cruce la puerta." },
+    { "caracteristica": "Hojas de origami", "lugar": "Repisa de libros", "dato": "Sus hojas son tan geométricas que parecen hechas de papel plegado." }
+  ],
+  "paisajes": [
+    { "lugar": "Atardecer en la ruta", "dato": "El sol parecía una yema de huevo gigante cayendo sobre el asfalto." },
+    { "lugar": "Plaza del barrio", "dato": "Un rincón de paz en medio del caos y el ruido de la ciudad." },
+    { "lugar": "Mirador de la colina", "dato": "Desde acá arriba los autos y las casas parecen juguetes de miniatura." },
+    { "lugar": "Cielo pre-tormenta", "dato": "Las nubes se tiñeron de un color violeta oscuro imponente." },
+    { "lugar": "Callejón antiguo", "dato": "Los adoquines y las luces amarillas te hacen viajar en el tiempo." },
+    { "lugar": "Reflejo en el charco", "dato": "Una perspectiva invertida de la ciudad después de la lluvia." },
+    { "lugar": "Parque forestal", "dato": "El sonido del viento entre las copas de los árboles anula cualquier estrés." },
+    { "lugar": "Horizonte infinito", "dato": "Donde la línea del planeta se junta con la nada misma." },
+    { "lugar": "Playa solitaria", "dato": "Las olas rompiendo de fondo componen la mejor música del mundo." },
+    { "lugar": "Niebla matutina", "dato": "La ciudad amaneció escondida bajo un manto blanco y misterioso." },
+    { "lugar": "Terraza urbana", "dato": "Las luces de los edificios forman un tablero de luces espectacular." },
+    { "lugar": "Sendero oculto", "dato": "Un camino de tierra que no figura en Google Maps." },
+    { "lugar": "Esquina de las luces", "dato": "El neón de los carteles comerciales le da un aire de película de ciencia ficción." },
+    { "lugar": "Puente colgante", "dato": "Una estructura de hierro que desafía la gravedad sobre el agua." },
+    { "lugar": "Amanecer dorado", "dato": "Los primeros rayos del día pegando directo en las ventanas." }
+  ]
+}

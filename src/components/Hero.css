@@ -1,0 +1,133 @@
+.spotter-hero {
+  min-height: 75vh;
+  background-color: #1a202c; /* Fondo oscuro (Gris casi negro) para que el blanco y el gradiente estallen visualmente */
+  padding: 3rem 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Contenedor principal */
+.hero-action-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* BOTÓN GIGANTE CON GRADIENTE AZUL Y VERDE */
+.btn-giant-camera {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  /* Gradiente Azul a Verde vibrante */
+  background: linear-gradient(135deg, #2b6cb0, #2f855a); 
+  border: 5px solid #ffffff;
+  outline: 4px solid #f1c40f; /* Anillo dorado tipo trading card */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  animation: pulse-ring 2s infinite;
+}
+
+/* Contenedor interno para dar efecto de relieve */
+.camera-lens-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+/* LA IMAGEN DEL FAVICON DENTRO DEL BOTÓN */
+.hero-favicon-img {
+  width: 65%;
+  height: 65%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+/* Efectos de Interacción */
+.btn-giant-camera:hover {
+  transform: scale(1.08);
+  outline-color: #e67e22; /* Pasa a naranja en hover */
+}
+
+.btn-giant-camera:hover .camera-lens-inner {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.btn-giant-camera:hover .hero-favicon-img {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.btn-giant-camera:active {
+  transform: scale(0.95);
+}
+
+/* Espaciados de letras */
+.tracking-wide {
+  letter-spacing: 0.05em;
+}
+.tracking-wider {
+  letter-spacing: 0.1em;
+}
+.fs-7 {
+  font-size: 0.85rem;
+}
+
+/* =========================================================
+   PREVISUALIZACIÓN Y ANIMACIONES
+   ========================================================= */
+
+.preview-container {
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+.preview-frame {
+  max-width: 250px;
+  border: 4px solid #ffffff;
+  border-radius: 15px;
+  overflow: hidden;
+  background-color: #000;
+  line-height: 0;
+}
+
+.preview-frame img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(241, 196, 15, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 25px rgba(241, 196, 15, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(241, 196, 15, 0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
