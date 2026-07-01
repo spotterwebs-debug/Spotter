@@ -1,45 +1,476 @@
-/* src/components/CardCreator.css */
+/* =====================================================
+   SPOTTER - CARD CREATOR
+=====================================================*/
 
-/* Utilidad para limitar el ancho de los contenedores de los pasos */
-.max-w-md { 
-  max-width: 450px; 
+.card-creator-container{
+    max-width:620px;
+    margin:25px auto;
+    padding:15px;
+    font-family:'Segoe UI',sans-serif;
 }
 
-/* El contenedor del visor de recorte (React Easy Crop) */
-.cropper-wrapper {
-  width: 100%;
-  height: 300px;
-  background-color: #1a202c;
-  border-radius: 12px;
-  overflow: hidden;
+/*=====================================================
+ TARJETAS
+=====================================================*/
+
+.bg-dark-card{
+
+    background:rgba(255,255,255,.92);
+
+    backdrop-filter:blur(18px);
+
+    border-radius:28px;
+
+    border:1px solid #dceef3;
+
+    padding:28px;
+
+    color:#3d5967;
+
+    box-shadow:
+        0 18px 45px rgba(55,120,150,.10);
+
 }
 
-/* Marco contenedor para previsualizar el recorte en el paso del formulario */
-.preview-frame {
-  max-width: 200px;
-  border: 3px solid #f1c40f;
-  border-radius: 12px;
-  overflow: hidden;
-  background-color: #000;
+/*=====================================================
+ FOTO
+=====================================================*/
+
+.bg-dark-card img{
+
+    border-radius:22px;
+
+    border:6px solid white;
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,.12);
 }
 
-/* Fondo oscuro personalizado para las tarjetas de cada paso del flujo */
-.bg-dark-card {
-  background-color: #2d3748;
+/*=====================================================
+ TITULO
+=====================================================*/
+
+h4{
+
+    color:#2e6d8c;
+
+    font-size:1.25rem;
+
+    font-weight:600;
+
+    margin-bottom:22px;
+
+    text-align:center;
 }
 
-/* Animación sutil de entrada para la transición entre pasos */
-.animate-fade-in {
-  animation: fadeInCreator 0.4s ease-out forwards;
+/*=====================================================
+ LABELS
+=====================================================*/
+
+.field-title{
+
+    display:block;
+
+    font-size:.80rem;
+
+    font-weight:700;
+
+    color:#5d7d8b;
+
+    letter-spacing:.8px;
+
+    text-transform:uppercase;
+
+    margin-bottom:6px;
+
+    margin-top:16px;
 }
 
-@keyframes fadeInCreator {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/*=====================================================
+ INPUTS
+=====================================================*/
+
+.form-control,
+.form-select{
+
+    background:#fbfefe !important;
+
+    border:2px solid #dceff2 !important;
+
+    border-radius:16px !important;
+
+    color:#41606d !important;
+
+    padding:13px 16px !important;
+
+    transition:.25s;
+
+    box-shadow:none !important;
+}
+
+.form-control::placeholder{
+
+    color:#9ab2bd;
+}
+
+.form-control:focus,
+.form-select:focus{
+
+    border-color:#88d0bf !important;
+
+    background:white !important;
+
+    box-shadow:
+        0 0 0 5px rgba(136,208,191,.18) !important;
+}
+
+/*=====================================================
+ BOTON GUARDAR
+=====================================================*/
+
+.btn-success{
+
+    margin-top:22px;
+
+    border:none !important;
+
+    border-radius:18px !important;
+
+    padding:15px !important;
+
+    font-size:.95rem;
+
+    font-weight:600;
+
+    background:linear-gradient(
+        135deg,
+        #74d1bb,
+        #68bde0
+    ) !important;
+
+    box-shadow:
+        0 12px 25px rgba(104,189,224,.25);
+
+    transition:.25s;
+}
+
+.btn-success:hover{
+
+    transform:translateY(-2px);
+
+    filter:brightness(1.05);
+}
+
+/*=====================================================
+ CANCELAR
+=====================================================*/
+
+.btn-outline-danger{
+
+    margin-top:10px !important;
+
+    background:white !important;
+
+    border:2px solid #dcecf1 !important;
+
+    color:#6d8894 !important;
+
+    border-radius:18px !important;
+
+    padding:13px !important;
+
+    transition:.25s;
+}
+
+.btn-outline-danger:hover{
+
+    background:#eef8fb !important;
+
+    border-color:#c8e4eb !important;
+
+    color:#48626d !important;
+}
+
+/*=====================================================
+ CROPPER
+=====================================================*/
+
+.cropper-container-box{
+
+    position:relative;
+
+    width:100%;
+
+    height:55vh;
+
+    overflow:hidden;
+
+    border-radius:28px;
+
+    border:2px solid #dceef2;
+
+    background:white;
+
+    box-shadow:
+        0 18px 45px rgba(55,120,150,.10);
+}
+
+.react-easy-crop-container{
+
+    position:absolute !important;
+}
+
+/*=====================================================
+ BOTON CROPPER
+=====================================================*/
+
+.cropper-floating-buttons{
+
+    position:absolute;
+
+    bottom:18px;
+
+    left:0;
+
+    right:0;
+
+    display:flex;
+
+    justify-content:center;
+
+    z-index:20;
+}
+
+.cropper-floating-buttons button{
+
+    border:none;
+
+    border-radius:40px;
+
+    background:linear-gradient(
+        135deg,
+        #72d0ba,
+        #67b8de
+    );
+
+    color:white;
+
+    padding:14px 28px;
+
+    font-size:.9rem;
+
+    font-weight:600;
+
+    box-shadow:
+        0 12px 24px rgba(103,184,222,.25);
+
+    transition:.25s;
+}
+
+.cropper-floating-buttons button:hover{
+
+    transform:translateY(-2px);
+}
+
+/*=====================================================
+ CATEGORIAS
+=====================================================*/
+
+.category-card{
+
+    max-width:560px;
+
+    margin:auto;
+
+    padding:35px;
+
+    background:rgba(255,255,255,.94);
+
+    border-radius:28px;
+
+    border:1px solid #dceef3;
+
+    backdrop-filter:blur(16px);
+
+    box-shadow:
+        0 18px 45px rgba(55,120,150,.10);
+
+    text-align:center;
+}
+
+.category-icon{
+
+    font-size:3rem;
+
+    margin-bottom:10px;
+}
+
+.category-header h2{
+
+    color:#2e6d8c;
+
+    font-size:1.55rem;
+
+    margin-bottom:8px;
+}
+
+.category-header p{
+
+    color:#7b98a6;
+
+    font-size:.95rem;
+
+    line-height:1.5;
+}
+
+.category-grid{
+
+    display:grid;
+
+    gap:12px;
+
+    margin:28px 0;
+}
+
+.category-option{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    background:#f8fcfd;
+
+    border:2px solid #dceef3;
+
+    border-radius:18px;
+
+    padding:16px 18px;
+
+    color:#477086;
+
+    font-size:.95rem;
+
+    font-weight:600;
+
+    transition:.25s;
+
+    cursor:pointer;
+}
+
+.category-option span{
+
+    flex:1;
+
+    text-align:left;
+}
+
+.category-option:hover{
+
+    transform:translateY(-2px);
+
+    background:#f2fbf8;
+
+    border-color:#93d8c8;
+}
+
+.category-option.active{
+
+    background:linear-gradient(
+        135deg,
+        #74d1bb,
+        #68bde0
+    );
+
+    color:white;
+
+    border:none;
+
+    box-shadow:
+        0 12px 25px rgba(104,189,224,.25);
+}
+
+/*=====================================================
+ CONTINUAR
+=====================================================*/
+
+.continue-btn{
+
+    width:100%;
+
+    border:none;
+
+    border-radius:18px;
+
+    padding:15px;
+
+    font-size:.95rem;
+
+    font-weight:600;
+
+    color:white;
+
+    background:linear-gradient(
+        135deg,
+        #74d1bb,
+        #68bde0
+    );
+
+    box-shadow:
+        0 12px 25px rgba(104,189,224,.25);
+
+    transition:.25s;
+}
+
+.continue-btn:hover{
+
+    transform:translateY(-2px);
+}
+
+.continue-btn:disabled{
+
+    opacity:.45;
+
+    cursor:not-allowed;
+}
+
+.random-btn{
+
+    width:100%;
+
+    margin-bottom:22px;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:16px;
+
+    background:linear-gradient(
+        135deg,
+        #eef9fb,
+        #f8fffd
+    );
+
+    color:#2d6c8a;
+
+    font-weight:600;
+
+    transition:.25s;
+
+    border:2px solid #dbeef3;
+}
+
+.random-btn:hover{
+
+    background:linear-gradient(
+        135deg,
+        #dff6ef,
+        #edf9fc
+    );
+
+    transform:translateY(-2px);
+
+    border-color:#8fd7c7;
 }

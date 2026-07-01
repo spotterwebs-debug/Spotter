@@ -1,8 +1,6 @@
 /* --- Estilos base del Álbum --- */
 .album-container {
-  background-color: #1a202c; /* Color de respaldo si no carga la imagen */
-  position: relative;
-  min-height: 92vh;
+  background-color: red; 
 }
 
 /* Capa de contraste traslúcida */

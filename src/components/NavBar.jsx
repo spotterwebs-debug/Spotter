@@ -11,7 +11,6 @@ function Navbar() {
   const [user, setUser] = useState(null);
   const albumCategorias = ['perros', 'gatos', 'plantas', 'aves', 'paisajes'];
 
-  // Escuchamos la sesión de Supabase de manera global en el componente
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
@@ -35,41 +34,23 @@ function Navbar() {
     if (navbarCollapse?.classList.contains('show')) navbarToggler.click();
   };
 
-  // Extraemos de forma segura el alias que el usuario cargó en las opciones de registro
   const userAlias = user?.user_metadata?.username || user?.email?.split('@')[0] || 'Usuario';
 
   return (
     <nav className="navbar navbar-expand-lg spooter-navbar">
-      <div className="container-fluid px-3 px-md-4 d-flex align-items-center justify-content-between">
+      <div className="container-fluid px-3 px-md-4">
         
-        {/* LADO IZQUIERDO: LOGO */}
+        {/* LOGO */}
         <NavLink className="navbar-brand m-0" to="/">
-          <img 
-            src="/logo.png" 
-            alt="Spotter" 
-            height="40" 
-            onError={(e) => { e.target.style.display = 'none'; }} 
-          />
+          <img src="/logo.png" alt="Spotter" height="40" />
         </NavLink>
 
-        {/* =================================================================
-            ZONA CENTRAL/DERECHA (EXTERNA): CONTROL DE AUTENTICACIÓN
-            Queda fija afuera de la hamburguesa, ideal para Mobile
-            ================================================================= */}
-        <div className="ms-auto me-2 d-flex align-items-center auth-nav-zone">
+        {/* ZONA EXTERNA (Visible siempre) */}
+        <div className="ms-auto me-2 d-flex align-items-center">
           {user ? (
-            <div className="d-flex align-items-center gap-2">
-              <span className="badge bg-success rounded-pill px-3 py-2 fw-semibold text-white">
-                👋 Hola: <span className="text-capitalize">{userAlias}</span>
-              </span>
-              <button 
-                className="btn btn-sm btn-outline-danger rounded-circle border-0 p-1" 
-                onClick={handleLogout}
-                title="Cerrar Sesión"
-              >
-                <i className="bi bi-box-arrow-right fs-5"></i>
-              </button>
-            </div>
+            <span className="badge bg-success rounded-pill px-3 py-2 fw-semibold text-white">
+              👋 Hola: <span className="text-capitalize">{userAlias}</span>
+            </span>
           ) : (
             <NavLink to="/login" className="btn btn-primary btn-sm rounded-pill px-3 fw-bold shadow-sm">
               🔑 Login
@@ -77,28 +58,22 @@ function Navbar() {
           )}
         </div>
 
-        {/* BOTÓN HAMBURGUESA (Controla SOLO el despliegue del menú de links) */}
-        <button 
-          className="navbar-toggler p-1 border-0" 
-          type="button" 
-          data-bs-toggle="collapse" 
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav" 
-          aria-expanded="false" 
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon" style={{ width: '1.25rem', height: '1.25rem' }}></span>
+        {/* HAMBURGUESA */}
+        <button className="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* CONTENIDO DESPLEGABLE (MENÚ DE NAVEGACIÓN) */}
+        {/* MENÚ DESPLEGABLE */}
         <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav ms-auto align-items-center pt-2 pt-lg-0">
+          <ul className="navbar-nav ms-auto align-items-center">
             <li className="nav-item">
               <NavLink className="nav-link" to="/" end onClick={closeNavbar}>Home</NavLink>
             </li>
             <li className="nav-item">
               <NavLink className="nav-link" to="/comunidad" onClick={closeNavbar}>Comunidad</NavLink>
             </li>
+            
+            {/* AQUÍ ESTÁ EL MAPEADO QUE FALTABA */}
             {albumCategorias.map((cat) => (
               <li className="nav-item" key={cat}>
                 <NavLink className="nav-link text-capitalize" to={`/album/${cat}`} onClick={closeNavbar}>
@@ -106,9 +81,20 @@ function Navbar() {
                 </NavLink>
               </li>
             ))}
+            
+            {/* BOTÓN LOGOUT */}
+            {user && (
+              <li className="nav-item mt-3 mt-lg-0">
+                <button 
+                  className="btn btn-outline-light w-100" 
+                  onClick={() => { handleLogout(); closeNavbar(); }}
+                >
+                  <i className="bi bi-box-arrow-right"></i> Cerrar Sesión
+                </button>
+              </li>
+            )}
           </ul>
         </div>
-
       </div>
     </nav>
   );

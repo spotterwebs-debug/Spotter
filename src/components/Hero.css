@@ -1,28 +1,45 @@
-.spotter-hero {
-  min-height: 75vh;
-  background-color: #1a202c; /* Fondo oscuro (Gris casi negro) para que el blanco y el gradiente estallen visualmente */
-  padding: 3rem 0;
-  display: flex;
-  align-items: center;
-}
 
-/* Contenedor principal */
-.hero-action-container {
+.hero-card {
+  background: linear-gradient(135deg, #2b6cb0, #2f855a);
+  
+  /* PADDING: Vertical mayor (4rem) para altura, Horizontal mayor (8rem) para volumen */
+  padding: 4rem 8rem; 
+  
+  border-radius: 30px; /* Bordes más redondeados para una card grande */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  
+  /* OCUPAR HORIZONTALMENTE: Casi todo el ancho */
+  width: 90%; 
+  max-width: 1000px; /* Punto máximo para que no se deforme en monitores 4K */
+  
+  margin: 3rem auto; 
+  color: white;
+  text-align: center;
+  
+  /* Asegura altura mínima para que no sea una "franja" */
+  min-height: 400px; 
+  justify-content: center; /* Centra verticalmente los elementos internos */
 }
 
-/* BOTÓN GIGANTE CON GRADIENTE AZUL Y VERDE */
+/* Ajuste para móviles: que el padding no sea excesivo en pantallas pequeñas */
+@media (max-width: 768px) {
+  .hero-card {
+    padding: 3rem 2rem;
+    min-height: 300px;
+  }
+}
+
 .btn-giant-camera {
-  width: 150px;
-  height: 150px;
+  width: 110px; 
+  height: 110px; 
   border-radius: 50%;
-  /* Gradiente Azul a Verde vibrante */
   background: linear-gradient(135deg, #2b6cb0, #2f855a); 
-  border: 5px solid #ffffff;
-  outline: 4px solid #f1c40f; /* Anillo dorado tipo trading card */
+  border: 4px solid #ffffff; 
+  outline: 3px solid green; 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -30,104 +47,40 @@
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
   animation: pulse-ring 2s infinite;
+  margin: 1rem 0; 
 }
 
-/* Contenedor interno para dar efecto de relieve */
 .camera-lens-inner {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.05);
+  background: linear-gradient(135deg, rgba(43, 108, 176, 0.6), rgba(47, 133, 90, 0.6));
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.3s ease;
 }
 
-/* LA IMAGEN DEL FAVICON DENTRO DEL BOTÓN */
 .hero-favicon-img {
-  width: 65%;
-  height: 65%;
+  width: 55%; 
+  height: 55%;
   object-fit: contain;
-  transition: transform 0.3s ease;
 }
 
-/* Efectos de Interacción */
+
 .btn-giant-camera:hover {
-  transform: scale(1.08);
-  outline-color: #e67e22; /* Pasa a naranja en hover */
+  transform: scale(1.05);
+  outline-color: #e67e22;
 }
 
-.btn-giant-camera:hover .camera-lens-inner {
-  background-color: rgba(255, 255, 255, 0.15);
+/* Agrega esto para el título dentro de la card */
+.hero-card h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
 }
 
-.btn-giant-camera:hover .hero-favicon-img {
-  transform: scale(1.1) rotate(5deg);
-}
-
-.btn-giant-camera:active {
-  transform: scale(0.95);
-}
-
-/* Espaciados de letras */
-.tracking-wide {
-  letter-spacing: 0.05em;
-}
-.tracking-wider {
-  letter-spacing: 0.1em;
-}
-.fs-7 {
-  font-size: 0.85rem;
-}
-
-/* =========================================================
-   PREVISUALIZACIÓN Y ANIMACIONES
-   ========================================================= */
-
-.preview-container {
-  max-width: 280px;
-  margin: 0 auto;
-}
-
-.preview-frame {
-  max-width: 250px;
-  border: 4px solid #ffffff;
-  border-radius: 15px;
-  overflow: hidden;
-  background-color: #000;
-  line-height: 0;
-}
-
-.preview-frame img {
-  width: 100%;
-  height: 250px;
-  object-fit: cover;
-}
-
-@keyframes pulse-ring {
-  0% {
-    box-shadow: 0 0 0 0 rgba(241, 196, 15, 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 25px rgba(241, 196, 15, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(241, 196, 15, 0);
-  }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.5s ease-out forwards;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.hero-card p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
 }

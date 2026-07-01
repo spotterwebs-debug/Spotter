@@ -1,25 +1,30 @@
-// src/pages/Home.jsx
 import React from 'react';
 import Hero from '../components/Hero';
-import CardCreator from '../components/CardCreator'; // <-- No te olvides de importar el creador
+import Categories from '../components/Categories';
+import LatestCaptures from '../components/LatestCaptures';
+import './Home.css';
 
-// Desestructuramos las props que le manda App.jsx: capturedPhoto y setCapturedPhoto
-function Home({ capturedPhoto, setCapturedPhoto }) {
+function Home({ setCapturedPhoto }) {
   return (
-    <div className="home-page bg-dark" style={{ minHeight: '90vh' }}>
+    <div className="home-page">
       <div className="container py-4">
-        
-        
-        {!capturedPhoto ? (
-          <Hero onPhotoCaptured={(photoUrl) => setCapturedPhoto(photoUrl)} />
-        ) : (
-          <CardCreator 
-            previewUrl={capturedPhoto} 
-            onCancel={() => setCapturedPhoto(null)} // Si cancela, limpia la foto y vuelve el Hero
-          />
-        )}
-        
+        <div className="main-action-area mb-5">
+          
+          <Hero setSharedPhoto={setCapturedPhoto} />
+
+        </div>
+        <div className="welcome-box">
+  <h3>¡Bienvenido a Spotter! 📸</h3>
+  <p>
+    Aquí podrás capturar y coleccionar aquello que más te apasiona.
+    Elegí una de las categorías disponibles, tomá una fotografía,
+    creá un hermoso álbum y compartí tus mejores capturas con toda
+    la comunidad Spotter.
+  </p>
+</div>
+        <Categories />
       </div>
+      <LatestCaptures />
     </div>
   );
 }

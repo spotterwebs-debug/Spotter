@@ -1,0 +1,31 @@
+.image-btn {
+  width: 100px; 
+  height: 100px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #007bff, #28a745);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  padding: 0;
+  overflow: hidden; /* Esto asegura que la imagen no se salga del círculo si es muy grande */
+}
+
+.image-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.btn-icon {
+  width: 60%; /* Ajuste leve para que luzca mejor dentro del círculo */
+  height: auto;
+  pointer-events: none;
+  object-fit: contain; /* Asegura que la imagen mantenga su proporción */
+}
+
+.row {
+  row-gap: 20px;
+}
