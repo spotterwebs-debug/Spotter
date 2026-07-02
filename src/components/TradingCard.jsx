@@ -1,7 +1,7 @@
 import React from 'react';
 import './TradingCard.css';
 
-function TradingCard({ datos, likes = 0, liked = false, onToggleLike }) {
+function TradingCard({ datos, likes = 0, liked = false, onToggleLike, showLikes = true }) {
 
   if (!datos) return null;
 
@@ -79,12 +79,21 @@ function TradingCard({ datos, likes = 0, liked = false, onToggleLike }) {
         {/* BOTÓN ME GUSTA */}
         <div className="card-actions d-flex justify-content-end align-items-center px-2 py-2">
 
-          <button
-            className="btn btn-sm btn-outline-danger"
-            onClick={onToggleLike}
-          >
-            {liked ? "❤️" : "🤍"} {likes}
-          </button>
+      
+ <button
+  className={`like-btn ${liked ? "liked" : ""}`}
+  onClick={onToggleLike}
+>
+  {liked ? "❤️" : "🤍"}
+
+  {showLikes && (
+    <span className="like-count">
+      {likes}
+    </span>
+  )}
+</button>
+
+
 
         </div>
 

@@ -71,3 +71,23 @@
   -webkit-box-orient: vertical;  
   overflow: hidden;
 }
+
+.like-btn{
+    background: transparent;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    color: #bbb;
+    transition: 0.2s;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.like-btn:hover{
+    transform: scale(1.05);
+}
+
+.like-btn.liked{
+    color: red;
+}

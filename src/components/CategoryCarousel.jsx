@@ -10,6 +10,7 @@ import "./CategoryCarousel.css";
 import TradingCard from "./TradingCard";
 
 function CategoryCarousel({
+    id,
     title,
     cards,
     likes,
@@ -20,7 +21,7 @@ function CategoryCarousel({
     if (!cards.length) return null;
 
     return (
-        <div className="category-section">
+        <div className="category-section" id={id}>
 
             <h3 className="category-title">
                 {title}
@@ -54,22 +55,17 @@ function CategoryCarousel({
 
                     <SwiperSlide key={post.id}>
 
-                        <TradingCard
-                            datos={post}
-                            likes={
-                                likes.filter(
-                                    like => like.card_id === post.id
-                                ).length
-                            }
-                            liked={
-                                likes.some(
-                                    like =>
-                                        like.card_id === post.id &&
-                                        like.user_id === user?.id
-                                )
-                            }
-                            onToggleLike={() => onToggleLike(post.id)}
-                        />
+                     <TradingCard
+  datos={post}
+  likes={likes.filter(like => like.card_id === post.id).length}
+  liked={likes.some(
+    like =>
+      like.card_id == post.id &&
+      like.user_id == user?.id
+  )}
+  onToggleLike={() => onToggleLike(post.id)}
+  showLikes={false}
+/>
 
                     </SwiperSlide>
 

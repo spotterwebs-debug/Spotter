@@ -5,7 +5,7 @@ import TradingCard from './TradingCard';
 import Swal from 'sweetalert2';
 import { supabase } from '../supabaseClient';
 
-function CardManager({ carta, onUpdate }) {
+function CardManager({ carta, onUpdate, likesCount = 0 }) {
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
@@ -45,7 +45,7 @@ function CardManager({ carta, onUpdate }) {
         await navigator.share({
           title: '¡Mira mi spot!',
           text: `Mira esta increíble carta de: ${carta.nombre}`,
-          url: window.location.href, // O el link de tu web pública
+          url: window.location.href,
         });
       } catch (err) { console.log("Error al compartir", err); }
     } else {
@@ -66,13 +66,21 @@ function CardManager({ carta, onUpdate }) {
   return (
     <>
       <div onClick={() => setShowModal(true)} style={{ cursor: 'pointer' }}>
-        <TradingCard datos={carta} />
+        <TradingCard 
+          datos={carta} 
+          likes={likesCount} 
+        />
       </div>
 
       {showModal && (
         <div className="custom-modal-overlay" onClick={() => setShowModal(false)}>
           <div className="custom-modal-content" onClick={e => e.stopPropagation()}>
-            <div className="modal-card-wrapper"><TradingCard datos={carta} /></div>
+            <div className="modal-card-wrapper">
+              <TradingCard 
+                datos={carta} 
+                likes={likesCount} 
+              />
+            </div>
             
             <div className="d-grid gap-2 mt-3">
               <button className="btn btn-outline-primary fw-bold" onClick={handleEditar}>✏️ Editar</button>
@@ -86,6 +94,7 @@ function CardManager({ carta, onUpdate }) {
                   onUpdate();
                 }}>🌐 Publicar en Comunidad</button>
               )}
+              
               <button className="btn btn-danger fw-bold" onClick={handleBorrar}>🗑️ Borrar Card</button>
             </div>
           </div>

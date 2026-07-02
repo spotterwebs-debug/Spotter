@@ -49,43 +49,43 @@ function Comunidad() {
 
   const toggleLike = async (cardId) => {
 
-    const existe = likes.find(
-      like =>
-        like.card_id === cardId &&
-        like.user_id === user.id
-    );
+  if (!user) return;
 
-    if (existe) {
+  const existe = likes.find(
+    like =>
+      like.card_id == cardId &&
+      like.user_id == user?.id
+  );
 
-      const { error } = await supabase
-        .from("likes")
-        .delete()
-        .eq("id", existe.id);
+  if (existe) {
 
-      if (!error) {
-        setLikes(prev =>
-          prev.filter(like => like.id !== existe.id)
-        );
-      }
+    const { error } = await supabase
+      .from("likes")
+      .delete()
+      .eq("id", existe.id);
 
-    } else {
-
-      const { data, error } = await supabase
-        .from("likes")
-        .insert({
-          card_id: cardId,
-          user_id: user.id
-        })
-        .select()
-        .single();
-
-      if (!error && data) {
-        setLikes(prev => [...prev, data]);
-      }
-
+    if (!error) {
+      setLikes(prev =>
+        prev.filter(like => like.id !== existe.id)
+      );
     }
 
-  };
+  } else {
+
+    const { data, error } = await supabase
+      .from("likes")
+      .insert({
+        card_id: cardId,
+        user_id: user?.id
+      })
+      .select()
+      .single();
+
+    if (!error && data) {
+      setLikes(prev => [...prev, data]);
+    }
+  }
+};
 
   if (loading) {
     return (
@@ -104,6 +104,14 @@ function Comunidad() {
     paisajes: posts.filter(post => post.categoria === "paisajes")
   };
 
+  // Scroll a la categoría
+  const scrollTo = (id) => {
+    document.getElementById(id)?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  };
+
   return (
     <div className="comunidad-page">
 
@@ -113,7 +121,32 @@ function Comunidad() {
           Comunidad Spotter
         </h2>
 
+        <div className="community-nav">
+
+          <button className="cat-perros" onClick={() => scrollTo("perros")}>
+            🐶 Perros
+          </button>
+
+          <button className="cat-gatos" onClick={() => scrollTo("gatos")}>
+            🐱 Gatos
+          </button>
+
+          <button className="cat-plantas" onClick={() => scrollTo("plantas")}>
+            🌿 Plantas
+          </button>
+
+          <button className="cat-aves" onClick={() => scrollTo("aves")}>
+            🐦 Aves
+          </button>
+
+          <button className="cat-paisajes" onClick={() => scrollTo("paisajes")}>
+            🏞️ Paisajes
+          </button>
+
+        </div>
+
         <CategoryCarousel
+          id="perros"
           title="🐶 Perros"
           cards={categorias.perros}
           likes={likes}
@@ -122,6 +155,7 @@ function Comunidad() {
         />
 
         <CategoryCarousel
+          id="gatos"
           title="🐱 Gatos"
           cards={categorias.gatos}
           likes={likes}
@@ -130,6 +164,7 @@ function Comunidad() {
         />
 
         <CategoryCarousel
+          id="plantas"
           title="🌿 Plantas"
           cards={categorias.plantas}
           likes={likes}
@@ -138,6 +173,7 @@ function Comunidad() {
         />
 
         <CategoryCarousel
+          id="aves"
           title="🐦 Aves"
           cards={categorias.aves}
           likes={likes}
@@ -146,6 +182,7 @@ function Comunidad() {
         />
 
         <CategoryCarousel
+          id="paisajes"
           title="🏞️ Paisajes"
           cards={categorias.paisajes}
           likes={likes}

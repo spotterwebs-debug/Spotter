@@ -13,6 +13,9 @@ function Album({ setSharedPhoto }) {
   const [loading, setLoading] = useState(true);
   const [vista, setVista] = useState('grid');
 
+  // ⭐ LIKES GLOBAL
+  const [likes, setLikes] = useState([]);
+
   const fondosPorCategoria = {
     perros: '/fondopatitas.png',
     gatos: '/fondopatitas.png',
@@ -23,6 +26,7 @@ function Album({ setSharedPhoto }) {
 
   const fondoActual = fondosPorCategoria[categoria] || '';
 
+  // 📦 CARGAR CARDS
   const fetchCartas = async () => {
     setLoading(true);
 
@@ -42,16 +46,46 @@ function Album({ setSharedPhoto }) {
       .eq('user_id', session.user.id)
       .eq('categoria', categoria);
 
-    if (!error && data) {
-      setCartasFiltradas(data);
+    if (!error) {
+      setCartasFiltradas(data || []);
     }
 
     setLoading(false);
   };
 
+  // ❤️ CARGAR LIKES GLOBALES
+  const fetchLikes = async () => {
+    const { data } = await supabase
+      .from('likes')
+      .select('card_id'); // 👈 optimizado
+
+    setLikes(data || []);
+  };
+
   useEffect(() => {
     fetchCartas();
+    fetchLikes();
   }, [categoria]);
+
+  // 🔁 REFRESH cuando vuelves a la pestaña (IMPORTANTE)
+  useEffect(() => {
+    const handleFocus = () => {
+      fetchLikes();
+    };
+
+    window.addEventListener("focus", handleFocus);
+
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+    };
+  }, []);
+
+  // ❤️ CONTADOR REAL GLOBAL
+  const getLikesCount = (cardId) => {
+    return likes.filter(
+      like => String(like.card_id) === String(cardId)
+    ).length;
+  };
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -100,82 +134,64 @@ function Album({ setSharedPhoto }) {
 
           <div className="album-buttons">
 
-  <div className="album-left">
+            <div className="album-left">
 
-    <button
-      className="album-big-btn blue"
-      onClick={() => fileInputRef.current.click()}
-    >
-      <div className="btn-icon">📁</div>
+              <button
+                className="album-big-btn blue"
+                onClick={() => fileInputRef.current.click()}
+              >
+                <div className="btn-icon">📁</div>
+                <div className="btn-info">
+                  <h3>Subir desde Galería</h3>
+                  <span>Añade tus {categoria}</span>
+                </div>
+                <div className="btn-arrow">❯</div>
+              </button>
 
-      <div className="btn-info">
-        <h3>Subir desde Galería</h3>
-        <span>Añade tus {categoria}</span>
-      </div>
+              <button
+                className="album-big-btn green"
+                onClick={() =>
+                  setVista(vista === 'grid' ? 'list' : 'grid')
+                }
+              >
+                <div className="btn-icon">👁️</div>
+                <div className="btn-info">
+                  <h3>Vista</h3>
+                  <span>
+                    {vista === 'grid'
+                      ? 'Cambiar a lista'
+                      : 'Cambiar a cuadrícula'}
+                  </span>
+                </div>
+                <div className="btn-arrow">❯</div>
+              </button>
 
-      <div className="btn-arrow">❯</div>
-    </button>
+            </div>
 
-    <button
-      
-      className="album-big-btn green"
-      onClick={() =>
-       
-        setVista(vista === 'grid' ? 'list' : 'grid')
-      }
-    >
-      <div className="btn-icon">👁️</div>
+            <div className="album-right">
 
-      <div className="btn-info">
-        <h3>Vista</h3>
+              <button className="album-big-btn red">
+                <div className="btn-icon">🎯</div>
+                <div className="btn-info">
+                  <h3>Desafío</h3>
+                  <span>Acepta el reto</span>
+                </div>
+                <div className="btn-arrow">❯</div>
+              </button>
 
-        <span>
-          {vista === 'grid'
-            ? 'Cambiar a lista'
-            : 'Cambiar a cuadrícula'}
-        </span>
+              <button className="album-big-btn yellow">
+                <div className="btn-icon">📊</div>
+                <div className="btn-info">
+                  <h3>Listones</h3>
+                  <span>Ver estadísticas</span>
+                </div>
+                <div className="btn-arrow">❯</div>
+              </button>
 
-      </div>
+            </div>
 
-      <div className="btn-arrow">❯</div>
-    </button>
-
-  </div>
-
-  <div className="album-right">
-
-    <button
-      className="album-big-btn red"
-      onClick={() => {}}
-    >
-      <div className="btn-icon">🎯</div>
-
-      <div className="btn-info">
-        <h3>Desafío</h3>
-        <span>Acepta el reto</span>
-      </div>
-
-      <div className="btn-arrow">❯</div>
-    </button>
-
-    <button
-      className="album-big-btn yellow"
-      onClick={() => {}}
-    >
-      <div className="btn-icon">📊</div>
-
-      <div className="btn-info">
-        <h3>Listones</h3>
-        <span>Ver estadísticas</span>
-      </div>
-
-      <div className="btn-arrow">❯</div>
-    </button>
-
-  </div>
-
-</div>
-</div>
+          </div>
+        </div>
 
         {/* CONTENIDO */}
         {loading ? (
@@ -184,19 +200,19 @@ function Album({ setSharedPhoto }) {
           </div>
         ) : (
           <>
-           
-  
-  
-   <div className={vista === 'grid' ? 'album-grid' : 'album-list'}>
-  {cartasFiltradas.map((carta) => (
-    <div key={carta.id} className="card-item-wrapper">
-      <CardManager 
-        carta={carta} 
-        onUpdate={fetchCartas} 
-      />
-    </div>
-  ))}
-</div>
+            <div className={vista === 'grid' ? 'album-grid' : 'album-list'}>
+              {cartasFiltradas.map((carta) => (
+                <div key={carta.id} className="card-item-wrapper">
+
+                  <CardManager 
+                    carta={carta} 
+                    onUpdate={fetchCartas}
+                    likesCount={getLikesCount(carta.id)} 
+                  />
+
+                </div>
+              ))}
+            </div>
 
             <div className="text-center mt-5">
               <button
