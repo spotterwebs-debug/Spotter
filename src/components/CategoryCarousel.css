@@ -1,0 +1,135 @@
+/* ===== SECCIÓN ===== */
+
+.category-section{
+    margin-bottom: 55px;
+}
+
+
+/* ===== TÍTULO ===== */
+
+.category-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:18px;
+
+    color:white;
+    font-size:1.6rem;
+    font-weight:700;
+
+    border-left:5px solid #ffd54f;
+    padding-left:14px;
+}
+
+
+.category-count{
+
+    background:#ffd54f;
+    color:#222;
+
+    padding:4px 12px;
+
+    border-radius:30px;
+
+    font-size:.9rem;
+    font-weight:700;
+
+}
+
+
+/* ===== SWIPER ===== */
+
+.category-section .swiper{
+
+    overflow:visible;
+
+    padding-bottom:15px;
+
+}
+
+
+/* Separación entre tarjetas */
+
+.category-section .swiper-slide{
+
+    height:auto;
+
+    display:flex;
+    justify-content:center;
+
+}
+
+
+/* ===== FLECHAS ===== */
+
+.swiper-button-next,
+.swiper-button-prev{
+
+    color:#ffd54f;
+
+    background:rgba(0,0,0,.45);
+
+    width:42px;
+    height:42px;
+
+    border-radius:50%;
+
+    backdrop-filter:blur(6px);
+
+    transition:.25s;
+
+}
+
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover{
+
+    transform:scale(1.12);
+
+}
+
+
+.swiper-button-next::after,
+.swiper-button-prev::after{
+
+    font-size:18px;
+    font-weight:bold;
+
+}
+
+
+/* ===== MÓVIL ===== */
+
+@media (max-width:768px){
+
+    .swiper-button-next,
+    .swiper-button-prev{
+
+        display:none;
+
+    }
+
+    .category-title{
+
+        font-size:1.3rem;
+
+    }
+
+}
+
+
+/* ===== EFECTO TARJETA ===== */
+
+.category-section .trading-card-final{
+
+    transition:transform .25s ease;
+
+}
+
+
+.category-section .trading-card-final:hover{
+
+    transform:translateY(-6px);
+
+}
