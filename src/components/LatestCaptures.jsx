@@ -16,7 +16,7 @@ function LatestCaptures() {
     const fetchLatest = async () => {
       setLoading(true);
 
-      // 🔥 QUERY SEGURA (SIN DEPENDER DE FK)
+      
       const { data, error } = await supabase
         .from('cards')
         .select('*')

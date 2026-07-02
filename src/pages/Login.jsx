@@ -13,7 +13,7 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  // EFECTO: Si detecta que ya hay sesión guardada en el dispositivo, saltea el login automáticamente
+  
   useEffect(() => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -27,7 +27,7 @@ function Login() {
     setLoading(true);
 
     if (isRegistering) {
-      // REGISTRO con metadatos para que el Trigger de Supabase los guarde en 'profiles'
+      
       const { error } = await supabase.auth.signUp({ 
         email, 
         password,

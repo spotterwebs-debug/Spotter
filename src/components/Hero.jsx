@@ -10,10 +10,10 @@ function Hero({ setSharedPhoto }) {
     const file = event.target.files[0];
 
     if (file) {
-      // seguimos guardando por compatibilidad (no rompe nada existente)
+      
       setSharedPhoto(file);
 
-      // 🔥 FIX REAL: enviamos la imagen al create correctamente
+
       navigate('/create', {
         state: {
           fileFromCamera: file

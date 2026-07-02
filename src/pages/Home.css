@@ -17,7 +17,7 @@
 
 
 .main-action-area {
-  margin-top: -1rem; /* O usa un valor negativo para acercarlo más */
+  margin-top: -1rem; 
   display: flex;
   justify-content: center;
 }

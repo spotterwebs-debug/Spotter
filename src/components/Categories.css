@@ -11,7 +11,7 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   padding: 0;
-  overflow: hidden; /* Esto asegura que la imagen no se salga del círculo si es muy grande */
+  overflow: hidden; 
 }
 
 .image-btn:hover {
@@ -20,10 +20,10 @@
 }
 
 .btn-icon {
-  width: 60%; /* Ajuste leve para que luzca mejor dentro del círculo */
+  width: 60%; 
   height: auto;
   pointer-events: none;
-  object-fit: contain; /* Asegura que la imagen mantenga su proporción */
+  object-fit: contain; 
 }
 
 .row {

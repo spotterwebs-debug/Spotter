@@ -1,15 +1,14 @@
-// src/components/TradingCard.jsx
+
 import React from 'react';
 import './TradingCard.css';
 
-// Recibimos 'datos' en lugar de props separadas
+
 function TradingCard({ datos }) {
   
-  // 🔒 PROTECCIÓN ANTI-CRASH
+  
   if (!datos) return null;
 
-  // Desestructuramos el objeto datos para usar las variables que ya tenías definidas
-  // Nota: Asegúrate de usar 'imagen_url' porque así lo llamamos al guardar en Supabase
+  
   const {
     nombre,
     categoria,

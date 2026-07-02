@@ -2,30 +2,30 @@
 .hero-card {
   background: linear-gradient(135deg, #2b6cb0, #2f855a);
   
-  /* PADDING: Vertical mayor (4rem) para altura, Horizontal mayor (8rem) para volumen */
+  
   padding: 4rem 8rem; 
   
-  border-radius: 30px; /* Bordes más redondeados para una card grande */
+  border-radius: 30px; 
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
   
   display: flex;
   flex-direction: column;
   align-items: center;
   
-  /* OCUPAR HORIZONTALMENTE: Casi todo el ancho */
+ 
   width: 90%; 
-  max-width: 1000px; /* Punto máximo para que no se deforme en monitores 4K */
+  max-width: 1000px; 
   
   margin: 3rem auto; 
   color: white;
   text-align: center;
   
-  /* Asegura altura mínima para que no sea una "franja" */
+  
   min-height: 400px; 
-  justify-content: center; /* Centra verticalmente los elementos internos */
+  justify-content: center; 
 }
 
-/* Ajuste para móviles: que el padding no sea excesivo en pantallas pequeñas */
+
 @media (max-width: 768px) {
   .hero-card {
     padding: 3rem 2rem;
@@ -72,7 +72,6 @@
   outline-color: #e67e22;
 }
 
-/* Agrega esto para el título dentro de la card */
 .hero-card h2 {
   margin: 0;
   font-size: 1.3rem;

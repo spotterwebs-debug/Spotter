@@ -1,16 +1,12 @@
-
+/* src/components/TradingCard.css */
 
 .trading-card-final {
   width: 290px;
   height: 410px;
-  background: linear-gradient(135deg, #f1c40f, #e67e22);
+  background: linear-gradient(135deg, #f1c40f, #e67e22); /* Marco dorado coleccionable */
   border-radius: 18px;
   padding: 8px;
   box-sizing: border-box;
-  
- 
-  display: block; 
-  margin: 0 auto; 
 }
 
 .card-inner-border {

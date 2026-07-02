@@ -8,20 +8,21 @@ import Album from './components/Album';
 import Create from './components/Create';
 import Login from './pages/Login';
 import EditCards from './components/EditCards';
+import Comunidad from './components/Comunidad';
 
 function App() {
   const [sharedPhoto, setSharedPhoto] = useState(null);
 
   return (
     <Router>
-      {/* Navbar visible en TODAS las rutas */}
+      
       <Navbar />
       
       <main className="content-container">
         <Routes>
           <Route path="/login" element={<Login />} />
           
-          {/* Aquí le pasas las props al Home para que pueda renderizar Hero o Creator */}
+          
           <Route 
             path="/" 
             element={<Home capturedPhoto={sharedPhoto} setCapturedPhoto={setSharedPhoto} />} 
@@ -36,10 +37,13 @@ function App() {
             element={<Create capturedPhoto={sharedPhoto} setCapturedPhoto={setSharedPhoto} />} 
           />
           <Route path="/edit/:id" element={<EditCards />} />
+          
+          
+          <Route path="/comunidad" element={<Comunidad />} /> 
         </Routes>
       </main>
 
-      {/* Footer visible en TODAS las rutas */}
+      
       <Footer /> 
     </Router>
   );

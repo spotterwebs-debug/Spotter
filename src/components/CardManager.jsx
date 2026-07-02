@@ -9,12 +9,12 @@ function CardManager({ carta, onUpdate }) {
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
-  // 1. EDITAR: Redirige a /edit/:id (asumiendo que tu ruta de edición es esa)
+  
   const handleEditar = () => {
     navigate(`/edit/${carta.id}`);
   };
 
-  // 2. CAMBIAR CATEGORÍA: SweetAlert con select
+  
   const handleCambiarCategoria = async () => {
     const { value: nuevaCategoria } = await Swal.fire({
       title: 'Selecciona nueva categoría',
@@ -38,7 +38,7 @@ function CardManager({ carta, onUpdate }) {
     }
   };
 
-  // 3. COMPARTIR: Web Share API (WhatsApp, Instagram, etc)
+  
   const handleCompartir = async () => {
     if (navigator.share) {
       try {
@@ -53,7 +53,7 @@ function CardManager({ carta, onUpdate }) {
     }
   };
 
-  // 4. BORRAR
+  
   const handleBorrar = async () => {
     const result = await Swal.fire({ title: '¿Borrar?', icon: 'warning', showCancelButton: true });
     if (result.isConfirmed) {

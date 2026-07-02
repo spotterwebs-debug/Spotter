@@ -22,7 +22,7 @@ function EditCards() {
   return (
     <CardCreator 
       cardToEdit={carta} 
-      // Al cancelar o guardar, volvemos a la categoría del álbum de la carta
+      
       onCancel={() => navigate(`/album/${carta.categoria}`)} 
     />
   );

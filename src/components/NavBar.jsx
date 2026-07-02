@@ -45,7 +45,7 @@ function Navbar() {
           <img src="/logo.png" alt="Spotter" height="40" />
         </NavLink>
 
-        {/* ZONA EXTERNA (Visible siempre) */}
+       
         <div className="ms-auto me-2 d-flex align-items-center">
           {user ? (
             <span className="badge bg-success rounded-pill px-3 py-2 fw-semibold text-white">
@@ -73,7 +73,7 @@ function Navbar() {
               <NavLink className="nav-link" to="/comunidad" onClick={closeNavbar}>Comunidad</NavLink>
             </li>
             
-            {/* AQUÍ ESTÁ EL MAPEADO QUE FALTABA */}
+         
             {albumCategorias.map((cat) => (
               <li className="nav-item" key={cat}>
                 <NavLink className="nav-link text-capitalize" to={`/album/${cat}`} onClick={closeNavbar}>

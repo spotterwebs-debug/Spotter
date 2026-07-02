@@ -168,7 +168,8 @@ function CardCreator({
         nombre: formValues.nombre,
         categoria,
         ...formValues,
-        imagen_url: croppedImage
+        imagen_url: croppedImage,
+        is_public: true
       };
 
       const { error } = cardToEdit
