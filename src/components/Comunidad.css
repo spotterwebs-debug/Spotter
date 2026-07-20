@@ -180,3 +180,130 @@ Categorias
     background:#64b5f6;
     transform:translateY(-2px);
 }
+
+/*=====================================================
+ MODAL COMUNIDAD
+=====================================================*/
+
+
+.community-modal-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.85);
+
+    z-index:999999;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:20px;
+
+    backdrop-filter:blur(5px);
+
+}
+
+
+
+.community-modal-content{
+
+    background:white;
+
+    border-radius:22px;
+
+    padding:15px;
+
+    width:90vw;
+
+    max-width:330px;
+
+    max-height:90vh;
+
+    overflow-y:auto;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.35);
+
+}
+
+
+/* Card dentro del modal */
+
+.community-modal-content 
+.trading-card-final{
+
+    width:290px!important;
+
+    height:410px!important;
+
+    transform:none!important;
+
+}
+
+
+/* botón cerrar */
+
+.community-close-btn{
+
+    margin-top:12px;
+
+    border:none;
+
+    border-radius:25px;
+
+    padding:9px 25px;
+
+    background:#2d5a27;
+
+    color:white;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+
+.community-close-btn:hover{
+
+    transform:scale(1.05);
+
+}
+
+
+/* MOBILE */
+
+@media(max-width:767px){
+
+
+    .community-modal-overlay{
+
+        align-items:flex-start;
+
+        padding-top:25px;
+
+        overflow-y:auto;
+
+    }
+
+
+    .community-modal-content{
+
+        margin-bottom:40px;
+
+    }
+
+}

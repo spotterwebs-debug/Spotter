@@ -9,7 +9,7 @@ function Categories() {
     { name: 'Perros', img: '/buttomdog.png', route: '/album/perros' },
     { name: 'Gatos', img: '/buttomcat.png', route: '/album/gatos' },
     { name: 'Plantas', img: '/buttomplant.png', route: '/album/plantas' },
-    { name: 'Aves', img: '/buttomaves.png', route: '/album/aves' }, // <-- Agregado
+    { name: 'Aves', img: '/buttomaves.png', route: '/album/aves' }, 
     { name: 'Paisajes', img: '/buttompaisajes.png', route: '/album/paisajes' },
     { name: 'Comunidad', img: '/buttomcomunidad.png', route: '/comunidad' }
   ];
