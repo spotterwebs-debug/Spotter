@@ -106,6 +106,7 @@ function CardManager({ carta, onUpdate, likesCount = 0 }) {
         <TradingCard
           datos={carta}
           likes={likesCount}
+          showLikes={true}
         />
       </div>
 
@@ -124,6 +125,7 @@ function CardManager({ carta, onUpdate, likesCount = 0 }) {
               <TradingCard
                 datos={carta}
                 likes={likesCount}
+                showLikes={true}
                 enableImageZoom={true}
               />
             </div>

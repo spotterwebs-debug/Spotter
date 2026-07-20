@@ -134,7 +134,7 @@ function CategoryCarousel({
 
             {/* ==========================
                 MODAL COMUNIDAD
-            =========================== */}
+            ================.=========== */}
 
 
             {selectedCard && (
