@@ -1,4 +1,7 @@
-/*  CONFIGURACIÓN DEL CONTENEDOR PRINCIPAL */
+/* =====================================
+   CONTENEDOR PRINCIPAL
+===================================== */
+
 .album-container {
     position: relative;
     min-height: 100vh;
@@ -9,111 +12,546 @@
     padding-bottom: 50px;
 }
 
+
 .album-overlay {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(255, 255, 255, 0.4);
-    z-index: 1;
+    position:absolute;
+    inset:0;
+    background:rgba(255,255,255,.4);
+    z-index:1;
 }
+
 
 .album-content {
-    position: relative;
-    z-index: 2;
+    position:relative;
+    z-index:2;
 }
 
-/*  ESTILOS DE HEADER Y BOTONES */
-.album-content h1 { color: #58506d; font-weight: 800; }
 
-.album-buttons { display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; }
-.album-left, .album-right { display: flex; flex-direction: column; gap: 5px; }
 
-.album-big-btn {
-    border: none; border-radius: 10px; display: flex; align-items: center;
-    justify-content: space-between; padding: 5px 8px; background: white;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1); cursor: pointer; transition: 0.2s;
+/* =====================================
+   TITULO
+===================================== */
+
+.album-content h1 {
+
+    color:#2d5a27 !important;
+    font-weight:800;
+    margin-bottom:1.5rem;
+    text-align:center;
+
 }
 
-.btn-icon { width: 24px; height: 24px; font-size: 12px; display: flex; justify-content: center; align-items: center; }
-.btn-info { flex: 1; text-align: left; padding: 0 8px; }
-.btn-info h3 { margin: 0; font-size: 0.75rem; font-weight: 700; color: #333; }
-.btn-info span { font-size: 0.55rem; color: #666; display: block; }
-.btn-arrow { font-size: 0.7rem; color: #ccc; }
 
-/*  CONFIGURACIÓN DE LA GALERÍA GRID */
+
+/* =====================================
+   ICONOS
+===================================== */
+
+
+.album-top-icons {
+
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    margin-bottom:15px;
+
+}
+
+
+.icon-btn {
+
+    background:rgba(255,255,255,.8);
+
+    border:none;
+
+    border-radius:50%;
+
+    width:38px;
+    height:38px;
+
+    font-size:1.2rem;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    cursor:pointer;
+
+    box-shadow:0 2px 5px rgba(0,0,0,.1);
+
+    transition:.3s;
+
+}
+
+
+.icon-btn:hover {
+
+    transform:scale(1.1);
+    background:white;
+
+}
+
+
+
+/* =====================================
+   BOTONES ALBUM
+===================================== */
+
+
+.album-buttons {
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:10px;
+
+    margin-bottom:30px;
+
+    padding:0 10px;
+
+}
+
+
+
+.album-small-btn {
+
+    background:white;
+
+    border:none;
+
+    padding:8px 16px;
+
+    border-radius:20px;
+
+    font-size:.85rem;
+
+    font-weight:600;
+
+    color:#58506d;
+
+    box-shadow:0 4px 6px rgba(0,0,0,.08);
+
+    cursor:pointer;
+
+    transition:.2s;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+}
+
+
+
+.album-small-btn:hover {
+
+    transform:translateY(-2px);
+
+}
+
+
+
+/* =====================================
+   GRID ALBUM
+===================================== */
+
+
 .album-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    padding: 0 10px;
+
+    display:grid;
+
+    grid-template-columns:repeat(2,minmax(0,1fr));
+
+    gap:15px;
+
+    padding:0 15px;
+
+    max-width:500px;
+
+    margin:auto;
+
 }
 
-.card-item-wrapper { width: 100%; position: relative; }
 
-.album-grid .trading-card-final .card-info-box, 
-.album-grid .trading-card-final .card-dato-curioso { display: none !important; }
 
-.album-grid .trading-card-final .card-image-box { height: 100% !important; border-bottom: none !important; }
-.album-grid .trading-card-final { padding: 4px !important; }
+.album-grid .card-item-wrapper {
 
-/*  ESTILOS DEL MODAL Y SUS ELEMENTOS */
+    width:100%;
+    min-width:0;
+
+}
+
+
+
+
+/* MINI CARD */
+
+.album-grid .trading-card-final {
+
+    width:100%!important;
+
+    height:220px!important;
+
+    padding:0!important;
+
+    overflow:hidden;
+
+    cursor:pointer;
+
+    margin:0!important;
+
+    transform:none!important;
+
+    border-radius:12px;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.1);
+
+}
+
+
+
+.album-grid .card-info-box,
+.album-grid .card-dato-curioso,
+.album-grid .card-actions {
+
+    display:none!important;
+
+}
+
+
+
+.album-grid .card-image-box {
+
+    width:100%!important;
+    height:100%!important;
+
+}
+
+
+
+.album-grid .card-image-box img {
+
+    width:100%!important;
+    height:100%!important;
+
+    object-fit:cover!important;
+
+}
+
+
+
+
+/* =====================================
+   LISTA
+===================================== */
+
+
+.album-list {
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:20px;
+
+    padding:0 20px;
+
+}
+
+
+
+
+/* =====================================
+   MODAL GENERAL
+===================================== */
+
+
 .custom-modal-overlay {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    background: rgba(0, 0, 0, 0.85) !important;
-    z-index: 999999 !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    backdrop-filter: blur(4px);
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.85);
+
+    z-index:999999;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:20px;
+
+    overflow-y:auto;
+
+    -webkit-overflow-scrolling:touch;
+
 }
+
+
 
 .custom-modal-content {
-    background: white !important;
-    padding: 10px !important; 
-    border-radius: 20px !important;
-    width: 90vw !important; 
-    max-width: 300px !important; 
-    max-height: 80vh !important; 
-    display: flex !important;
-    flex-direction: column !important;
-    overflow: hidden !important; 
-    position: relative !important;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+
+    background:white;
+
+    width:90vw;
+
+    max-width:330px;
+
+    border-radius:20px;
+
+    padding:15px;
+
+    box-sizing:border-box;
+
+    max-height:none;
+
+    overflow:visible;
+
+    margin:auto;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.5);
+
 }
+
+
+
+/* =====================================
+   CARD COMPLETA MODAL
+===================================== */
+
 
 .modal-card-wrapper {
-    flex: 1 !important;
-    overflow-y: auto !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    padding-bottom: 5px !important;
+
+    display:flex;
+
+    justify-content:center;
+
 }
+
+
 
 .modal-card-wrapper .trading-card-final {
-    width: 160px !important;
-    aspect-ratio: 290/410;
-    margin: 5px auto 10px auto !important;
-    transform: none !important;
+
+    width:290px!important;
+
+    height:410px!important;
+
+    transform:none!important;
+
 }
 
-.card-buttons-container button {
-    padding: 6px 10px !important;
-    font-size: 0.8rem !important;
-    margin-bottom: 5px !important;
-    width: 100% !important;
+
+
+.modal-card-wrapper .card-info-box,
+.modal-card-wrapper .card-dato-curioso,
+.modal-card-wrapper .card-actions {
+
+    display:block!important;
+
 }
 
-/*  UTILIDADES Y DISEÑO RESPONSIVO */
-.blue { background: #edf7ff; } .blue .btn-icon { background: #cdeeff; }
-.green { background: #edfceb; } .green .btn-icon { background: #cff5cb; }
-.red { background: #ffeef2; } .red .btn-icon { background: #ffd4dd; }
-.yellow { background: #fff8e5; } .yellow .btn-icon { background: #ffe8a6; }
 
-@media (min-width: 768px) {
-    .album-buttons { display: grid; grid-template-columns: 1fr 1fr; max-width: 800px; margin: auto; }
-    .album-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; }
+
+
+/* =====================================
+   BOTONES MODAL
+===================================== */
+
+
+.custom-modal-content .d-grid {
+
+    display:grid;
+
+    gap:8px;
+
+    margin-top:15px!important;
+
+    padding-bottom:25px;
+
+}
+
+
+
+.custom-modal-content .btn {
+
+    border-radius:18px!important;
+
+    padding:9px 14px!important;
+
+    font-size:.85rem!important;
+
+    font-weight:600!important;
+
+    transition:.25s;
+
+    box-shadow:0 3px 8px rgba(0,0,0,.08);
+
+}
+
+
+
+.custom-modal-content .btn:hover {
+
+    transform:translateY(-2px);
+
+}
+
+
+
+.btn-outline-primary {
+
+    background:#eff6ff!important;
+
+    color:#3b82f6!important;
+
+    border-color:#bfdbfe!important;
+
+}
+
+
+.btn-outline-warning {
+
+    background:#fffbeb!important;
+
+    color:#b45309!important;
+
+    border-color:#fde68a!important;
+
+}
+
+
+.btn-info {
+
+    background:#d1fae5!important;
+
+    color:#047857!important;
+
+    border-color:#a7f3d0!important;
+
+}
+
+
+.btn-success {
+
+    background:#dcfce7!important;
+
+    color:#15803d!important;
+
+    border-color:#bbf7d0!important;
+
+}
+
+
+.btn-danger {
+
+    background:#fee2e2!important;
+
+    color:#dc2626!important;
+
+    border-color:#fecaca!important;
+
+}
+
+
+
+
+/* =====================================
+   TEXTOS
+===================================== */
+
+
+.card-info-box p {
+
+    overflow-wrap:break-word;
+
+    word-break:break-word;
+
+}
+
+
+
+
+/* =====================================
+   TABLET
+===================================== */
+
+
+@media(min-width:768px){
+
+    .album-grid {
+
+        grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+
+        max-width:800px;
+
+    }
+
+}
+
+
+
+
+/* =====================================
+   MOBILE
+===================================== */
+
+
+@media(max-width:767px){
+
+
+    .album-content {
+
+        padding-top:20px;
+
+    }
+
+
+    .title-green,
+    .album-content h1 {
+
+        font-size:1.9rem!important;
+
+        line-height:1.25;
+
+        width:100%;
+
+        word-break:break-word;
+
+    }
+
+
+
+    .album-buttons {
+
+        flex-wrap:wrap;
+
+    }
+
+
+
+    .custom-modal-overlay {
+
+        align-items:flex-start;
+
+        padding-top:20px;
+
+        padding-bottom:40px;
+
+    }
+
+
+
+    .custom-modal-content {
+
+        margin-bottom:60px;
+
+    }
+
+
 }

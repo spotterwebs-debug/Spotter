@@ -12,8 +12,6 @@ function Album({ setSharedPhoto }) {
   const [cartasFiltradas, setCartasFiltradas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [vista, setVista] = useState('grid');
-
-  // ⭐ LIKES GLOBAL
   const [likes, setLikes] = useState([]);
 
   const fondosPorCategoria = {
@@ -26,13 +24,10 @@ function Album({ setSharedPhoto }) {
 
   const fondoActual = fondosPorCategoria[categoria] || '';
 
-  // 📦 CARGAR CARDS
   const fetchCartas = async () => {
     setLoading(true);
 
-    const {
-      data: { session }
-    } = await supabase.auth.getSession();
+    const { data: { session } } = await supabase.auth.getSession();
 
     if (!session) {
       setCartasFiltradas([]);
@@ -46,18 +41,15 @@ function Album({ setSharedPhoto }) {
       .eq('user_id', session.user.id)
       .eq('categoria', categoria);
 
-    if (!error) {
-      setCartasFiltradas(data || []);
-    }
+    if (!error) setCartasFiltradas(data || []);
 
     setLoading(false);
   };
 
-  // ❤️ CARGAR LIKES GLOBALES
   const fetchLikes = async () => {
     const { data } = await supabase
       .from('likes')
-      .select('card_id'); // 👈 optimizado
+      .select('card_id');
 
     setLikes(data || []);
   };
@@ -67,20 +59,6 @@ function Album({ setSharedPhoto }) {
     fetchLikes();
   }, [categoria]);
 
-  // 🔁 REFRESH cuando vuelves a la pestaña (IMPORTANTE)
-  useEffect(() => {
-    const handleFocus = () => {
-      fetchLikes();
-    };
-
-    window.addEventListener("focus", handleFocus);
-
-    return () => {
-      window.removeEventListener("focus", handleFocus);
-    };
-  }, []);
-
-  // ❤️ CONTADOR REAL GLOBAL
   const getLikesCount = (cardId) => {
     return likes.filter(
       like => String(like.card_id) === String(cardId)
@@ -91,11 +69,7 @@ function Album({ setSharedPhoto }) {
     const file = event.target.files[0];
 
     if (file) {
-      setSharedPhoto({
-        file,
-        categoria
-      });
-
+      setSharedPhoto({ file, categoria });
       navigate('/create');
     }
   };
@@ -107,22 +81,32 @@ function Album({ setSharedPhoto }) {
         '--bg': fondoActual ? `url(${fondoActual})` : 'none'
       }}
     >
+
       <div className="album-overlay"></div>
 
       <div className="container px-4 position-relative album-content">
 
-        {/* HEADER */}
+        {/* HEADER DEL ÁLBUM */}
         <div className="d-flex flex-column mb-5">
 
-          <div className="text-center mb-4">
-            <h1 className="display-4 fw-bold text-capitalize">
-              Álbum de <span className="text-warning">{categoria}</span>
+          {/* TÍTULO */}
+          <div className="text-center mb-3 w-100">
+            <h1 className="display-4 fw-bold text-capitalize title-green">
+              Álbum de {categoria}
             </h1>
-
-            <p className="fs-5 text-light opacity-75">
-              Explora, organiza y disfruta tus {categoria}
-            </p>
           </div>
+
+          {/* ICONOS */}
+          <div className="album-top-icons">
+            <button className="icon-btn" title="Desafío">
+              🎯
+            </button>
+
+            <button className="icon-btn" title="Listones">
+              🏆
+            </button>
+          </div>
+
 
           <input
             type="file"
@@ -132,100 +116,61 @@ function Album({ setSharedPhoto }) {
             style={{ display: 'none' }}
           />
 
+
+          {/* BOTONES */}
           <div className="album-buttons">
 
-            <div className="album-left">
+            <button
+              className="album-small-btn"
+              onClick={() => fileInputRef.current.click()}
+            >
+              📁 Subir
+            </button>
 
-              <button
-                className="album-big-btn blue"
-                onClick={() => fileInputRef.current.click()}
-              >
-                <div className="btn-icon">📁</div>
-                <div className="btn-info">
-                  <h3>Subir desde Galería</h3>
-                  <span>Añade tus {categoria}</span>
-                </div>
-                <div className="btn-arrow">❯</div>
-              </button>
 
-              <button
-                className="album-big-btn green"
-                onClick={() =>
-                  setVista(vista === 'grid' ? 'list' : 'grid')
-                }
-              >
-                <div className="btn-icon">👁️</div>
-                <div className="btn-info">
-                  <h3>Vista</h3>
-                  <span>
-                    {vista === 'grid'
-                      ? 'Cambiar a lista'
-                      : 'Cambiar a cuadrícula'}
-                  </span>
-                </div>
-                <div className="btn-arrow">❯</div>
-              </button>
-
-            </div>
-
-            <div className="album-right">
-
-              <button className="album-big-btn red">
-                <div className="btn-icon">🎯</div>
-                <div className="btn-info">
-                  <h3>Desafío</h3>
-                  <span>Acepta el reto</span>
-                </div>
-                <div className="btn-arrow">❯</div>
-              </button>
-
-              <button className="album-big-btn yellow">
-                <div className="btn-icon">📊</div>
-                <div className="btn-info">
-                  <h3>Listones</h3>
-                  <span>Ver estadísticas</span>
-                </div>
-                <div className="btn-arrow">❯</div>
-              </button>
-
-            </div>
+            <button
+              className="album-small-btn"
+              onClick={() => setVista(vista === 'grid' ? 'list' : 'grid')}
+            >
+              👁️ {vista === 'grid' ? 'Ver lista' : 'Ver cuadricula'}
+            </button>
 
           </div>
+
         </div>
 
-        {/* CONTENIDO */}
+
         {loading ? (
+
           <div className="text-center py-5">
             <div className="spinner-border text-warning"></div>
           </div>
+
         ) : (
-          <>
-            <div className={vista === 'grid' ? 'album-grid' : 'album-list'}>
-              {cartasFiltradas.map((carta) => (
-                <div key={carta.id} className="card-item-wrapper">
 
-                  <CardManager 
-                    carta={carta} 
-                    onUpdate={fetchCartas}
-                    likesCount={getLikesCount(carta.id)} 
-                  />
+          <div className={vista === 'grid' ? 'album-grid' : 'album-list'}>
 
-                </div>
-              ))}
-            </div>
+            {cartasFiltradas.map((carta) => (
 
-            <div className="text-center mt-5">
-              <button
-                className="btn btn-primary px-4 py-2 rounded-pill"
-                onClick={() => fileInputRef.current.click()}
+              <div
+                key={carta.id}
+                className="card-item-wrapper"
               >
-                ➕ Subir nueva card
-              </button>
-            </div>
-          </>
+                <CardManager
+                  carta={carta}
+                  onUpdate={fetchCartas}
+                  likesCount={getLikesCount(carta.id)}
+                />
+              </div>
+
+            ))}
+
+          </div>
+
         )}
 
       </div>
+
     </div>
   );
 }

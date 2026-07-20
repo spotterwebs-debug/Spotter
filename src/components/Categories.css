@@ -1,3 +1,4 @@
+/* Aseguramos que el botón sea un círculo perfecto */
 .image-btn {
   width: 100px; 
   height: 100px;
@@ -11,21 +12,20 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   padding: 0;
-  overflow: hidden; 
+  overflow: hidden; /* Esto es vital para que la imagen no se salga del círculo */
 }
 
+/* Forzamos a la imagen a ser el círculo completo */
+.btn-icon {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important; /* Recorta la imagen para llenar el espacio */
+  pointer-events: none;
+  display: block;
+}
+
+/* Hover effect */
 .image-btn:hover {
   transform: scale(1.1);
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-}
-
-.btn-icon {
-  width: 60%; 
-  height: auto;
-  pointer-events: none;
-  object-fit: contain; 
-}
-
-.row {
-  row-gap: 20px;
 }
