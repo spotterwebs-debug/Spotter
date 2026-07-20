@@ -12,7 +12,8 @@ import Login from './pages/Login';
 import EditCards from './components/EditCards';
 import Comunidad from './components/Comunidad';
 import Challenges from './components/Challenges';
-import Premios from './components/Premios'; // Importamos el nuevo componente
+import Premios from './components/Premios';
+import AdminDashboard from './components/AdminDashboard'; // 1. Importamos con el nombre correcto
 
 function App() {
   const [sharedPhoto, setSharedPhoto] = useState(null);
@@ -52,10 +53,15 @@ function App() {
             element={<Challenges />}
           />
 
-          {/* Nueva ruta para los premios */}
           <Route
             path="/premios"
             element={<Premios />}
+          />
+
+          {/* 2. Usamos AdminDashboard en la ruta */}
+          <Route
+            path="/admin"
+            element={<AdminDashboard />}
           />
 
           <Route 

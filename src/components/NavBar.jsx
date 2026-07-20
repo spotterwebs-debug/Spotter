@@ -9,15 +9,34 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 function Navbar() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const albumCategorias = ['perros', 'gatos', 'plantas', 'aves', 'paisajes'];
 
   useEffect(() => {
+    const fetchUserAndRole = async (sessionUser) => {
+      setUser(sessionUser ?? null);
+      if (sessionUser) {
+        // Consultamos el rol en la tabla profiles
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', sessionUser.id)
+          .single();
+
+        setIsAdmin(profile?.role === 'admin');
+      } else {
+        setIsAdmin(false);
+      }
+    };
+
+    // Sesión inicial
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
+      fetchUserAndRole(session?.user);
     });
 
+    // Escuchar cambios de autenticación
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+      fetchUserAndRole(session?.user);
     });
 
     return () => subscription.unsubscribe();
@@ -25,6 +44,7 @@ function Navbar() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    setIsAdmin(false);
     navigate('/login');
   };
 
@@ -45,7 +65,6 @@ function Navbar() {
           <img src="/logo.png" alt="Spotter" height="40" />
         </NavLink>
 
-       
         <div className="ms-auto me-2 d-flex align-items-center">
           {user ? (
             <span className="badge bg-success rounded-pill px-3 py-2 fw-semibold text-white">
@@ -73,7 +92,6 @@ function Navbar() {
               <NavLink className="nav-link" to="/comunidad" onClick={closeNavbar}>Comunidad</NavLink>
             </li>
             
-         
             {albumCategorias.map((cat) => (
               <li className="nav-item" key={cat}>
                 <NavLink className="nav-link text-capitalize" to={`/album/${cat}`} onClick={closeNavbar}>
@@ -81,6 +99,19 @@ function Navbar() {
                 </NavLink>
               </li>
             ))}
+
+            {/* ENLACE AL PANEL ADMIN (Solo si es admin) */}
+            {isAdmin && (
+              <li className="nav-item">
+                <NavLink 
+                  className="nav-link text-warning fw-bold" 
+                  to="/admin" 
+                  onClick={closeNavbar}
+                >
+                  ⚙️ Admin
+                </NavLink>
+              </li>
+            )}
             
             {/* BOTÓN LOGOUT */}
             {user && (
