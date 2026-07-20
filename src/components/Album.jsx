@@ -98,13 +98,23 @@ function Album({ setSharedPhoto }) {
 
           {/* ICONOS */}
           <div className="album-top-icons">
-            <button className="icon-btn" title="Desafío">
+
+            <button
+              className="icon-btn"
+              title="Desafío"
+              onClick={() => navigate(`/challenges/${categoria}`)}
+            >
               🎯
             </button>
 
-            <button className="icon-btn" title="Listones">
+            <button
+              className="icon-btn"
+              title="Listones"
+              onClick={() => navigate(`/badges/${categoria}`)}
+            >
               🏆
             </button>
+
           </div>
 
 
@@ -136,6 +146,7 @@ function Album({ setSharedPhoto }) {
             </button>
 
           </div>
+
 
         </div>
 

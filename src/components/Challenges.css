@@ -1,0 +1,64 @@
+.challenge-container {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.challenge-title {
+  color: #333;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.challenge-subtitle {
+  color: #2d3436;
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.challenge-desc {
+  color: #636e72;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.prize-box {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  border: 2px dashed #dfe6e9;
+}
+
+.participate-btn {
+  background: #00b894;
+  color: white;
+  border: none;
+  padding: 1rem 3rem;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.participate-btn:hover {
+  background: #009475;
+  transform: translateY(-2px);
+}
+
+/* Para centrar la carga y errores */
+.challenge-loading, .challenge-error {
+  text-align: center;
+  margin-top: 3rem;
+  font-size: 1.2rem;
+  color: #636e72;
+}
