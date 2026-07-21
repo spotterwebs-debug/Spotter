@@ -12,6 +12,9 @@ function Comunidad() {
   
   // Estado para el índice del mazo estilo swipe/carrusel de tarjetas
   const [currentIndex, setCurrentIndex] = useState(0);
+  
+  // Estado específico para las tarjetas de premios/desafíos públicos con su consigna
+  const [cardsPremiosComunidad, setCardsPremiosComunidad] = useState([]);
 
   useEffect(() => {
     cargarDatos();
@@ -46,6 +49,35 @@ function Comunidad() {
       .select("*");
 
     setLikes(likesData || []);
+
+    // Cargar tarjetas de premios de desafíos trayendo también la consigna asociada desde challenges
+    const { data: premiosData, error: premiosError } = await supabase
+      .from('user_challenges')
+      .select(`
+        card:card_id (*),
+        challenge:challenge_id (
+          titulo,
+          descripcion
+        )
+      `);
+
+    if (!premiosError && premiosData) {
+      const unicasCards = [];
+      const idsVistos = new Set();
+      
+      premiosData.forEach(item => {
+        if (item.card && item.card.is_public && !idsVistos.has(item.card.id)) {
+          idsVistos.add(item.card.id);
+          // Adjuntamos la información de la consigna directamente al objeto card
+          unicasCards.push({
+            ...item.card,
+            consigna: item.challenge?.titulo || item.challenge?.descripcion || "Desafío completado"
+          });
+        }
+      });
+
+      setCardsPremiosComunidad(unicasCards);
+    }
 
     setLoading(false);
   };
@@ -90,10 +122,10 @@ function Comunidad() {
   }
 };
 
-  // Funciones de navegación para el mazo swipe de tarjetas
+  // Funciones de navegación para el mazo swipe de tarjetas de premios
   const handleNext = () => {
-    if (posts.length === 0) return;
-    if (currentIndex < posts.length - 1) {
+    if (cardsPremiosComunidad.length === 0) return;
+    if (currentIndex < cardsPremiosComunidad.length - 1) {
       setCurrentIndex(prev => prev + 1);
     } else {
       setCurrentIndex(0); // Vuelve al inicio del mazo
@@ -101,11 +133,11 @@ function Comunidad() {
   };
 
   const handlePrev = () => {
-    if (posts.length === 0) return;
+    if (cardsPremiosComunidad.length === 0) return;
     if (currentIndex > 0) {
       setCurrentIndex(prev => prev - 1);
     } else {
-      setCurrentIndex(posts.length - 1); // Va al final del mazo
+      setCurrentIndex(cardsPremiosComunidad.length - 1); // Va al final del mazo
     }
   };
 
@@ -144,15 +176,15 @@ function Comunidad() {
         </h2>
 
         {/* =========================================================
-            NUEVO: Mazo de Figuritas / Swipe Deck de la Comunidad
+            NUEVO: Mazo de Figuritas / Swipe Deck de la Comunidad (Solo Premios con Consigna)
         ========================================================= */}
         <div className="swipe-deck-wrapper position-relative d-flex flex-column align-items-center justify-content-center mb-5">
           <h4 className="mb-3 text-white">✨ Mazo de desafios!</h4>
           
-          {posts.length > 0 ? (
+          {cardsPremiosComunidad.length > 0 ? (
             <div className="d-flex flex-column align-items-center w-100">
-              <div className="deck-container position-relative my-2" style={{ minHeight: '320px', width: '250px' }}>
-                {posts.map((card, index) => {
+              <div className="deck-container position-relative my-2" style={{ minHeight: '340px', width: '250px' }}>
+                {cardsPremiosComunidad.map((card, index) => {
                   const offset = index - currentIndex;
                   if (Math.abs(offset) > 2) return null;
 
@@ -164,7 +196,7 @@ function Comunidad() {
                       className={`swipe-card trading-card-final ${index === currentIndex ? 'active-card' : 'stacked-card'}`}
                       style={{
                         transform: `translateX(${offset * 15}px) translateY(${offset * 10}px) scale(${1 - Math.abs(offset) * 0.05})`,
-                        zIndex: posts.length - Math.abs(offset),
+                        zIndex: cardsPremiosComunidad.length - Math.abs(offset),
                         opacity: Math.abs(offset) > 1 ? 0.4 : 1,
                         transition: 'all 0.3s ease-in-out',
                         position: index === currentIndex ? 'relative' : 'absolute',
@@ -189,10 +221,17 @@ function Comunidad() {
                             <p className="text-muted small mb-1 text-capitalize">
                               {card?.raza || card?.lugar || card?.caracteristica || card?.categoria}
                             </p>
+                            {/* Información de la consigna del desafío */}
+                            <div className="bg-light p-1 rounded mt-1 border" style={{ fontSize: '0.65rem' }}>
+                              <span className="fw-bold text-dark">Consigna: </span>
+                              <span className="text-muted text-truncate d-inline-block w-100" style={{ verticalAlign: 'middle' }}>
+                                {card.consigna}
+                              </span>
+                            </div>
                           </div>
                           <div className="border-top pt-1 mt-1 d-flex justify-content-between align-items-center">
-                            <small className="text-success fw-bold text-truncate" style={{ fontSize: '0.7rem' }}>
-                              🌍 Comunidad
+                            <small className="text-warning fw-bold text-truncate" style={{ fontSize: '0.7rem' }}>
+                              🎖️ Premio Desafío
                             </small>
                             <button 
                               className="btn btn-sm p-0 border-0 bg-transparent"
@@ -218,7 +257,7 @@ function Comunidad() {
                   ⬅️
                 </button>
                 <span className="text-white fw-bold">
-                  {currentIndex + 1} / {posts.length}
+                  {currentIndex + 1} / {cardsPremiosComunidad.length}
                 </span>
                 <button 
                   className="btn btn-warning rounded-circle px-3 py-2 fw-bold"
@@ -229,7 +268,7 @@ function Comunidad() {
               </div>
             </div>
           ) : (
-            <p className="text-muted">No hay figuras públicas disponibles en este momento.</p>
+            <p className="text-muted">No hay premios de desafíos compartidos en este momento.</p>
           )}
         </div>
         {/* ========================================================= */}
