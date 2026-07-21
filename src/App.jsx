@@ -13,7 +13,7 @@ import EditCards from './components/EditCards';
 import Comunidad from './components/Comunidad';
 import Challenges from './components/Challenges';
 import Premios from './components/Premios';
-import AdminDashboard from './components/AdminDashboard'; // 1. Importamos con el nombre correcto
+import AdminDashboard from './components/AdminDashboard';
 
 function App() {
   const [sharedPhoto, setSharedPhoto] = useState(null);
@@ -53,12 +53,17 @@ function App() {
             element={<Challenges />}
           />
 
+          {/* Rutas de premios y listones */}
           <Route
             path="/premios"
             element={<Premios />}
           />
 
-          {/* 2. Usamos AdminDashboard en la ruta */}
+          <Route
+            path="/badges/:categoria"
+            element={<Premios />}
+          />
+
           <Route
             path="/admin"
             element={<AdminDashboard />}

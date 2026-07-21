@@ -9,46 +9,57 @@ const Premios = () => {
   useEffect(() => {
     const fetchPremios = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        setLoading(false);
+        return;
+      }
 
-      const { data } = await supabase
+      // Sintaxis segura para el Join en Supabase especificando la relación por foreign key
+      const { data, error } = await supabase
         .from('user_challenges')
         .select(`
           completed_at,
-          challenges (titulo, liston_color)
+          challenges:challenge_id (titulo, liston_color, categoria)
         `)
         .eq('user_id', user.id);
 
-      setPremios(data || []);
+      if (error) {
+        console.error("Error al cargar premios:", error);
+      } else {
+        setPremios(data || []);
+      }
+      
       setLoading(false);
     };
 
     fetchPremios();
   }, []);
 
-  if (loading) return <div>Cargando tus premios...</div>;
+  if (loading) return <div className="text-center py-5 text-white">Cargando tus premios...</div>;
 
   return (
-    <div className="premios-container">
-      <h2>Mis Logros</h2>
+    <div className="premios-container py-5 text-white">
+      <h2>Mis Logros y Listones</h2>
       
       <div className="listones-grid">
         {premios.length > 0 ? (
           premios.map((p, index) => (
             <div key={index} className="liston-card">
-              {/* Aquí usamos un emoji de listón. Si prefieres otro, puedes cambiarlo */}
               <div className="liston-icono">🎖️</div>
-              <p className="liston-titulo">{p.challenges.titulo}</p>
+              <p className="liston-titulo">{p.challenges?.titulo || 'Desafío completado'}</p>
+              {p.challenges?.categoria && (
+                <span className="badge bg-secondary text-capitalize">{p.challenges.categoria}</span>
+              )}
             </div>
           ))
         ) : (
-          <p>Aún no tienes listones. ¡Participa en los desafíos!</p>
+          <p>Aún no tienes listones. ¡Participa en los desafíos de tus categorías!</p>
         )}
       </div>
 
       {/* Copa Mensual */}
       {premios.length >= 4 && (
-        <div className="copa-mensual">
+        <div className="copa-mensual mt-4">
           <span className="copa-icono">🏆</span>
           <h3>¡Felicidades! Ganaste la Copa Mensual</h3>
         </div>

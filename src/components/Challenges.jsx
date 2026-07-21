@@ -1,18 +1,18 @@
 import { useEffect, useState, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'; // Agregamos useNavigate
+import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import Swal from 'sweetalert2';
 import "./Challenges.css";
 
 const Challenge = () => {
   const { categoria } = useParams();
-  const navigate = useNavigate(); // Hook para redirigir
+  const navigate = useNavigate();
   const categoriaFormateada = categoria ? categoria.charAt(0).toUpperCase() + categoria.slice(1) : null;
   const fileInputRef = useRef(null);
 
   const [challenge, setChallenge] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [yaParticipo, setYaParticipo] = useState(false); // Estado para bloquear botón
+  const [yaParticipo, setYaParticipo] = useState(false);
 
   useEffect(() => {
     const checkStatus = async () => {
@@ -63,7 +63,7 @@ const Challenge = () => {
         completed_at: new Date().toISOString()
       }]);
 
-      setYaParticipo(true); // Bloqueamos el botón localmente
+      setYaParticipo(true);
 
       Swal.fire({
         title: '¡Felicidades!',
@@ -72,7 +72,7 @@ const Challenge = () => {
         confirmButtonText: 'Ver mis listones'
       }).then((result) => {
         if (result.isConfirmed) {
-          navigate('/premios'); // Cambia '/premios' por la ruta donde muestras tus listones
+          navigate(`/badges/${categoria}`); // <-- Corregido para redirigir a los listones de esta categoría
         }
       });
 
