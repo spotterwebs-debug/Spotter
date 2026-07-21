@@ -30,6 +30,7 @@ function CardCreator({
 
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
+  const [rotation, setRotation] = useState(0); // Nuevo estado para la rotación manual
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [croppedImage, setCroppedImage] = useState(cardToEdit?.imagen_url || null);
 
@@ -69,7 +70,7 @@ function CardCreator({
 
       let fileToProcess = file;
 
-      if (file.type === 'image/heic' || file.type === 'image/heif') {
+      if (file.type === 'image/heic' || file.type === 'image/heif' || file.name.match(/\.(heic|heif)$/i)) {
         const converted = await heic2any({
           blob: file,
           toType: 'image/jpeg',
@@ -86,16 +87,17 @@ function CardCreator({
       } else {
         fileToProcess = await imageCompression(file, {
           maxSizeMB: 0.2,
-          maxWidthOrHeight: 400,
+          maxWidthOrHeight: 800,
           useWebWorker: true,
-          initialQuality: 0.4
+          initialQuality: 0.7
         });
       }
 
       const reader = new FileReader();
 
-      reader.onload = () => {
-        setPreviewUrl(reader.result);
+      reader.onload = (e) => {
+        setPreviewUrl(e.target.result);
+        setRotation(0); // Reiniciar rotación al cargar nueva imagen
 
         if (categoriaInicial) {
           setPaso('crop');
@@ -129,32 +131,71 @@ function CardCreator({
     setCroppedAreaPixels(pixels);
   }, []);
 
-  const generarImagenRecortada = async () => {
-    const image = new Image();
-    image.src = previewUrl;
+  // Función auxiliar para aplicar rotación en un canvas temporal antes de recortar
+  const createImage = (url) =>
+    new Promise((resolve, reject) => {
+      const image = new Image();
+      image.addEventListener('load', () => resolve(image));
+      image.addEventListener('error', (error) => reject(error));
+      image.setAttribute('crossOrigin', 'anonymous');
+      image.src = url;
+    });
 
-    await new Promise(r => (image.onload = r));
-
+  const getRotatedImage = async (imageSrc, rot = 0) => {
+    const image = await createImage(imageSrc);
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
 
-    canvas.width = croppedAreaPixels.width;
-    canvas.height = croppedAreaPixels.height;
+    const rotRad = (rot * Math.PI) / 180;
 
-    ctx.drawImage(
-      image,
-      croppedAreaPixels.x,
-      croppedAreaPixels.y,
-      croppedAreaPixels.width,
-      croppedAreaPixels.height,
-      0,
-      0,
-      croppedAreaPixels.width,
-      croppedAreaPixels.height
-    );
+    // Calcular dimensiones según los grados de rotación
+    const bBoxWidth =
+      Math.abs(Math.cos(rotRad) * image.width) + Math.abs(Math.sin(rotRad) * image.height);
+    const bBoxHeight =
+      Math.abs(Math.sin(rotRad) * image.width) + Math.abs(Math.cos(rotRad) * image.height);
 
-    setCroppedImage(canvas.toDataURL('image/jpeg', 0.8));
-    setPaso('formulario');
+    canvas.width = bBoxWidth;
+    canvas.height = bBoxHeight;
+
+    ctx.translate(bBoxWidth / 2, bBoxHeight / 2);
+    ctx.rotate(rotRad);
+    ctx.drawImage(image, -image.width / 2, -image.height / 2);
+
+    return canvas.toDataURL('image/jpeg', 0.9);
+  };
+
+  const generarImagenRecortada = async () => {
+    try {
+      Swal.fire({ title: 'Recortando...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+      // Primero aplicamos la rotación manual elegida por el usuario
+      const rotatedImageSrc = await getRotatedImage(previewUrl, rotation);
+      const image = await createImage(rotatedImageSrc);
+
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = croppedAreaPixels.width;
+      canvas.height = croppedAreaPixels.height;
+
+      ctx.drawImage(
+        image,
+        croppedAreaPixels.x,
+        croppedAreaPixels.y,
+        croppedAreaPixels.width,
+        croppedAreaPixels.height,
+        0,
+        0,
+        croppedAreaPixels.width,
+        croppedAreaPixels.height
+      );
+
+      setCroppedImage(canvas.toDataURL('image/jpeg', 0.8));
+      Swal.close();
+      setPaso('formulario');
+    } catch (error) {
+      Swal.fire('Error', 'No se pudo procesar el recorte', 'error');
+    }
   };
 
   const handleGuardarEnAlbum = async () => {
@@ -254,13 +295,21 @@ function CardCreator({
             image={previewUrl}
             crop={crop}
             zoom={zoom}
+            rotation={rotation}
             aspect={3 / 4}
             onCropChange={setCrop}
             onZoomChange={setZoom}
+            onRotationChange={setRotation}
             onCropComplete={onCropComplete}
           />
 
-          <div className="cropper-floating-buttons">
+          <div className="cropper-floating-buttons d-flex gap-2 flex-wrap justify-content-center">
+            <button className="btn btn-secondary" onClick={() => setRotation((prev) => (prev - 90) % 360)}>
+              ↺ Girar Izquierda
+            </button>
+            <button className="btn btn-secondary" onClick={() => setRotation((prev) => (prev + 90) % 360)}>
+              ↻ Girar Derecha
+            </button>
             <button className="btn btn-warning" onClick={generarImagenRecortada}>
               Cortar y Continuar
             </button>
