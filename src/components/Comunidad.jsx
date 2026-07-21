@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import CategoryCarousel from './CategoryCarousel';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import "./Comunidad.css";
 
 function Comunidad() {
+  const navigate = useNavigate();
 
   const [posts, setPosts] = useState([]);
   const [likes, setLikes] = useState([]);
@@ -15,6 +18,9 @@ function Comunidad() {
   
   // Estado específico para las tarjetas de premios/desafíos públicos con su consigna
   const [cardsPremiosComunidad, setCardsPremiosComunidad] = useState([]);
+
+  // Estado para la foto en grande (Lightbox / Zoom)
+  const [fotoEnGrande, setFotoEnGrande] = useState(null);
 
   useEffect(() => {
     cargarDatos();
@@ -83,44 +89,57 @@ function Comunidad() {
   };
 
   const toggleLike = async (cardId) => {
-
-  if (!user) return;
-
-  const existe = likes.find(
-    like =>
-      like.card_id == cardId &&
-      like.user_id == user?.id
-  );
-
-  if (existe) {
-
-    const { error } = await supabase
-      .from("likes")
-      .delete()
-      .eq("id", existe.id);
-
-    if (!error) {
-      setLikes(prev =>
-        prev.filter(like => like.id !== existe.id)
-      );
+    if (!user) {
+      Swal.fire({
+        icon: 'warning',
+        title: '¡Acceso denegado!',
+        text: 'Debes iniciar sesión para dar Me Gusta.',
+        confirmButtonText: 'Iniciar sesión',
+        confirmButtonColor: '#ffc107',
+        allowOutsideClick: false
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate('/login');
+        }
+      });
+      return;
     }
 
-  } else {
+    const existe = likes.find(
+      like =>
+        like.card_id == cardId &&
+        like.user_id == user?.id
+    );
 
-    const { data, error } = await supabase
-      .from("likes")
-      .insert({
-        card_id: cardId,
-        user_id: user?.id
-      })
-      .select()
-      .single();
+    if (existe) {
 
-    if (!error && data) {
-      setLikes(prev => [...prev, data]);
+      const { error } = await supabase
+        .from("likes")
+        .delete()
+        .eq("id", existe.id);
+
+      if (!error) {
+        setLikes(prev =>
+          prev.filter(like => like.id !== existe.id)
+        );
+      }
+
+    } else {
+
+      const { data, error } = await supabase
+        .from("likes")
+        .insert({
+          card_id: cardId,
+          user_id: user?.id
+        })
+        .select()
+        .single();
+
+      if (!error && data) {
+        setLikes(prev => [...prev, data]);
+      }
     }
-  }
-};
+  };
 
   // Funciones de navegación para el mazo swipe de tarjetas de premios
   const handleNext = () => {
@@ -176,7 +195,7 @@ function Comunidad() {
         </h2>
 
         {/* =========================================================
-            NUEVO: Mazo de Figuritas / Swipe Deck de la Comunidad (Solo Premios con Consigna)
+            Mazo de Figuritas / Swipe Deck de la Comunidad (Solo Premios con Consigna)
         ========================================================= */}
         <div className="swipe-deck-wrapper position-relative d-flex flex-column align-items-center justify-content-center mb-5">
           <h4 className="mb-3 text-white">✨ Mazo de desafios!</h4>
@@ -206,7 +225,16 @@ function Comunidad() {
                       }}
                     >
                       <div className="card-inner-border">
-                        <div className="card-image-box">
+                        <div 
+                          className="card-image-box"
+                          style={{ cursor: card?.imagen_url ? 'pointer' : 'default' }}
+                          onClick={() => {
+                            if (card?.imagen_url) {
+                              setFotoEnGrande(card.imagen_url);
+                            }
+                          }}
+                          title="Click para ver la foto en grande"
+                        >
                           {card?.imagen_url ? (
                             <img src={card.imagen_url} alt={card.nombre || 'Tarjeta'} />
                           ) : (
@@ -304,6 +332,7 @@ function Comunidad() {
           likes={likes}
           user={user}
           onToggleLike={toggleLike}
+          onImageClick={(url) => setFotoEnGrande(url)}
         />
 
         <CategoryCarousel
@@ -313,6 +342,7 @@ function Comunidad() {
           likes={likes}
           user={user}
           onToggleLike={toggleLike}
+          onImageClick={(url) => setFotoEnGrande(url)}
         />
 
         <CategoryCarousel
@@ -322,6 +352,7 @@ function Comunidad() {
           likes={likes}
           user={user}
           onToggleLike={toggleLike}
+          onImageClick={(url) => setFotoEnGrande(url)}
         />
 
         <CategoryCarousel
@@ -331,6 +362,7 @@ function Comunidad() {
           likes={likes}
           user={user}
           onToggleLike={toggleLike}
+          onImageClick={(url) => setFotoEnGrande(url)}
         />
 
         <CategoryCarousel
@@ -340,9 +372,37 @@ function Comunidad() {
           likes={likes}
           user={user}
           onToggleLike={toggleLike}
+          onImageClick={(url) => setFotoEnGrande(url)}
         />
 
       </div>
+
+      {/* =========================================================
+          MODAL DE FOTO EN GRANDE (LIGHTBOX)
+      ========================================================= */}
+      {fotoEnGrande && (
+        <div 
+          className="modal-foto-grande position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)', zIndex: 9999, cursor: 'zoom-out' }}
+          onClick={() => setFotoEnGrande(null)}
+        >
+          <div className="position-relative p-2 text-center" onClick={(e) => e.stopPropagation()}>
+            <button 
+              className="btn btn-dark position-absolute top-0 end-0 m-3 rounded-circle"
+              onClick={() => setFotoEnGrande(null)}
+              style={{ width: '40px', height: '40px', fontSize: '1.2rem', zIndex: 10000 }}
+            >
+              ✕
+            </button>
+            <img 
+              src={fotoEnGrande} 
+              alt="Foto en grande" 
+              className="img-fluid rounded shadow-lg"
+              style={{ maxHeight: '85vh', maxWidth: '90vw', objectFit: 'contain' }}
+            />
+          </div>
+        </div>
+      )}
 
     </div>
   );

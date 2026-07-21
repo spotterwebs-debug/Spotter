@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import CardManager from '../components/CardManager';
+import Swal from 'sweetalert2';
 import './Album.css';
 
 function Album({ setSharedPhoto }) {
@@ -55,8 +56,30 @@ function Album({ setSharedPhoto }) {
   };
 
   useEffect(() => {
-    fetchCartas();
-    fetchLikes();
+    const verificarSesionYCargar = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        Swal.fire({
+          icon: 'warning',
+          title: '¡Acceso denegado!',
+          text: 'Debes iniciar sesión para crear un álbum.',
+          confirmButtonText: 'Iniciar sesión',
+          confirmButtonColor: '#ffc107',
+          allowOutsideClick: false
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigate('/login');
+          }
+        });
+        return;
+      }
+
+      fetchCartas();
+      fetchLikes();
+    };
+
+    verificarSesionYCargar();
   }, [categoria]);
 
   const getLikesCount = (cardId) => {
