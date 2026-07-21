@@ -1,14 +1,12 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
-import Swal from 'sweetalert2';
 import "./Challenges.css";
 
 const Challenge = () => {
   const { categoria } = useParams();
   const navigate = useNavigate();
   const categoriaFormateada = categoria ? categoria.charAt(0).toUpperCase() + categoria.slice(1) : null;
-  const fileInputRef = useRef(null);
 
   const [challenge, setChallenge] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -19,17 +17,15 @@ const Challenge = () => {
       setLoading(true);
       const { data: { user } } = await supabase.auth.getUser();
       
-      // 1. Obtener el desafío activo
       const { data: chal } = await supabase
         .from('challenges')
         .select('*')
         .eq('categoria', categoriaFormateada)
         .eq('activo', true)
-        .single();
+        .maybeSingle();
       
       if (chal) {
         setChallenge(chal);
-        // 2. Verificar si ya participó
         if (user) {
           const { data: existing } = await supabase
             .from('user_challenges')
@@ -45,59 +41,35 @@ const Challenge = () => {
     if (categoriaFormateada) checkStatus();
   }, [categoriaFormateada]);
 
-  const handleFileUpload = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    Swal.fire({ title: 'Subiendo...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      const fileName = `${user.id}/${Date.now()}_${file.name}`;
-      
-      await supabase.storage.from('desafios').upload(fileName, file);
-
-      await supabase.from('user_challenges').insert([{ 
-        user_id: user.id, 
-        challenge_id: challenge.id,
-        completed_at: new Date().toISOString()
-      }]);
-
-      setYaParticipo(true);
-
-      Swal.fire({
-        title: '¡Felicidades!',
-        text: `Gracias por participar. ¡Has ganado el listón ${challenge.titulo}!`,
-        icon: 'success',
-        confirmButtonText: 'Ver mis listones'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate(`/badges/${categoria}`); // <-- Corregido para redirigir a los listones de esta categoría
-        }
-      });
-
-    } catch (err) {
-      Swal.fire('Error', 'No pudimos registrar tu participación.', 'error');
-    }
+  // Al hacer clic, redirigimos al creador de tarjetas oficial en /create
+  const handleParticiparClick = () => {
+    navigate('/create', { 
+      state: { 
+        challengeId: challenge.id, 
+        categoriaInicial: categoria 
+      } 
+    });
   };
 
   if (loading) return <div className="challenge-loading">Cargando...</div>;
-  if (!challenge) return <div>No se encontró el desafío.</div>;
+  if (!challenge) return <div className="text-center py-5">No se encontró un desafío activo para esta categoría.</div>;
 
   return (
-    <div className="challenge-container">
-      <h2>Desafío: {challenge.titulo}</h2>
-      <p>{challenge.descripcion}</p>
+    <div className="challenge-container py-5 text-center">
+      <h2 className="challenge-subtitle">Desafío: {challenge.titulo}</h2>
+      <p className="challenge-desc">{challenge.descripcion}</p>
       
       {yaParticipo ? (
-        <p className="status-msg">✅ Ya participaste. Espera la próxima semana para un nuevo desafío.</p>
+        <div className="alert alert-success d-inline-block mt-3">
+          ✅ Ya participaste en este desafío. ¡Revisa tu sección de Premios!
+        </div>
       ) : (
-        <button className="participate-btn" onClick={() => fileInputRef.current.click()}>
-          Participar
-        </button>
+        <div className="mt-4">
+          <button className="btn btn-warning btn-lg fw-bold" onClick={handleParticiparClick}>
+            🎨 ¡Participa!
+          </button>
+        </div>
       )}
-      
-      <input type="file" ref={fileInputRef} onChange={handleFileUpload} style={{ display: 'none' }} accept="image/*" />
     </div>
   );
 };

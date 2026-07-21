@@ -14,23 +14,27 @@ function CardCreator({
   cardToEdit = null
 }) {
   const navigate = useNavigate();
-
   const location = useLocation();
+  
   const fileFromCamera = location.state?.fileFromCamera;
+  const challengeId = location.state?.challengeId;
 
+  // 1. Si no hay archivo ni edición, pero sí categoría inicial o desafío, arrancamos pidiendo la foto
   const [paso, setPaso] = useState(
-    cardToEdit ? 'formulario' : 'cargando'
+    cardToEdit 
+      ? 'formulario' 
+      : (categoriaInicial || location.state?.categoriaInicial ? 'seleccionar_foto' : 'cargando')
   );
 
   const [previewUrl, setPreviewUrl] = useState(null);
 
   const [categoria, setCategoria] = useState(
-    cardToEdit?.categoria || categoriaInicial || ''
+    cardToEdit?.categoria || categoriaInicial || location.state?.categoriaInicial || ''
   );
 
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
-  const [rotation, setRotation] = useState(0); // Nuevo estado para la rotación manual
+  const [rotation, setRotation] = useState(0);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [croppedImage, setCroppedImage] = useState(cardToEdit?.imagen_url || null);
 
@@ -60,6 +64,8 @@ function CardCreator({
 
     if (cardToEdit) {
       setPaso('formulario');
+    } else if (categoriaInicial || location.state?.categoriaInicial) {
+      setPaso('seleccionar_foto');
     }
   }, [fileFromAlbum, fileFromCamera]);
 
@@ -97,9 +103,10 @@ function CardCreator({
 
       reader.onload = (e) => {
         setPreviewUrl(e.target.result);
-        setRotation(0); // Reiniciar rotación al cargar nueva imagen
+        setRotation(0);
 
-        if (categoriaInicial) {
+        // Si ya viene con categoría del desafío, saltamos directo al recorte ('crop')
+        if (categoriaInicial || location.state?.categoriaInicial) {
           setPaso('crop');
         } else {
           setPaso('categoria');
@@ -131,7 +138,6 @@ function CardCreator({
     setCroppedAreaPixels(pixels);
   }, []);
 
-  // Función auxiliar para aplicar rotación en un canvas temporal antes de recortar
   const createImage = (url) =>
     new Promise((resolve, reject) => {
       const image = new Image();
@@ -148,7 +154,6 @@ function CardCreator({
 
     const rotRad = (rot * Math.PI) / 180;
 
-    // Calcular dimensiones según los grados de rotación
     const bBoxWidth =
       Math.abs(Math.cos(rotRad) * image.width) + Math.abs(Math.sin(rotRad) * image.height);
     const bBoxHeight =
@@ -168,7 +173,6 @@ function CardCreator({
     try {
       Swal.fire({ title: 'Recortando...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
-      // Primero aplicamos la rotación manual elegida por el usuario
       const rotatedImageSrc = await getRotatedImage(previewUrl, rotation);
       const image = await createImage(rotatedImageSrc);
 
@@ -227,8 +231,90 @@ function CardCreator({
     }
   };
 
+  const handleGuardarParaDesafio = async () => {
+    try {
+      Swal.fire({ title: 'Guardando para el desafío...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+      const { data: { session } } = await supabase.auth.getSession();
+      const userId = session.user.id;
+
+      const payload = {
+        user_id: userId,
+        nombre: formValues.nombre,
+        categoria,
+        ...formValues,
+        imagen_url: croppedImage,
+        is_public: true
+      };
+
+      const { data: nuevaCard, error: cardError } = await supabase
+        .from('cards')
+        .insert([payload])
+        .select()
+        .single();
+
+      if (cardError) throw cardError;
+
+      const { error: challengeError } = await supabase
+        .from('user_challenges')
+        .insert([{
+          user_id: userId,
+          challenge_id: challengeId,
+          card_id: nuevaCard.id,
+          completed_at: new Date().toISOString()
+        }]);
+
+      if (challengeError) throw challengeError;
+
+      Swal.fire({
+        icon: 'success',
+        title: '¡Desafío completado!',
+        text: 'Tu tarjeta se guardó en tu álbum y ganaste el listón.',
+        timer: 2000,
+        showConfirmButton: false
+      });
+
+      navigate('/premios');
+
+    } catch (error) {
+      Swal.fire('Error', error.message || 'No se pudo registrar el desafío', 'error');
+    }
+  };
+
   return (
     <div className="card-creator-container container my-4 text-white">
+
+      {/* 2. Nuevo paso para seleccionar foto al venir desde el desafío */}
+      {paso === 'seleccionar_foto' && (
+        <div className="category-card text-center p-5">
+          <div className="category-header">
+            <div className="category-icon">📸</div>
+            <h2>Sube tu foto para el Desafío</h2>
+            <p>Selecciona una imagen de tu dispositivo para crear tu tarjeta participante.</p>
+          </div>
+
+          <div className="my-4">
+            <input 
+              type="file" 
+              accept="image/*" 
+              id="file-upload-challenge" 
+              className="d-none" 
+              onChange={(e) => {
+                if (e.target.files && e.target.files[0]) {
+                  procesarArchivo(e.target.files[0]);
+                }
+              }} 
+            />
+            <label htmlFor="file-upload-challenge" className="btn btn-warning btn-lg fw-bold px-4 py-3" style={{ cursor: 'pointer' }}>
+              📁 Elegir foto de la galería
+            </label>
+          </div>
+
+          <button className="btn btn-outline-danger mt-3" onClick={handleVolver}>
+            ← Cancelar
+          </button>
+        </div>
+      )}
 
       {paso === 'categoria' && (
         <div className="category-card">
@@ -394,9 +480,15 @@ function CardCreator({
               </>
             )}
 
-            <button className="btn btn-success w-100 mt-4" onClick={handleGuardarEnAlbum}>
-              💾 Guardar tarjeta
-            </button>
+            {challengeId ? (
+              <button className="btn btn-warning w-100 mt-4 fw-bold py-2" onClick={handleGuardarParaDesafio}>
+                🏆 Subir al Challenge y Ganar Listón
+              </button>
+            ) : (
+              <button className="btn btn-success w-100 mt-4" onClick={handleGuardarEnAlbum}>
+                💾 Guardar tarjeta
+              </button>
+            )}
 
             <button className="btn btn-outline-danger w-100 mt-2" onClick={handleVolver}>
               ← Cancelar

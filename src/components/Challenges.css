@@ -23,8 +23,9 @@
   margin-bottom: 0.5rem;
 }
 
-.challenge-desc {
-  color: #636e72;
+.challenge-desc,
+.challenge-container p.lead {
+  color: #2d3436 !important; /* Texto oscuro y contrastado para que se lea perfectamente */
   font-size: 1.1rem;
   margin-bottom: 2rem;
   line-height: 1.5;
