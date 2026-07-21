@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../supabaseClient';
 import CategoryCarousel from './CategoryCarousel';
 import { useNavigate } from 'react-router-dom';
@@ -16,11 +16,15 @@ function Comunidad() {
   // Estado para el índice del mazo estilo swipe/carrusel de tarjetas
   const [currentIndex, setCurrentIndex] = useState(0);
   
-  // Estado específico para las tarjetas de premios/desafíos públicos con su consigna
+  // Estado específico para las tarjetas de premios/desafíos públicos de TODO EL MUNDO
   const [cardsPremiosComunidad, setCardsPremiosComunidad] = useState([]);
 
   // Estado para la foto en grande (Lightbox / Zoom)
   const [fotoEnGrande, setFotoEnGrande] = useState(null);
+
+  // Referencias para detectar el gesto de arrastre (Swipe)
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
 
   useEffect(() => {
     cargarDatos();
@@ -29,14 +33,14 @@ function Comunidad() {
   const cargarDatos = async () => {
     setLoading(true);
 
-    // Usuario logueado
+    // Usuario logueado (solo para saber quién da like, no para filtrar el mazo)
     const {
       data: { user }
     } = await supabase.auth.getUser();
 
     setUser(user);
 
-    // Cards
+    // Cards generales
     const { data: cards, error } = await supabase
       .from("cards")
       .select("*")
@@ -56,7 +60,7 @@ function Comunidad() {
 
     setLikes(likesData || []);
 
-    // Cargar tarjetas de premios de desafíos trayendo también la consigna asociada desde challenges
+    // Cargar tarjetas de premios de desafíos de TODOS los usuarios (sin filtros de user_id)
     const { data: premiosData, error: premiosError } = await supabase
       .from('user_challenges')
       .select(`
@@ -72,9 +76,9 @@ function Comunidad() {
       const idsVistos = new Set();
       
       premiosData.forEach(item => {
+        // Validamos que la card exista y sea pública
         if (item.card && item.card.is_public && !idsVistos.has(item.card.id)) {
           idsVistos.add(item.card.id);
-          // Adjuntamos la información de la consigna directamente al objeto card
           unicasCards.push({
             ...item.card,
             consigna: item.challenge?.titulo || item.challenge?.descripcion || "Desafío completado"
@@ -112,7 +116,6 @@ function Comunidad() {
     );
 
     if (existe) {
-
       const { error } = await supabase
         .from("likes")
         .delete()
@@ -123,9 +126,7 @@ function Comunidad() {
           prev.filter(like => like.id !== existe.id)
         );
       }
-
     } else {
-
       const { data, error } = await supabase
         .from("likes")
         .insert({
@@ -160,6 +161,50 @@ function Comunidad() {
     }
   };
 
+  // Manejadores para gestos táctiles y de mouse (Swipe)
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    const distance = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 50;
+
+    if (distance > minSwipeDistance) {
+      handleNext();
+    } else if (distance < -minSwipeDistance) {
+      handlePrev();
+    }
+
+    touchStartX.current = 0;
+    touchEndX.current = 0;
+  };
+
+  const handleMouseDown = (e) => {
+    touchStartX.current = e.clientX;
+  };
+
+  const handleMouseUp = (e) => {
+    touchEndX.current = e.clientX;
+    if (!touchStartX.current || !touchEndX.current) return;
+    const distance = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 50;
+
+    if (distance > minSwipeDistance) {
+      handleNext();
+    } else if (distance < -minSwipeDistance) {
+      handlePrev();
+    }
+
+    touchStartX.current = 0;
+    touchEndX.current = 0;
+  };
+
   if (loading) {
     return (
       <div className="comunidad-loading">
@@ -187,7 +232,6 @@ function Comunidad() {
 
   return (
     <div className="comunidad-page">
-
       <div className="container comunidad-content">
 
         <h2 className="comunidad-title">
@@ -195,14 +239,22 @@ function Comunidad() {
         </h2>
 
         {/* =========================================================
-            Mazo de Figuritas / Swipe Deck de la Comunidad (Solo Premios con Consigna)
+            Mazo de Desafíos de la Comunidad (Global)
         ========================================================= */}
         <div className="swipe-deck-wrapper position-relative d-flex flex-column align-items-center justify-content-center mb-5">
-          <h4 className="mb-3 text-white">✨ Mazo de desafios!</h4>
+          <h4 className="mb-3 text-white">✨ ¡Mazo de desafíos de la comunidad!</h4>
           
           {cardsPremiosComunidad.length > 0 ? (
             <div className="d-flex flex-column align-items-center w-100">
-              <div className="deck-container position-relative my-2" style={{ minHeight: '340px', width: '250px' }}>
+              <div 
+                className="deck-container position-relative my-2" 
+                style={{ minHeight: '340px', width: '250px', touchAction: 'pan-y' }}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+                onMouseDown={handleMouseDown}
+                onMouseUp={handleMouseUp}
+              >
                 {cardsPremiosComunidad.map((card, index) => {
                   const offset = index - currentIndex;
                   if (Math.abs(offset) > 2) return null;
@@ -221,14 +273,16 @@ function Comunidad() {
                         position: index === currentIndex ? 'relative' : 'absolute',
                         top: 0,
                         left: 0,
-                        width: '100%'
+                        width: '100%',
+                        cursor: 'grab'
                       }}
                     >
                       <div className="card-inner-border">
                         <div 
                           className="card-image-box"
                           style={{ cursor: card?.imagen_url ? 'pointer' : 'default' }}
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation();
                             if (card?.imagen_url) {
                               setFotoEnGrande(card.imagen_url);
                             }
@@ -249,7 +303,6 @@ function Comunidad() {
                             <p className="text-muted small mb-1 text-capitalize">
                               {card?.raza || card?.lugar || card?.caracteristica || card?.categoria}
                             </p>
-                            {/* Información de la consigna del desafío */}
                             <div className="bg-light p-1 rounded mt-1 border" style={{ fontSize: '0.65rem' }}>
                               <span className="fw-bold text-dark">Consigna: </span>
                               <span className="text-muted text-truncate d-inline-block w-100" style={{ verticalAlign: 'middle' }}>
@@ -263,7 +316,10 @@ function Comunidad() {
                             </small>
                             <button 
                               className="btn btn-sm p-0 border-0 bg-transparent"
-                              onClick={() => toggleLike(card.id)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleLike(card.id);
+                              }}
                               style={{ fontSize: '1rem' }}
                             >
                               {isLiked ? '❤️' : '🤍'}
@@ -302,27 +358,11 @@ function Comunidad() {
         {/* ========================================================= */}
 
         <div className="community-nav">
-
-          <button className="cat-perros" onClick={() => scrollTo("perros")}>
-            🐶 Perros
-          </button>
-
-          <button className="cat-gatos" onClick={() => scrollTo("gatos")}>
-            🐱 Gatos
-          </button>
-
-          <button className="cat-plantas" onClick={() => scrollTo("plantas")}>
-            🌿 Plantas
-          </button>
-
-          <button className="cat-aves" onClick={() => scrollTo("aves")}>
-            🐦 Aves
-          </button>
-
-          <button className="cat-paisajes" onClick={() => scrollTo("paisajes")}>
-            🏞️ Paisajes
-          </button>
-
+          <button className="cat-perros" onClick={() => scrollTo("perros")}>🐶 Perros</button>
+          <button className="cat-gatos" onClick={() => scrollTo("gatos")}>🐱 Gatos</button>
+          <button className="cat-plantas" onClick={() => scrollTo("plantas")}>🌿 Plantas</button>
+          <button className="cat-aves" onClick={() => scrollTo("aves")}>🐦 Aves</button>
+          <button className="cat-paisajes" onClick={() => scrollTo("paisajes")}>🏞️ Paisajes</button>
         </div>
 
         <CategoryCarousel
@@ -377,9 +417,7 @@ function Comunidad() {
 
       </div>
 
-      {/* =========================================================
-          MODAL DE FOTO EN GRANDE (LIGHTBOX)
-      ========================================================= */}
+      {/* MODAL DE FOTO EN GRANDE (LIGHTBOX) */}
       {fotoEnGrande && (
         <div 
           className="modal-foto-grande position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
