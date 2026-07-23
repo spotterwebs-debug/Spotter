@@ -1,7 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 
 function LatestCaptures() {
+
+  const navigate = useNavigate();
+
   const [captures, setCaptures] = useState([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
@@ -119,6 +123,7 @@ function LatestCaptures() {
           <p className="text-muted">Aún no hay capturas para mostrar.</p>
         ) : (
           <div className="swipe-deck-wrapper position-relative d-flex flex-column align-items-center justify-content-center my-3">
+
             <div className="d-flex flex-column align-items-center w-100">
 
               <div
@@ -160,7 +165,9 @@ function LatestCaptures() {
                         width: '100%',
                       }}
                     >
+
                       <div className="card-inner-border">
+
                         <div className="card-image-box">
                           {card?.imagen_url ? (
                             <img
@@ -173,8 +180,8 @@ function LatestCaptures() {
                             </div>
                           )}
                         </div>
+                                                <div className="card-info-box p-2 d-flex flex-column justify-content-between">
 
-                        <div className="card-info-box p-2 d-flex flex-column justify-content-between">
                           <div>
                             <h6 className="mb-0 fw-bold text-dark text-truncate">
                               {card?.nombre || 'Sin nombre'}
@@ -196,14 +203,21 @@ function LatestCaptures() {
                               🌍 Comunidad
                             </small>
                           </div>
+
                         </div>
+
                       </div>
+
                     </div>
                   );
                 })}
+
               </div>
-                            {/* Controles de deslizamiento */}
+
+
+              {/* Controles de deslizamiento */}
               <div className="d-flex gap-3 mt-3 align-items-center">
+
                 <button
                   className="btn btn-outline-danger rounded-circle px-3 py-2 fw-bold shadow-sm"
                   onClick={handlePrev}
@@ -211,9 +225,11 @@ function LatestCaptures() {
                   ⬅️
                 </button>
 
+
                 <span className="text-dark fw-bold">
                   {currentIndex + 1} / {captures.length}
                 </span>
+
 
                 <button
                   className="btn btn-danger rounded-circle px-3 py-2 fw-bold shadow-sm"
@@ -221,13 +237,31 @@ function LatestCaptures() {
                 >
                   ➡️
                 </button>
+
               </div>
 
+
+              {/* NUEVO BOTÓN: Ir a Comunidad */}
+              <div className="mt-4">
+
+                <button
+                  className="btn btn-success px-4 py-2 rounded-pill fw-semibold shadow"
+                  onClick={() => navigate('/comunidad')}
+                >
+                  <i className="bi bi-people-fill me-2"></i>
+                  Ver comunidad
+                </button>
+
+              </div>
+
+
             </div>
+
           </div>
         )}
 
       </div>
+
     </section>
   );
 }
