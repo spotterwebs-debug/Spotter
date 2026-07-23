@@ -50,7 +50,7 @@ function Album({ setSharedPhoto }) {
   const fetchLikes = async () => {
     const { data } = await supabase
       .from('likes')
-      .select('card_id');
+      .select('card_id, user_id');
 
     setLikes(data || []);
   };
@@ -169,7 +169,6 @@ function Album({ setSharedPhoto }) {
             </button>
 
           </div>
-
 
         </div>
 
