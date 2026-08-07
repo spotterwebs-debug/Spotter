@@ -4,9 +4,7 @@
 
 .comunidad-page{
     min-height:100vh;
-
     padding:40px 20px;
-
     background:linear-gradient(
         135deg,
         #74d1bb 0%,
@@ -14,9 +12,7 @@
         #67c9d8 55%,
         #68bde0 100%
     );
-
     position:relative;
-
     overflow:hidden;
 }
 
@@ -25,29 +21,20 @@
 =====================================================*/
 
 .comunidad-page::before{
-
     content:"";
-
     position:absolute;
-
     inset:0;
-
     pointer-events:none;
-
     background:
-
         radial-gradient(circle at 15% 15%,
         rgba(255,255,255,.22) 0%,
         transparent 30%),
-
         radial-gradient(circle at 85% 20%,
         rgba(255,255,255,.15) 0%,
         transparent 28%),
-
         radial-gradient(circle at 70% 80%,
         rgba(255,255,255,.18) 0%,
         transparent 35%),
-
         radial-gradient(circle at 10% 90%,
         rgba(255,255,255,.12) 0%,
         transparent 28%);
@@ -58,9 +45,7 @@
 =====================================================*/
 
 .comunidad-content{
-
     position:relative;
-
     z-index:2;
 }
 
@@ -69,46 +54,114 @@
 =====================================================*/
 
 .comunidad-title{
-
     color:white;
-
     font-size:2rem;
-
     font-weight:700;
-
     text-align:center;
-
     margin-bottom:35px;
-
     text-shadow:
         0 3px 10px rgba(0,0,0,.18);
 }
 
 /*=====================================================
- CARGANDO
+ CARGANDO (CENTRADO ABSOLUTO ANTI-CONFLICTOS)
 =====================================================*/
 
-.comunidad-loading{
-
-    min-height:100vh;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    color:white;
-
-    font-size:1.2rem;
-
-    font-weight:600;
-
-    background:linear-gradient(
+.comunidad-loading {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 9999999 !important;
+    background: linear-gradient(
         135deg,
-        #74d1bb,
-        #68bde0
-    );
+        #74d1bb 0%,
+        #88dcc5 22%,
+        #67c9d8 55%,
+        #68bde0 100%
+    ) !important;
+    padding: 20px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    transform: none !important;
+}
+
+.comunidad-loading-box {
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 24px;
+    width: 100%;
+    max-width: 340px;
+    padding: 30px 25px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25),
+                inset 0 0 15px rgba(255, 255, 255, 0.2);
+    animation: flotarCaja 3s ease-in-out infinite;
+    margin: auto !important;
+}
+
+@keyframes flotarCaja {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+.comunidad-loading-box h3 {
+    color: #fff;
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.loading-phrase {
+    color: #ffffff;
+    font-size: 1.05rem;
+    font-weight: 600;
+    min-height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.progress-bar-custom {
+    width: 100%;
+    height: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    overflow: hidden;
+    padding: 2px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ffc107, #ff9800);
+    border-radius: 20px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 6px rgba(255, 152, 0, 0.5);
+}
+
+.comunidad-loading-box small {
+    color: rgba(255, 255, 255, 0.95) !important;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-top: 15px !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
 /*=====================================================
@@ -121,7 +174,6 @@ Categorias
     align-items:center;
     flex-wrap:wrap;           /* 👈 permite salto en móvil */
     gap:16px;                 /* 👈 distancia entre botones */
-
     margin:20px 0 35px;
 }
 
@@ -185,125 +237,67 @@ Categorias
  MODAL COMUNIDAD
 =====================================================*/
 
-
 .community-modal-overlay{
-
     position:fixed;
-
     inset:0;
-
     background:rgba(0,0,0,.85);
-
     z-index:999999;
-
     display:flex;
-
     justify-content:center;
-
     align-items:center;
-
     padding:20px;
-
     backdrop-filter:blur(5px);
-
 }
-
-
 
 .community-modal-content{
-
     background:white;
-
     border-radius:22px;
-
     padding:15px;
-
     width:90vw;
-
     max-width:330px;
-
     max-height:90vh;
-
     overflow-y:auto;
-
     display:flex;
-
     flex-direction:column;
-
     align-items:center;
-
     box-shadow:
         0 15px 40px rgba(0,0,0,.35);
-
 }
-
 
 /* Card dentro del modal */
-
 .community-modal-content 
 .trading-card-final{
-
     width:290px!important;
-
     height:410px!important;
-
     transform:none!important;
-
 }
-
 
 /* botón cerrar */
-
 .community-close-btn{
-
     margin-top:12px;
-
     border:none;
-
     border-radius:25px;
-
     padding:9px 25px;
-
     background:#2d5a27;
-
     color:white;
-
     font-weight:700;
-
     cursor:pointer;
-
     transition:.25s;
-
 }
-
 
 .community-close-btn:hover{
-
     transform:scale(1.05);
-
 }
 
-
 /* MOBILE */
-
 @media(max-width:767px){
-
-
     .community-modal-overlay{
-
         align-items:flex-start;
-
         padding-top:25px;
-
         overflow-y:auto;
-
     }
-
 
     .community-modal-content{
-
         margin-bottom:40px;
-
     }
-
 }

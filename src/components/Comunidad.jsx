@@ -5,6 +5,16 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import "./Comunidad.css";
 
+// Frases divertidas para la pantalla de carga
+const MENSAJES_CARGA = [
+  "Maquillando mascotas...",
+  "Preparando las aves para la foto...",
+  "Buscando los mejores paisajes...",
+  "Acariciando a los gatitos...",
+  "Ordenando el mazo de desafíos...",
+  "Casi listo en la Comunidad Spotter..."
+];
+
 function Comunidad() {
   const navigate = useNavigate();
 
@@ -13,18 +23,34 @@ function Comunidad() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   
-  // Estado para el índice del mazo estilo swipe/carrusel de tarjetas
-  const [currentIndex, setCurrentIndex] = useState(0);
+  // Estados para la animación de carga divertida
+  const [mensajeIndex, setMensajeIndex] = useState(0);
+  const [progreso, setProgreso] = useState(10);
   
-  // Estado específico para las tarjetas de premios/desafíos públicos de TODO EL MUNDO
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [cardsPremiosComunidad, setCardsPremiosComunidad] = useState([]);
-
-  // Estado para la foto en grande (Lightbox / Zoom)
   const [fotoEnGrande, setFotoEnGrande] = useState(null);
 
-  // Referencias para detectar el gesto de arrastre (Swipe)
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
+
+  // Efecto para rotar los mensajes y simular progreso mientras carga
+  useEffect(() => {
+    if (!loading) return;
+
+    const intervaloMensaje = setInterval(() => {
+      setMensajeIndex((prev) => (prev + 1) % MENSAJES_CARGA.length);
+    }, 1500);
+
+    const intervaloProgreso = setInterval(() => {
+      setProgreso((prev) => (prev < 90 ? prev + 10 : prev));
+    }, 400);
+
+    return () => {
+      clearInterval(intervaloMensaje);
+      clearInterval(intervaloProgreso);
+    };
+  }, [loading]);
 
   useEffect(() => {
     cargarDatos();
@@ -32,64 +58,69 @@ function Comunidad() {
 
   const cargarDatos = async () => {
     setLoading(true);
+    setProgreso(10);
 
-    // Usuario logueado (solo para saber quién da like, no para filtrar el mazo)
-    const {
-      data: { user }
-    } = await supabase.auth.getUser();
+    try {
+      const [
+        authResponse,
+        cardsResponse,
+        likesResponse,
+        premiosResponse
+      ] = await Promise.all([
+        supabase.auth.getUser(),
+        supabase
+          .from("cards")
+          .select("*")
+          .eq("is_public", true)
+          .order("created_at", { ascending: false }),
+        supabase
+          .from("likes")
+          .select("*"),
+        supabase
+          .from('user_challenges')
+          .select(`
+            card:card_id (*),
+            challenge:challenge_id (
+              titulo,
+              descripcion
+            )
+          `)
+          .limit(30)
+      ]);
 
-    setUser(user);
+      setUser(authResponse.data?.user || null);
 
-    // Cards generales
-    const { data: cards, error } = await supabase
-      .from("cards")
-      .select("*")
-      .eq("is_public", true)
-      .order("created_at", { ascending: false });
+      if (!cardsResponse.error) {
+        setPosts(cardsResponse.data || []);
+      }
 
-    if (error) {
-      console.error(error);
-    } else {
-      setPosts(cards || []);
+      if (!likesResponse.error) {
+        setLikes(likesResponse.data || []);
+      }
+
+      if (!premiosResponse.error && premiosResponse.data) {
+        const unicasCards = [];
+        const idsVistos = new Set();
+        
+        premiosResponse.data.forEach(item => {
+          if (item.card && item.card.is_public && !idsVistos.has(item.card.id)) {
+            idsVistos.add(item.card.id);
+            unicasCards.push({
+              ...item.card,
+              consigna: item.challenge?.titulo || item.challenge?.descripcion || "Desafío completado"
+            });
+          }
+        });
+
+        setCardsPremiosComunidad(unicasCards);
+      }
+
+    } catch (error) {
+      console.error("Error cargando datos de la comunidad:", error);
+    } finally {
+      setProgreso(100);
+      setTimeout(() => setLoading(false), 300);
     }
-
-    // Likes
-    const { data: likesData } = await supabase
-      .from("likes")
-      .select("*");
-
-    setLikes(likesData || []);
-
-    // Cargar tarjetas de premios de desafíos de TODOS los usuarios (sin filtros de user_id)
-    const { data: premiosData, error: premiosError } = await supabase
-      .from('user_challenges')
-      .select(`
-        card:card_id (*),
-        challenge:challenge_id (
-          titulo,
-          descripcion
-        )
-      `);
-
-    if (!premiosError && premiosData) {
-      const unicasCards = [];
-      const idsVistos = new Set();
-      
-      premiosData.forEach(item => {
-        // Validamos que la card exista y sea pública
-        if (item.card && item.card.is_public && !idsVistos.has(item.card.id)) {
-          idsVistos.add(item.card.id);
-          unicasCards.push({
-            ...item.card,
-            consigna: item.challenge?.titulo || item.challenge?.descripcion || "Desafío completado"
-          });
-        }
-      });
-
-      setCardsPremiosComunidad(unicasCards);
-    }
-
-    setLoading(false);
   };
 
   const toggleLike = async (cardId) => {
@@ -142,13 +173,12 @@ function Comunidad() {
     }
   };
 
-  // Funciones de navegación para el mazo swipe de tarjetas de premios
   const handleNext = () => {
     if (cardsPremiosComunidad.length === 0) return;
     if (currentIndex < cardsPremiosComunidad.length - 1) {
       setCurrentIndex(prev => prev + 1);
     } else {
-      setCurrentIndex(0); // Vuelve al inicio del mazo
+      setCurrentIndex(0);
     }
   };
 
@@ -157,11 +187,10 @@ function Comunidad() {
     if (currentIndex > 0) {
       setCurrentIndex(prev => prev - 1);
     } else {
-      setCurrentIndex(cardsPremiosComunidad.length - 1); // Va al final del mazo
+      setCurrentIndex(cardsPremiosComunidad.length - 1);
     }
   };
 
-  // Manejadores para gestos táctiles y de mouse (Swipe)
   const handleTouchStart = (e) => {
     touchStartX.current = e.touches[0].clientX;
   };
@@ -207,13 +236,19 @@ function Comunidad() {
 
   if (loading) {
     return (
-      <div className="comunidad-loading">
-        Cargando comunidad...
+      <div className="comunidad-loading-container">
+        <div className="comunidad-loading-box">
+          <h3 className="mb-3 text-white">🐾 Spotter</h3>
+          <p className="loading-phrase">{MENSAJES_CARGA[mensajeIndex]}</p>
+          <div className="progress-bar-custom">
+            <div className="progress-fill" style={{ width: `${progreso}%` }}></div>
+          </div>
+          <small className="text-muted mt-3 d-block">{progreso}%</small>
+        </div>
       </div>
     );
   }
 
-  // Agrupar cards por categoría
   const categorias = {
     perros: posts.filter(post => post.categoria === "perros"),
     gatos: posts.filter(post => post.categoria === "gatos"),
@@ -222,7 +257,6 @@ function Comunidad() {
     paisajes: posts.filter(post => post.categoria === "paisajes")
   };
 
-  // Scroll a la categoría
   const scrollTo = (id) => {
     document.getElementById(id)?.scrollIntoView({
       behavior: "smooth",
@@ -238,9 +272,6 @@ function Comunidad() {
           Comunidad Spotter
         </h2>
 
-        {/* =========================================================
-            Mazo de Desafíos de la Comunidad (Global)
-        ========================================================= */}
         <div className="swipe-deck-wrapper position-relative d-flex flex-column align-items-center justify-content-center mb-5">
           <h4 className="mb-3 text-white">✨ ¡Mazo de desafíos de la comunidad!</h4>
           
@@ -332,7 +363,6 @@ function Comunidad() {
                 })}
               </div>
 
-              {/* Controles de deslizamiento */}
               <div className="d-flex gap-3 mt-3 align-items-center">
                 <button 
                   className="btn btn-outline-warning rounded-circle px-3 py-2 fw-bold"
@@ -355,7 +385,6 @@ function Comunidad() {
             <p className="text-muted">No hay premios de desafíos compartidos en este momento.</p>
           )}
         </div>
-        {/* ========================================================= */}
 
         <div className="community-nav">
           <button className="cat-perros" onClick={() => scrollTo("perros")}>🐶 Perros</button>
@@ -417,7 +446,6 @@ function Comunidad() {
 
       </div>
 
-      {/* MODAL DE FOTO EN GRANDE (LIGHTBOX) */}
       {fotoEnGrande && (
         <div 
           className="modal-foto-grande position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
