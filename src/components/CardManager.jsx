@@ -1,6 +1,11 @@
 // src/components/CardManager.jsx
 
-import React, { useState, useRef } from 'react';
+import React, {
+  useState,
+  useRef,
+  useEffect
+} from 'react';
+
 import { useNavigate } from 'react-router-dom';
 import TradingCard from './TradingCard';
 import Swal from 'sweetalert2';
@@ -13,7 +18,20 @@ function CardManager({
   likesCount = 0
 }) {
 
+  // ==========================================
+  // ESTADOS
+  // ==========================================
+
   const [showModal, setShowModal] =
+    useState(false);
+
+  const [shareFile, setShareFile] =
+    useState(null);
+
+  const [shareReady, setShareReady] =
+    useState(false);
+
+  const [preparingShare, setPreparingShare] =
     useState(false);
 
   const cardRef =
@@ -157,7 +175,375 @@ function CardManager({
 
 
   // ==========================================
-  // DESCARGAR CARD PARA COMPARTIR
+  // PREPARAR CARD PARA COMPARTIR
+  // ==========================================
+
+  useEffect(() => {
+
+    let cancelado = false;
+
+
+    const prepararCard = async () => {
+
+      if (!showModal) {
+
+        setShareFile(null);
+        setShareReady(false);
+        setPreparingShare(false);
+
+        return;
+      }
+
+
+      try {
+
+        setPreparingShare(true);
+        setShareReady(false);
+        setShareFile(null);
+
+
+        // Esperamos dos frames para asegurar
+        // que la card completa esté renderizada.
+        await new Promise((resolve) => {
+
+          requestAnimationFrame(() => {
+
+            requestAnimationFrame(
+              resolve
+            );
+
+          });
+
+        });
+
+
+        if (
+          cancelado ||
+          !cardRef.current
+        ) {
+          return;
+        }
+
+
+        // ======================================
+        // CONVERTIR CARD A PNG
+        // ======================================
+
+        const dataUrl =
+          await toPng(
+            cardRef.current,
+            {
+              cacheBust:
+                true,
+
+              pixelRatio:
+                2
+            }
+          );
+
+
+        if (cancelado) {
+          return;
+        }
+
+
+        // ======================================
+        // CONVERTIR PNG A FILE
+        // ======================================
+
+        const response =
+          await fetch(
+            dataUrl
+          );
+
+
+        const blob =
+          await response.blob();
+
+
+        const file =
+          new File(
+            [blob],
+
+            `spotter-${carta.nombre || 'card'}.png`,
+
+            {
+              type:
+                'image/png'
+            }
+          );
+
+
+        if (cancelado) {
+          return;
+        }
+
+
+        setShareFile(
+          file
+        );
+
+        setShareReady(
+          true
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          'Error preparando card para compartir:',
+          error
+        );
+
+
+        setShareFile(
+          null
+        );
+
+        setShareReady(
+          false
+        );
+
+
+      } finally {
+
+        if (!cancelado) {
+
+          setPreparingShare(
+            false
+          );
+
+        }
+
+      }
+
+    };
+
+
+    prepararCard();
+
+
+    return () => {
+
+      cancelado =
+        true;
+
+    };
+
+  }, [
+    showModal,
+    carta.id,
+    carta.nombre
+  ]);
+
+
+  // ==========================================
+  // COMPARTIR CARD NATIVAMENTE
+  // ==========================================
+
+  const handleCompartirCard = async () => {
+
+    // ========================================
+    // CARD TODAVÍA NO PREPARADA
+    // ========================================
+
+    if (
+      !shareReady ||
+      !shareFile
+    ) {
+
+      await Swal.fire({
+
+        icon:
+          'info',
+
+        title:
+          'Preparando tu Card',
+
+        text:
+          'Esperá un instante y volvé a tocar Compartir Card.',
+
+        timer:
+          1500,
+
+        showConfirmButton:
+          false
+
+      });
+
+
+      return;
+    }
+
+
+    // ========================================
+    // CONTEXTO NO SEGURO
+    // ========================================
+
+    if (!window.isSecureContext) {
+
+      await Swal.fire({
+
+        icon:
+          'info',
+
+        title:
+          'Compartir no disponible',
+
+        text:
+          'La función Compartir Card necesita abrirse desde la versión segura HTTPS de Spotter.',
+
+        confirmButtonText:
+          'Entendido'
+
+      });
+
+
+      return;
+    }
+
+
+    // ========================================
+    // NAVEGADOR SIN WEB SHARE
+    // ========================================
+
+    if (!navigator.share) {
+
+      await Swal.fire({
+
+        icon:
+          'info',
+
+        title:
+          'Compartir no disponible',
+
+        text:
+          'Este navegador no permite abrir el menú nativo de compartir. Podés usar Descargar Card.',
+
+        confirmButtonText:
+          'Entendido'
+
+      });
+
+
+      return;
+    }
+
+
+    try {
+
+      const puedeCompartirArchivo =
+        !navigator.canShare ||
+        navigator.canShare({
+          files:
+            [shareFile]
+        });
+
+
+      // ======================================
+      // EL NAVEGADOR NO ACEPTA ARCHIVOS
+      // ======================================
+
+      if (!puedeCompartirArchivo) {
+
+        await Swal.fire({
+
+          icon:
+            'info',
+
+          title:
+            'No se puede compartir esta imagen directamente',
+
+          html: `
+            <p>
+              Tu navegador no permite enviar la Card
+              como archivo desde Spotter.
+            </p>
+
+            <p>
+              Probá abrir Spotter directamente en
+              <strong>Chrome o Safari</strong>.
+            </p>
+
+            <p>
+              También podés usar
+              <strong>📥 Descargar Card</strong>.
+            </p>
+          `,
+
+          confirmButtonText:
+            'Entendido'
+
+        });
+
+
+        return;
+      }
+
+
+      // ======================================
+      // ABRIR MENÚ NATIVO
+      // ======================================
+
+      await navigator.share({
+
+        title:
+          `Mi Card Spotter${
+            carta.nombre
+              ? ` - ${carta.nombre}`
+              : ''
+          }`,
+
+        text:
+          '📸 Mirá mi nueva Card de Spotter',
+
+        files:
+          [shareFile]
+
+      });
+
+
+    } catch (error) {
+
+      // El usuario simplemente cerró
+      // el menú de compartir.
+      if (
+        error?.name ===
+        'AbortError'
+      ) {
+
+        return;
+
+      }
+
+
+      console.error(
+        'Error navigator.share:',
+        error
+      );
+
+
+      await Swal.fire({
+
+        icon:
+          'error',
+
+        title:
+          'No se pudo compartir',
+
+        text:
+          error?.message ||
+          'El navegador no pudo abrir el menú para compartir la Card.'
+
+      });
+
+    }
+
+  };
+
+
+  // ==========================================
+  // DESCARGAR CARD
   // ==========================================
 
   const handleDescargarParaCompartir = async () => {
@@ -184,7 +570,10 @@ function CardManager({
           cardRef.current,
           {
             cacheBust:
-              true
+              true,
+
+            pixelRatio:
+              2
           }
         );
 
@@ -212,7 +601,7 @@ function CardManager({
           '¡Card descargada!',
 
         text:
-          'Ya se guardó en tu dispositivo. Subí la imagen a tus historias de Instagram o envíala por WhatsApp.',
+          'Ya se guardó en tu dispositivo. Podés compartirla desde tu galería.',
 
         icon:
           'success',
@@ -247,7 +636,7 @@ function CardManager({
 
 
   // ==========================================
-  // PUBLICAR EN COMUNIDAD
+  // COMPARTIR EN COMUNIDAD
   // ==========================================
 
   const handlePublicarEnComunidad = async () => {
@@ -258,7 +647,7 @@ function CardManager({
         await Swal.fire({
 
           title:
-            '¿Publicar en Comunidad? 🌐',
+            '¿Compartir en Comunidad? 🌐',
 
           text:
             'Tu card será visible para los demás usuarios de Spotter.',
@@ -270,7 +659,7 @@ function CardManager({
             true,
 
           confirmButtonText:
-            'Sí, publicar',
+            'Sí, compartir',
 
           cancelButtonText:
             'Cancelar',
@@ -309,7 +698,9 @@ function CardManager({
       }
 
 
-      setShowModal(false);
+      setShowModal(
+        false
+      );
 
 
       await onUpdate();
@@ -321,7 +712,7 @@ function CardManager({
           'success',
 
         title:
-          '¡Publicada! 🌐',
+          '¡Compartida! 🌐',
 
         text:
           'Tu card ya está disponible en la Comunidad Spotter.',
@@ -338,7 +729,7 @@ function CardManager({
     } catch (error) {
 
       console.error(
-        'Error publicando en comunidad:',
+        'Error compartiendo en comunidad:',
         error
       );
 
@@ -349,7 +740,7 @@ function CardManager({
           'error',
 
         title:
-          'No se pudo publicar',
+          'No se pudo compartir',
 
         text:
           'Ocurrió un error al compartir la card en la comunidad.'
@@ -435,7 +826,9 @@ function CardManager({
     }
 
 
-    setShowModal(false);
+    setShowModal(
+      false
+    );
 
 
     await onUpdate();
@@ -474,7 +867,9 @@ function CardManager({
 
       <div className="album-card-block">
 
+
         <div
+
           onClick={() =>
             setShowModal(true)
           }
@@ -486,6 +881,7 @@ function CardManager({
         >
 
           <TradingCard
+
             datos={
               carta
             }
@@ -501,18 +897,20 @@ function CardManager({
             showLikes={
               true
             }
+
           />
 
         </div>
 
 
         {/* ======================================
-            PUBLICAR DESDE LA CUADRÍCULA
+            COMPARTIR EN COMUNIDAD DESDE GRID
         ====================================== */}
 
         {!carta.is_public ? (
 
           <button
+
             type="button"
 
             className="album-publish-btn"
@@ -550,6 +948,7 @@ function CardManager({
       {showModal && (
 
         <div
+
           className="custom-modal-overlay"
 
           onClick={() =>
@@ -558,6 +957,7 @@ function CardManager({
         >
 
           <div
+
             className="custom-modal-content"
 
             onClick={(e) =>
@@ -565,9 +965,12 @@ function CardManager({
             }
           >
 
-            {/* CARD COMPLETA */}
+            {/* =================================
+                CARD COMPLETA
+            ================================= */}
 
             <div
+
               ref={
                 cardRef
               }
@@ -576,6 +979,7 @@ function CardManager({
             >
 
               <TradingCard
+
                 datos={
                   carta
                 }
@@ -591,6 +995,7 @@ function CardManager({
                 enableImageZoom={
                   true
                 }
+
               />
 
             </div>
@@ -603,7 +1008,10 @@ function CardManager({
             <div className="d-grid gap-2 mt-3">
 
 
+              {/* EDITAR */}
+
               <button
+
                 className="btn btn-outline-primary fw-bold"
 
                 onClick={
@@ -616,7 +1024,10 @@ function CardManager({
               </button>
 
 
+              {/* CAMBIAR CATEGORÍA */}
+
               <button
+
                 className="btn btn-outline-warning fw-bold"
 
                 onClick={
@@ -629,7 +1040,42 @@ function CardManager({
               </button>
 
 
+              {/* =================================
+                  COMPARTIR CARD
+              ================================= */}
+
               <button
+
+                type="button"
+
+                className="btn btn-primary fw-bold"
+
+                onClick={
+                  handleCompartirCard
+                }
+
+                disabled={
+                  preparingShare ||
+                  !shareReady
+                }
+              >
+
+                {preparingShare
+                  ? '⏳ Preparando Card...'
+                  : '📤 Compartir Card'
+                }
+
+              </button>
+
+
+              {/* =================================
+                  DESCARGAR CARD
+              ================================= */}
+
+              <button
+
+                type="button"
+
                 className="btn btn-info text-white fw-bold"
 
                 onClick={
@@ -637,18 +1083,19 @@ function CardManager({
                 }
               >
 
-                📥 Descarga tu card para compartirla
+                📥 Descargar Card
 
               </button>
 
 
               {/* =================================
-                  PUBLICAR EN COMUNIDAD
+                  COMPARTIR EN COMUNIDAD
               ================================= */}
 
               {!carta.is_public && (
 
                 <button
+
                   className="btn btn-success fw-bold"
 
                   onClick={
@@ -663,7 +1110,9 @@ function CardManager({
               )}
 
 
-              {/* SI YA ESTÁ PUBLICADA */}
+              {/* =================================
+                  YA COMPARTIDA
+              ================================= */}
 
               {carta.is_public && (
 
@@ -683,6 +1132,7 @@ function CardManager({
               ================================= */}
 
               <button
+
                 className="btn btn-danger fw-bold"
 
                 onClick={
