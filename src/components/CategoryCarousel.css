@@ -1,135 +1,426 @@
-/* ===== SECCIÓN ===== */
+/* ==========================================
+   SECCIÓN
+========================================== */
 
-.category-section{
-    margin-bottom: 55px;
+.category-section {
+  margin-bottom: 60px;
 }
 
 
-/* ===== TÍTULO ===== */
+/* ==========================================
+   TÍTULO
+========================================== */
 
-.category-title{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+.category-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-    margin-bottom:18px;
+  margin-bottom: 20px;
 
-    color:white;
-    font-size:1.6rem;
-    font-weight:700;
+  color: white;
 
-    border-left:5px solid #ffd54f;
-    padding-left:14px;
+  font-size: 1.55rem;
+  font-weight: 700;
+
+  border-left: 5px solid #ffd54f;
+
+  padding-left: 14px;
+}
+
+.category-count {
+  background: #ffd54f;
+
+  color: #222;
+
+  padding: 4px 12px;
+
+  border-radius: 30px;
+
+  font-size: .9rem;
+  font-weight: 700;
 }
 
 
-.category-count{
+/* ==========================================
+   SWIPER
+========================================== */
 
-    background:#ffd54f;
-    color:#222;
+.category-section .swiper {
+  overflow: visible;
 
-    padding:4px 12px;
+  padding:
+    4px
+    4px
+    18px;
+}
 
-    border-radius:30px;
+.category-section .swiper-wrapper {
+  align-items: flex-start;
+}
 
-    font-size:.9rem;
-    font-weight:700;
+.category-section .swiper-slide {
+  height: auto;
+
+  display: flex;
+  justify-content: center;
+}
+
+
+/* ==========================================
+   CARD COMUNIDAD
+   MISMO ESTILO QUE ALBUM-GRID
+========================================== */
+
+.community-grid-card {
+  width: 100%;
+  min-width: 0;
+
+  cursor: pointer;
+
+  transition:
+    transform .2s ease;
+}
+
+.community-grid-card:hover {
+  transform:
+    translateY(-4px);
+}
+
+
+/* MINI CARD */
+
+.community-grid-card .trading-card-final {
+  width: 100% !important;
+
+  height: 220px !important;
+
+  padding: 0 !important;
+
+  overflow: hidden;
+
+  cursor: pointer;
+
+  margin: 0 !important;
+
+  transform: none !important;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, .12);
+}
+
+
+/* OCULTAMOS INFORMACIÓN
+   IGUAL QUE ALBUM GRID */
+
+.community-grid-card .card-info-box,
+.community-grid-card .card-dato-curioso,
+.community-grid-card .card-actions {
+  display: none !important;
+}
+
+
+/* ==========================================
+   FOTO
+========================================== */
+
+.community-grid-card .card-image-box {
+  width: 100% !important;
+  height: 100% !important;
+
+  margin: 0 !important;
+
+  border-radius: 0 !important;
+}
+
+.community-grid-card .card-image-box img {
+  width: 100% !important;
+  height: 100% !important;
+
+  display: block;
+
+  object-fit: cover !important;
+}
+
+
+/* ==========================================
+   FLECHAS
+========================================== */
+
+.category-section .swiper-button-next,
+.category-section .swiper-button-prev {
+  color: #ffd54f;
+
+  background:
+    rgba(0, 0, 0, .48);
+
+  width: 42px;
+  height: 42px;
+
+  border-radius: 50%;
+
+  backdrop-filter:
+    blur(6px);
+
+  box-shadow:
+    0 6px 16px rgba(0,0,0,.18);
+
+  transition:
+    transform .25s ease,
+    background .25s ease;
+}
+
+.category-section .swiper-button-next:hover,
+.category-section .swiper-button-prev:hover {
+  transform:
+    scale(1.1);
+
+  background:
+    rgba(0,0,0,.65);
+}
+
+.category-section .swiper-button-next::after,
+.category-section .swiper-button-prev::after {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 768px) {
+
+  .category-section {
+    margin-bottom: 50px;
+  }
+
+  .category-title {
+    font-size: 1.3rem;
+  }
+
+  .category-section .swiper-button-next,
+  .category-section .swiper-button-prev {
+    display: none;
+  }
 
 }
 
 
-/* ===== SWIPER ===== */
+/* ==========================================
+   MOBILE PEQUEÑO
+========================================== */
 
-.category-section .swiper{
+@media (max-width: 480px) {
 
-    overflow:visible;
+  .category-title {
+    font-size: 1.15rem;
+  }
 
-    padding-bottom:15px;
+  .community-grid-card .trading-card-final {
+    height: 220px !important;
+  }
+
+}
+
+/* ==========================================
+   MODAL CARD COMPLETA
+========================================== */
+
+.community-card-modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 99999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background:
+    rgba(0, 0, 0, .82);
+
+  backdrop-filter:
+    blur(6px);
+}
+
+
+/* ==========================================
+   CONTENEDOR MODAL
+========================================== */
+
+.community-card-modal {
+  position: relative;
+
+  width: 100%;
+  max-width: 350px;
+
+  padding: 22px 18px 16px;
+
+  border-radius: 24px;
+
+  background: white;
+
+  box-shadow:
+    0 25px 60px
+    rgba(0, 0, 0, .35);
+
+  animation:
+    communityCardAppear
+    .25s ease;
+}
+
+
+@keyframes communityCardAppear {
+
+  from {
+    opacity: 0;
+
+    transform:
+      scale(.94)
+      translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      scale(1)
+      translateY(0);
+  }
 
 }
 
 
-/* Separación entre tarjetas */
+/* ==========================================
+   BOTÓN CERRAR
+========================================== */
 
-.category-section .swiper-slide{
+.community-card-modal-close {
+  position: absolute;
 
-    height:auto;
+  top: 8px;
+  right: 8px;
 
-    display:flex;
-    justify-content:center;
+  z-index: 5;
 
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background:
+    rgba(15, 23, 42, .88);
+
+  color: white;
+
+  font-size: 1rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform .2s ease;
 }
 
 
-/* ===== FLECHAS ===== */
-
-.swiper-button-next,
-.swiper-button-prev{
-
-    color:#ffd54f;
-
-    background:rgba(0,0,0,.45);
-
-    width:42px;
-    height:42px;
-
-    border-radius:50%;
-
-    backdrop-filter:blur(6px);
-
-    transition:.25s;
-
+.community-card-modal-close:hover {
+  transform:
+    scale(1.08);
 }
 
 
-.swiper-button-next:hover,
-.swiper-button-prev:hover{
+/* ==========================================
+   CARD COMPLETA
+========================================== */
 
-    transform:scale(1.12);
+.community-full-card {
+  display: flex;
 
+  justify-content: center;
+  align-items: center;
 }
 
 
-.swiper-button-next::after,
-.swiper-button-prev::after{
+.community-full-card .trading-card-final {
+  width: 290px !important;
 
-    font-size:18px;
-    font-weight:bold;
+  height: 410px !important;
 
+  transform: none !important;
+
+  margin: 0 !important;
 }
 
 
-/* ===== MÓVIL ===== */
+/* VOLVEMOS A MOSTRAR LA INFORMACIÓN */
 
-@media (max-width:768px){
-
-    .swiper-button-next,
-    .swiper-button-prev{
-
-        display:none;
-
-    }
-
-    .category-title{
-
-        font-size:1.3rem;
-
-    }
-
+.community-full-card .card-info-box,
+.community-full-card .card-dato-curioso,
+.community-full-card .card-actions {
+  display: block !important;
 }
 
 
-/* ===== EFECTO TARJETA ===== */
+/* ==========================================
+   AYUDA
+========================================== */
 
-.category-section .trading-card-final{
+.community-card-photo-help {
+  margin:
+    12px
+    0
+    0;
 
-    transition:transform .25s ease;
+  text-align: center;
 
+  color: #64748b;
+
+  font-size: .78rem;
 }
 
 
-.category-section .trading-card-final:hover{
+/* ==========================================
+   MOBILE
+========================================== */
 
-    transform:translateY(-6px);
+@media (max-width: 480px) {
+
+  .community-card-modal-overlay {
+    padding:
+      14px;
+  }
+
+
+  .community-card-modal {
+    max-width:
+      330px;
+
+    padding:
+      20px
+      12px
+      14px;
+  }
+
+
+  .community-full-card .trading-card-final {
+    width:
+      280px !important;
+
+    height:
+      400px !important;
+  }
 
 }

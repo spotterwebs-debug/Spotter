@@ -1,130 +1,397 @@
+/* =========================================
+   FOOTER PRINCIPAL
+========================================= */
+
 .app-footer {
   position: fixed;
+
   bottom: 0;
   left: 0;
+
   width: 100%;
+
   display: flex;
   flex-direction: column;
+
   gap: 8px;
+
   padding: 10px 8px;
-  background: linear-gradient(90deg, #0f172a, #0b3d2e);
-  border-top: 2px solid rgba(39, 174, 96, 0.4);
+
+  background:
+    linear-gradient(
+      90deg,
+      #0f172a,
+      #0b3d2e
+    );
+
+  border-top:
+    2px solid rgba(39, 174, 96, 0.4);
+
   z-index: 999;
+
   backdrop-filter: blur(10px);
+
   box-sizing: border-box;
 }
 
-/* =========================
-   FILA 1 (BOTONES SUPERIORES)
-========================= */
+
+/* =========================================
+   FILA 1 - BOTONES SUPERIORES
+========================================= */
+
 .footer-main {
   display: flex;
+
   flex-direction: row;
   flex-wrap: nowrap;
+
   gap: 2px;
+
   width: 100%;
+
+  position: relative;
+
+  /*
+    Los botones quedan por encima
+    de la fila donde está el logo.
+  */
+  z-index: 10;
+
+  /*
+    Un poco de aire entre categorías
+    y logo.
+  */
+  margin-bottom: 10px;
 }
+
 
 .footer-main .footer-btn {
   flex: 1;
+
   min-width: 0;
+
   white-space: nowrap;
+
   overflow: hidden;
+
   text-overflow: ellipsis;
+
   padding: 12px 4px;
+
   font-size: 0.7rem;
 }
 
-/* =========================
-   FILA 2 (LOGO + BOTÓN MODAL)
-========================= */
+
+/* =========================================
+   FILA 2 - LOGO + QUÉ ES SPOTTER
+========================================= */
+
 .footer-bottom {
   display: flex;
+
   justify-content: space-between;
   align-items: center;
+
   width: 100%;
-  padding: 0 4px;
+
+  height: 52px;
+
+  padding: 0 8px;
+
   box-sizing: border-box;
-  height: 45px;
+
+  position: relative;
+
+  z-index: 1;
 }
+
+
+/* =========================================
+   LOGO / BOTÓN INICIO
+========================================= */
 
 .footer-logo {
+  /*
+    Esta es la zona REAL clickeable.
+    Aunque la imagen sea más grande,
+    este Link no invade Perros.
+  */
+
+  position: relative;
+
   display: flex;
+
   align-items: center;
   justify-content: flex-start;
-  height: 100%;
+
+  width: 115px;
+  height: 50px;
+
+  flex-shrink: 0;
+
   cursor: pointer;
+
   text-decoration: none;
+
+  z-index: 1;
 }
+
+
+/* =========================================
+   IMAGEN DEL LOGO
+========================================= */
 
 .footer-logo img {
-  height: 150px; 
-  width: auto; 
-  max-width: 100px;
+  /*
+    El logo puede verse grande
+    sin agrandar el área clickeable.
+  */
+
+  position: absolute;
+
+  left: 0;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  width: 115px;
+  height: auto;
+
+  max-width: none;
+
   object-fit: contain;
+
   display: block;
+
+  /*
+    La imagen no captura el click.
+    El click lo recibe .footer-logo.
+  */
+
+  pointer-events: none;
 }
 
-/* =========================
+
+/* =========================================
    BOTONES BASE
-========================= */
+========================================= */
+
 .footer-btn {
   display: flex;
+
   align-items: center;
   justify-content: center;
+
   text-decoration: none;
+
   font-family: 'Michroma', sans-serif;
+
   color: white;
+
   border-radius: 8px;
-  transition: all 0.25s ease;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  transition:
+    transform 0.25s ease,
+    filter 0.25s ease;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.08);
 }
+
 
 .footer-btn:hover {
   transform: translateY(-2px);
+
   filter: brightness(1.2);
+
+  color: white;
 }
 
-/* COLORES */
-.footer-btn.dogs { background: rgba(59, 130, 246, 0.35); }
-.footer-btn.cats { background: rgba(245, 158, 11, 0.35); }
-.footer-btn.plants { background: rgba(34, 197, 94, 0.35); }
-.footer-btn.birds { background: rgba(236, 72, 153, 0.35); }
-.footer-btn.landscapes { background: rgba(52, 211, 153, 0.35); }
-.footer-btn.community { background: rgba(168, 85, 247, 0.35); }
+
+/* =========================================
+   COLORES DE CATEGORÍAS
+========================================= */
+
+.footer-btn.dogs {
+  background:
+    rgba(59, 130, 246, 0.35);
+}
+
+
+.footer-btn.cats {
+  background:
+    rgba(245, 158, 11, 0.35);
+}
+
+
+.footer-btn.plants {
+  background:
+    rgba(34, 197, 94, 0.35);
+}
+
+
+.footer-btn.birds {
+  background:
+    rgba(236, 72, 153, 0.35);
+}
+
+
+.footer-btn.landscapes {
+  background:
+    rgba(52, 211, 153, 0.35);
+}
+
+
+.footer-btn.community {
+  background:
+    rgba(168, 85, 247, 0.35);
+}
+
+
+/* =========================================
+   BOTÓN "QUÉ ES SPOTTER"
+========================================= */
 
 .footer-btn.info {
-  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  background:
+    linear-gradient(
+      135deg,
+      #27ae60,
+      #2ecc71
+    );
+
   padding: 8px 16px;
+
   font-size: 0.65rem;
+
   text-align: center;
+
+  border: none;
+
+  cursor: pointer;
+
+  white-space: nowrap;
 }
 
-/* =========================
-   RESPONSIVE (MOBILE)
-========================= */
+
+/* =========================================
+   RESPONSIVE - MOBILE
+========================================= */
+
 @media (max-width: 600px) {
+
   body {
-    padding-bottom: 120px; 
+    /*
+      Espacio para que el footer fijo
+      no tape el contenido.
+    */
+
+    padding-bottom: 130px;
   }
+
+
+  .app-footer {
+    gap: 6px;
+
+    padding:
+      8px
+      6px;
+  }
+
+
+  /* =====================================
+     BOTONES SUPERIORES
+  ===================================== */
 
   .footer-main {
     gap: 1px;
+
+    z-index: 10;
+
+    /*
+      Separación entre botones
+      y logo.
+    */
+
+    margin-bottom: 9px;
   }
+
 
   .footer-main .footer-btn {
     font-size: 0.4rem;
-    padding: 7px 2px;
+
+    padding:
+      7px
+      2px;
+
     letter-spacing: -0.3px;
   }
-  
-  .footer-logo img {
-    height: 80px;
-    max-width: 70px;
+
+
+  /* =====================================
+     FILA INFERIOR
+  ===================================== */
+
+  .footer-bottom {
+    height: 50px;
+
+    padding:
+      0
+      5px;
+
+    z-index: 1;
   }
+
+
+  /* =====================================
+     LOGO MOBILE
+  ===================================== */
+
+  .footer-logo {
+    /*
+      Zona clickeable controlada.
+    */
+
+    width: 105px;
+
+    height: 48px;
+
+    flex-shrink: 0;
+  }
+
+
+  .footer-logo img {
+    /*
+      Logo grande visualmente.
+    */
+
+    width: 105px;
+
+    height: auto;
+
+    max-width: none;
+
+    left: 0;
+
+    top: 50%;
+
+    transform:
+      translateY(-50%);
+
+    pointer-events: none;
+  }
+
+
+  /* =====================================
+     QUÉ ES SPOTTER
+  ===================================== */
 
   .footer-btn.info {
     font-size: 0.5rem;
-    padding: 4px 6px;
+
+    padding:
+      5px
+      8px;
   }
+
 }
