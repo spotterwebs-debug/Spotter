@@ -1,0 +1,1057 @@
+.foto-dia-section {
+  width: 100%;
+  padding: 48px 18px;
+  display: flex;
+  justify-content: center;
+}
+
+.foto-dia-card {
+  width: 100%;
+  max-width: 720px;
+  padding: 38px;
+  border-radius: 32px;
+
+  position: relative;
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(56, 189, 248, .16),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at bottom left,
+      rgba(45, 212, 191, .14),
+      transparent 35%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, .98),
+      rgba(240, 253, 250, .98)
+    );
+
+  border: 1px solid rgba(15, 118, 110, .12);
+
+  box-shadow:
+    0 28px 70px rgba(15, 23, 42, .14);
+
+  text-align: center;
+}
+
+/* ==========================================
+   DECORACIÓN
+========================================== */
+
+.foto-dia-card::before {
+  content: "";
+
+  position: absolute;
+  width: 170px;
+  height: 170px;
+
+  border-radius: 50%;
+
+  top: -70px;
+  right: -55px;
+
+  background:
+    rgba(45, 212, 191, .10);
+
+  filter: blur(4px);
+
+  pointer-events: none;
+}
+
+.foto-dia-card::after {
+  content: "";
+
+  position: absolute;
+  width: 130px;
+  height: 130px;
+
+  border-radius: 50%;
+
+  bottom: -55px;
+  left: -45px;
+
+  background:
+    rgba(56, 189, 248, .10);
+
+  pointer-events: none;
+}
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.foto-dia-header {
+  position: relative;
+  z-index: 2;
+
+  margin-bottom: 28px;
+}
+
+.foto-dia-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 7px 14px;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(45, 212, 191, .16),
+      rgba(56, 189, 248, .16)
+    );
+
+  font-size: .72rem;
+  letter-spacing: 1.8px;
+  font-weight: 800;
+
+  color: #0f766e;
+
+  margin-bottom: 12px;
+}
+
+.foto-dia-header h2 {
+  margin: 0;
+
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  font-weight: 850;
+
+  color: #0f172a;
+
+  letter-spacing: -.04em;
+}
+
+.foto-dia-header p {
+  margin: 12px auto 0;
+
+  max-width: 520px;
+
+  color: #64748b;
+
+  font-size: .98rem;
+  line-height: 1.6;
+}
+
+/* ==========================================
+   AVENTURA
+========================================== */
+
+.foto-dia-aventura {
+  position: relative;
+  z-index: 2;
+
+  padding: 20px 22px;
+
+  border-radius: 22px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(204, 251, 241, .92),
+      rgba(224, 242, 254, .92)
+    );
+
+  border: 1px solid rgba(15, 118, 110, .10);
+
+  margin-bottom: 18px;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.85);
+}
+
+.foto-dia-aventura span {
+  display: block;
+
+  font-size: .74rem;
+  font-weight: 800;
+
+  color: #64748b;
+
+  text-transform: uppercase;
+  letter-spacing: 1.3px;
+}
+
+.foto-dia-aventura strong {
+  display: block;
+
+  margin-top: 6px;
+
+  font-size: 1.55rem;
+
+  color: #0f172a;
+
+  text-transform: capitalize;
+}
+
+/* ==========================================
+   INTENTOS
+========================================== */
+
+.foto-dia-intentos {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  gap: 10px;
+
+  margin-bottom: 26px;
+
+  color: #475569;
+
+  font-size: .88rem;
+}
+
+.foto-dia-intentos > strong {
+  color: #0f172a;
+}
+
+.foto-dia-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.intento-dot {
+  width: 12px;
+  height: 12px;
+
+  border-radius: 50%;
+
+  background: #cbd5e1;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(15, 23, 42, .05);
+}
+
+.intento-dot.activo {
+  background: #10b981;
+
+  box-shadow:
+    0 0 0 4px rgba(16, 185, 129, .13),
+    0 4px 10px rgba(16, 185, 129, .18);
+}
+
+/* ==========================================
+   UPLOAD
+========================================== */
+
+.foto-dia-upload-area {
+  position: relative;
+  z-index: 2;
+
+  padding: 32px 24px;
+
+  border-radius: 26px;
+
+  border: 2px dashed rgba(15, 118, 110, .24);
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.88),
+      rgba(248,250,252,.88)
+    );
+
+  transition:
+    border-color .25s ease,
+    transform .25s ease,
+    box-shadow .25s ease;
+}
+
+.foto-dia-upload-area:hover {
+  border-color:
+    rgba(15, 118, 110, .45);
+
+  box-shadow:
+    0 14px 32px rgba(15, 23, 42, .06);
+}
+
+.foto-dia-upload-icon {
+  width: 68px;
+  height: 68px;
+
+  margin: 0 auto 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 22px;
+
+  font-size: 2rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ccfbf1,
+      #e0f2fe
+    );
+
+  box-shadow:
+    0 12px 26px rgba(15, 118, 110, .12);
+}
+
+.foto-dia-upload-area h3 {
+  color: #0f172a;
+
+  margin: 6px 0;
+
+  font-size: 1.12rem;
+}
+
+.foto-dia-upload-area p {
+  color: #64748b;
+
+  font-size: .9rem;
+
+  line-height: 1.5;
+}
+
+/* ==========================================
+   BOTÓN SUBIR
+========================================== */
+
+.foto-dia-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 18px;
+
+  min-width: 170px;
+
+  padding: 13px 25px;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #0f766e,
+      #0891b2
+    );
+
+  color: white;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 10px 24px rgba(15, 118, 110, .24);
+
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease,
+    opacity .2s ease;
+}
+
+.foto-dia-upload-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 15px 30px rgba(15, 118, 110, .30);
+}
+
+.foto-dia-upload-btn:active {
+  transform: translateY(0);
+}
+
+.foto-dia-upload-btn input {
+  display: none;
+}
+
+.foto-dia-upload-btn.disabled {
+  opacity: .6;
+  pointer-events: none;
+}
+
+/* ==========================================
+   PREVIEW
+========================================== */
+
+.foto-dia-preview {
+  margin-top: 26px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.foto-dia-preview img {
+  width: 240px;
+  max-width: 100%;
+
+  aspect-ratio: 4 / 5;
+
+  object-fit: cover;
+
+  border-radius: 24px;
+
+  border: 5px solid white;
+
+  box-shadow:
+    0 18px 38px rgba(15, 23, 42, .18);
+}
+
+.foto-dia-preview span {
+  padding: 5px 11px;
+
+  border-radius: 999px;
+
+  background: #f1f5f9;
+
+  font-size: .76rem;
+  font-weight: 700;
+
+  color: #64748b;
+}
+
+/* ==========================================
+   LOADING
+========================================== */
+
+.foto-dia-loading {
+  margin-top: 30px;
+
+  padding: 26px 20px;
+
+  border-radius: 22px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(240, 253, 250, .92),
+      rgba(239, 246, 255, .92)
+    );
+
+  border: 1px solid rgba(14, 116, 144, .10);
+}
+
+.foto-dia-spinner {
+  width: 52px;
+  height: 52px;
+
+  margin: 0 auto 18px;
+
+  border-radius: 50%;
+
+  border: 5px solid rgba(14, 116, 144, .13);
+  border-top-color: #0f766e;
+  border-right-color: #0891b2;
+
+  animation:
+    fotoDiaSpin .85s linear infinite;
+}
+
+@keyframes fotoDiaSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.foto-dia-loading h3 {
+  margin: 0;
+
+  color: #0f172a;
+
+  font-size: 1.05rem;
+}
+
+.foto-dia-loading-steps {
+  width: min(100%, 340px);
+
+  margin: 20px auto;
+
+  text-align: left;
+
+  padding: 16px 18px;
+
+  border-radius: 18px;
+
+  background: rgba(255,255,255,.72);
+}
+
+.foto-dia-loading-steps p {
+  margin: 8px 0;
+
+  font-size: .88rem;
+
+  color: #475569;
+}
+
+.foto-dia-loading-steps p:last-child {
+  color: #0f766e;
+  font-weight: 800;
+
+  animation:
+    fotoDiaPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes fotoDiaPulse {
+  0%,
+  100% {
+    opacity: .55;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.foto-dia-loading-help {
+  max-width: 380px;
+
+  margin: 12px auto 0;
+
+  font-size: .8rem;
+
+  line-height: 1.5;
+
+  color: #64748b;
+}
+
+/* ==========================================
+   RESULTADO
+========================================== */
+
+.foto-dia-result {
+  position: relative;
+  z-index: 2;
+
+  animation:
+    fotoDiaAppear .5s ease;
+}
+
+@keyframes fotoDiaAppear {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.foto-dia-result-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 12px;
+
+  padding: 7px 15px;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ecfdf5,
+      #eff6ff
+    );
+
+  color: #047857;
+
+  font-size: .72rem;
+
+  font-weight: 850;
+
+  letter-spacing: 1px;
+
+  border: 1px solid rgba(16, 185, 129, .14);
+}
+
+.foto-dia-result h3 {
+  margin: 0 0 20px;
+
+  color: #0f172a;
+
+  font-size: 1.3rem;
+}
+
+.foto-dia-image-frame {
+  max-width: 420px;
+
+  margin: auto;
+
+  padding: 8px;
+
+  border-radius: 30px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2dd4bf,
+      #38bdf8,
+      #60a5fa
+    );
+
+  box-shadow:
+    0 24px 55px rgba(15, 23, 42, .22);
+
+  position: relative;
+}
+
+.foto-dia-image-frame::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 8px;
+
+  border-radius: 22px;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.32);
+
+  pointer-events: none;
+}
+
+.foto-dia-image-frame img {
+  display: block;
+
+  width: 100%;
+
+  border-radius: 22px;
+}
+
+.foto-dia-result-text {
+  margin-top: 20px;
+
+  color: #475569;
+
+  font-size: .92rem;
+}
+
+/* ==========================================
+   GUARDAR EN ÁLBUM
+========================================== */
+
+.foto-dia-save-btn {
+  display: block;
+
+  width: 100%;
+  max-width: 320px;
+
+  margin: 18px auto 10px;
+
+  padding: 14px 22px;
+
+  border: none;
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #0f766e,
+      #0891b2
+    );
+
+  color: white;
+
+  font-weight: 800;
+  font-size: .95rem;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 10px 24px rgba(15, 118, 110, .24);
+
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease,
+    opacity .2s ease;
+}
+
+.foto-dia-save-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 15px 30px rgba(15, 118, 110, .30);
+}
+
+.foto-dia-save-btn:disabled {
+  opacity: .55;
+  cursor: wait;
+}
+
+/* ==========================================
+   GUARDADA
+========================================== */
+
+.foto-dia-guardada {
+  max-width: 360px;
+
+  margin: 18px auto 10px;
+
+  padding: 13px 16px;
+
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ecfdf5,
+      #f0fdfa
+    );
+
+  border:
+    1px solid #a7f3d0;
+
+  color: #047857;
+
+  font-weight: 800;
+
+  text-transform: capitalize;
+
+  box-shadow:
+    0 8px 18px rgba(16,185,129,.08);
+}
+
+/* ==========================================
+   SEGUNDO INTENTO
+========================================== */
+
+.foto-dia-secondary-btn {
+  margin-top: 8px;
+
+  padding: 12px 22px;
+
+  border: 1px solid #dbe4ea;
+
+  border-radius: 999px;
+
+  background: white;
+
+  color: #0f172a;
+
+  font-weight: 750;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 6px 16px rgba(15, 23, 42, .06);
+
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease,
+    border-color .2s ease;
+}
+
+.foto-dia-secondary-btn:hover {
+  transform: translateY(-2px);
+
+  border-color:
+    rgba(15, 118, 110, .28);
+
+  box-shadow:
+    0 10px 22px rgba(15, 23, 42, .10);
+}
+
+/* ==========================================
+   LÍMITE
+========================================== */
+
+.foto-dia-limit {
+  position: relative;
+  z-index: 2;
+
+  margin-top: 24px;
+
+  padding: 28px 22px;
+
+  border-radius: 22px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f8fafc,
+      #f1f5f9
+    );
+
+  border:
+    1px solid #e2e8f0;
+}
+
+.foto-dia-limit > span {
+  display: block;
+
+  font-size: 2.2rem;
+
+  margin-bottom: 6px;
+}
+
+.foto-dia-limit h3 {
+  margin: 6px 0;
+
+  color: #0f172a;
+
+  font-size: 1.08rem;
+}
+
+.foto-dia-limit p {
+  margin: 0;
+
+  color: #64748b;
+
+  font-size: .9rem;
+
+  line-height: 1.5;
+}
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 576px) {
+
+  .foto-dia-section {
+    padding: 24px 10px;
+  }
+
+  .foto-dia-card {
+    padding: 26px 15px;
+
+    border-radius: 26px;
+  }
+
+  .foto-dia-header {
+    margin-bottom: 22px;
+  }
+
+  .foto-dia-header h2 {
+    font-size: 1.8rem;
+  }
+
+  .foto-dia-header p {
+    font-size: .9rem;
+  }
+
+  .foto-dia-aventura {
+    padding: 17px 14px;
+  }
+
+  .foto-dia-aventura strong {
+    font-size: 1.25rem;
+  }
+
+  .foto-dia-intentos {
+    gap: 9px;
+
+    margin-bottom: 22px;
+  }
+
+  .foto-dia-upload-area {
+    padding: 26px 14px;
+  }
+
+  .foto-dia-preview img {
+    width: 210px;
+  }
+
+  .foto-dia-loading {
+    padding: 22px 14px;
+  }
+
+  .foto-dia-image-frame {
+    max-width: 100%;
+
+    border-radius: 24px;
+  }
+
+  .foto-dia-image-frame img {
+    border-radius: 18px;
+  }
+
+  .foto-dia-save-btn,
+  .foto-dia-secondary-btn {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* ==========================================
+   MENSAJE DE ESPERA IA
+========================================== */
+
+.foto-dia-wait-message {
+  max-width: 430px;
+  margin: 12px auto 22px;
+
+  color: #64748b;
+
+  font-size: .92rem;
+  line-height: 1.55;
+}
+
+.foto-dia-wait-message strong {
+  color: #0f766e;
+}
+
+/* ==========================================
+   BARRA DE PROGRESO IA
+========================================== */
+
+.foto-dia-progress-container {
+  width: 100%;
+  max-width: 430px;
+
+  margin: 24px auto 18px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+}
+
+.foto-dia-progress-track {
+  flex: 1;
+
+  height: 13px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background:
+    rgba(15, 118, 110, .12);
+
+  box-shadow:
+    inset 0 1px 3px
+    rgba(15, 23, 42, .08);
+}
+
+.foto-dia-progress-bar {
+  height: 100%;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      90deg,
+      #10b981,
+      #14b8a6,
+      #38bdf8
+    );
+
+  transition:
+    width 1.2s ease;
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+/* brillo animado */
+
+.foto-dia-progress-bar::after {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  bottom: 0;
+
+  width: 80px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.7),
+      transparent
+    );
+
+  animation:
+    fotoDiaProgressShine
+    1.5s linear infinite;
+}
+
+@keyframes fotoDiaProgressShine {
+
+  from {
+    left: -80px;
+  }
+
+  to {
+    left: 100%;
+  }
+
+}
+
+.foto-dia-progress-number {
+  min-width: 42px;
+
+  color: #0f766e;
+
+  font-size: .82rem;
+  font-weight: 800;
+}
+
+/* ==========================================
+   TEXTO CAMBIANTE
+========================================== */
+
+.foto-dia-loading h3 {
+  min-height: 30px;
+
+  color: #0f172a;
+
+  animation:
+    fotoDiaMessageAppear
+    .4s ease;
+}
+
+@keyframes fotoDiaMessageAppear {
+
+  from {
+    opacity: .35;
+
+    transform:
+      translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+
+}
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 576px) {
+
+  .foto-dia-progress-container {
+    gap: 8px;
+  }
+
+  .foto-dia-wait-message {
+    font-size: .86rem;
+  }
+
+  .foto-dia-progress-number {
+    min-width: 36px;
+    font-size: .76rem;
+  }
+
+}
