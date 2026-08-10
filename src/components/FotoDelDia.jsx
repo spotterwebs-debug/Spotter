@@ -28,6 +28,7 @@ export const FotoDelDia = () => {
     id: null,
     nombre: 'Cargando...',
     template: '',
+    prompt: '',
   });
 
   // ==========================================
@@ -105,23 +106,37 @@ export const FotoDelDia = () => {
   }, []);
 
   // ==========================================
-  // TEMÁTICA ACTIVA
+  // AVENTURA DEL DÍA SEGÚN FECHA
   // ==========================================
 
   useEffect(() => {
     const fetchAventura = async () => {
       try {
+        const fechaHoy = obtenerFechaUruguay();
+
+        console.log(
+          'Buscando aventura para:',
+          fechaHoy
+        );
+
         const { data, error } = await supabase
           .from('tematicas')
           .select('*')
-          .eq('activa', true)
+          .eq('fecha', fechaHoy)
           .single();
 
         if (error) {
           console.error(
-            'Error cargando temática:',
+            'Error cargando temática del día:',
             error
           );
+
+          setAventuraActual({
+            id: null,
+            nombre: 'Sin aventura disponible',
+            template: '',
+            prompt: '',
+          });
 
           return;
         }
@@ -130,7 +145,8 @@ export const FotoDelDia = () => {
           setAventuraActual({
             id: data.id,
             nombre: data.nombre_aventura,
-            template: data.template_image,
+            template: data.template_image || '',
+            prompt: data.prompt_text || '',
           });
         }
 
@@ -139,6 +155,13 @@ export const FotoDelDia = () => {
           'Error cargando aventura:',
           error
         );
+
+        setAventuraActual({
+          id: null,
+          nombre: 'Sin aventura disponible',
+          template: '',
+          prompt: '',
+        });
       }
     };
 
@@ -392,6 +415,22 @@ export const FotoDelDia = () => {
     }
 
     // ========================================
+    // VERIFICAR AVENTURA
+    // ========================================
+
+    if (!aventuraActual.id) {
+      await Swal.fire({
+        icon: 'info',
+        title: 'No hay aventura disponible',
+        text:
+          'Todavía no hay una aventura programada para hoy.',
+        confirmButtonText: 'Entendido',
+      });
+
+      return;
+    }
+
+    // ========================================
     // INTENTOS
     // ========================================
 
@@ -469,10 +508,12 @@ export const FotoDelDia = () => {
         publicUrlData.publicUrl;
 
       // ======================================
-      // 3. PROMPT
+      // 3. PROMPT DE LA AVENTURA DEL DÍA
       // ======================================
 
-      const prompt = `
+      const prompt =
+        aventuraActual.prompt ||
+        `
 Transform the pet in the reference image into a ${aventuraActual.nombre} adventurer.
 
 Keep exactly the same pet clearly recognizable.
@@ -547,15 +588,6 @@ Do not replace it with another animal.
       }
 
       // ======================================
-      // IMPORTANTE
-      //
-      // NO actualizamos intentosRestantes acá.
-      // El intento ya está reservado en Supabase,
-      // pero visualmente esperamos a que termine
-      // la imagen.
-      // ======================================
-
-      // ======================================
       // 5. ESPERAR RESULTADO
       // ======================================
 
@@ -566,7 +598,7 @@ Do not replace it with another animal.
         );
 
       // ======================================
-      // 6. AHORA SÍ ACTUALIZAMOS INTENTOS
+      // 6. ACTUALIZAR INTENTOS
       // ======================================
 
       if (
@@ -594,10 +626,13 @@ Do not replace it with another animal.
 
       await Swal.fire({
         icon: 'error',
+
         title:
           'No pudimos crear la aventura',
+
         text:
           error.message,
+
         confirmButtonText:
           'Aceptar',
       });
@@ -856,13 +891,10 @@ Do not replace it with another animal.
         <div className="foto-dia-header">
 
           <span className="foto-dia-eyebrow">
-            ✨ DESAFÍO DIARIO
+            ✨ Aventura del día
           </span>
 
-          <h2>
-            Foto del día
-          </h2>
-
+          
           <p>
             Convertí a tu mascota en protagonista
             de una aventura.
@@ -881,7 +913,7 @@ Do not replace it with another animal.
           </span>
 
           <strong>
-            🏴‍☠️ {aventuraActual.nombre}
+            ✨ {aventuraActual.nombre}
           </strong>
 
         </div>
@@ -903,10 +935,6 @@ Do not replace it with another animal.
           </div>
 
         ) : !usuario ? (
-
-          /* ==================================
-             NO REGISTRADO
-          ================================== */
 
           <div className="foto-dia-login-required">
 
@@ -933,6 +961,29 @@ Do not replace it with another animal.
             >
               Iniciar sesión
             </button>
+
+          </div>
+
+        ) : aventuraActual.id === null ? (
+
+          /* ==================================
+             SIN AVENTURA PROGRAMADA
+          ================================== */
+
+          <div className="foto-dia-limit">
+
+            <span>
+              📅
+            </span>
+
+            <h3>
+              Hoy todavía no hay una aventura
+            </h3>
+
+            <p>
+              Muy pronto habrá una nueva misión
+              para tu mascota.
+            </p>
 
           </div>
 
