@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, FreeMode } from "swiper/modules";
+import Swal from "sweetalert2";
 
 import "swiper/css";
 import "swiper/css/navigation";
 
 import "./CategoryCarousel.css";
 import TradingCard from "./TradingCard";
+import { supabase } from "../supabaseClient";
 
 function CategoryCarousel({
   id,
@@ -56,6 +58,139 @@ function CategoryCarousel({
   const cerrarCard = () => {
     setCardSeleccionada(null);
   };
+
+  // ==========================================
+  // REPORTAR PUBLICACIÓN
+  // ==========================================
+
+  const handleReportar = async (cardId) => {
+
+    if (!user) {
+      await Swal.fire({
+        icon: "info",
+        title: "Iniciá sesión",
+        text:
+          "Necesitás iniciar sesión para reportar una publicación.",
+        confirmButtonText: "Entendido"
+      });
+
+      return;
+    }
+
+    const { value: reason } = await Swal.fire({
+      title: "🚩 Reportar publicación",
+
+      text:
+        "Seleccioná el motivo del reporte.",
+
+      input: "select",
+
+      inputOptions: {
+        categoria_incorrecta:
+          "📂 Categoría incorrecta",
+
+        contenido_inapropiado:
+          "⚠️ Contenido inapropiado",
+
+        spam:
+          "🚫 Spam",
+
+        otro:
+          "💬 Otro motivo"
+      },
+
+      inputPlaceholder:
+        "Seleccioná un motivo",
+
+      showCancelButton:
+        true,
+
+      confirmButtonText:
+        "Enviar reporte",
+
+      cancelButtonText:
+        "Cancelar",
+
+      inputValidator: (value) => {
+        if (!value) {
+          return "Elegí un motivo";
+        }
+      }
+    });
+
+    if (!reason) return;
+
+    try {
+
+      const { error } = await supabase
+        .from("reports")
+        .insert({
+          card_id: cardId,
+          reporter_user_id: user.id,
+          reason
+        });
+
+      if (error) {
+
+        // El usuario ya reportó esta misma card
+        if (error.code === "23505") {
+
+          await Swal.fire({
+            icon: "info",
+            title:
+              "Ya reportaste esta publicación",
+            text:
+              "Tu reporte ya fue registrado anteriormente.",
+            confirmButtonText:
+              "Entendido"
+          });
+
+          return;
+        }
+
+        throw error;
+      }
+
+      await Swal.fire({
+        icon: "success",
+
+        title:
+          "Reporte enviado",
+
+        text:
+          "Gracias. Revisaremos esta publicación.",
+
+        timer:
+          1800,
+
+        showConfirmButton:
+          false
+      });
+
+    } catch (error) {
+
+      console.error(
+        "Error reportando publicación:",
+        error
+      );
+
+      await Swal.fire({
+        icon: "error",
+
+        title:
+          "No se pudo enviar el reporte",
+
+        text:
+          error.message ||
+          "Ocurrió un error al enviar el reporte."
+      });
+
+    }
+  };
+
+  // ==========================================
+  // VISTA
+  // ==========================================
 
   return (
     <div
@@ -127,6 +262,7 @@ function CategoryCarousel({
 
               <div
                 className="community-grid-card"
+
                 onClick={() =>
                   abrirCard(post)
                 }
@@ -134,15 +270,23 @@ function CategoryCarousel({
 
                 <TradingCard
                   datos={post}
-                  likes={likesCount}
-                  liked={isLiked}
+
+                  likes={
+                    likesCount
+                  }
+
+                  liked={
+                    isLiked
+                  }
 
                   onToggleLike={(e) => {
+
                     e?.stopPropagation();
 
                     onToggleLike(
                       post.id
                     );
+
                   }}
 
                   showLikes={false}
@@ -180,10 +324,13 @@ function CategoryCarousel({
             }
           >
 
-            {/* CERRAR */}
+            {/* =================================
+                CERRAR
+            ================================= */}
 
             <button
               type="button"
+
               className="community-card-modal-close"
 
               onClick={
@@ -193,7 +340,9 @@ function CategoryCarousel({
               ✕
             </button>
 
-            {/* CARD COMPLETA */}
+            {/* =================================
+                CARD COMPLETA
+            ================================= */}
 
             <div className="community-full-card">
 
@@ -217,11 +366,13 @@ function CategoryCarousel({
                 showLikes={true}
 
                 onToggleLike={(e) => {
+
                   e?.stopPropagation();
 
                   onToggleLike(
                     cardSeleccionada.id
                   );
+
                 }}
 
                 enableImageZoom={true}
@@ -244,9 +395,31 @@ function CategoryCarousel({
 
             </div>
 
+            {/* =================================
+                AYUDA FOTO
+            ================================= */}
+
             <p className="community-card-photo-help">
               Tocá la foto para verla en grande
             </p>
+
+            {/* =================================
+                REPORTAR
+            ================================= */}
+
+            <button
+              type="button"
+
+              className="community-report-btn"
+
+              onClick={() =>
+                handleReportar(
+                  cardSeleccionada.id
+                )
+              }
+            >
+              🚩 Reportar publicación
+            </button>
 
           </div>
 
