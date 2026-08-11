@@ -1,14 +1,19 @@
 // src/App.jsx
 
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from 'react-router-dom';
 
-import Navbar from './components/NavBar'; 
-import Footer from './components/Footer'; 
+import Navbar from './components/NavBar';
+import Footer from './components/Footer';
 import Home from './pages/Home';
 import Album from './components/Album';
 import Create from './components/Create';
 import Login from './pages/Login';
+import ResetPassword from './pages/ResetPassword';
 import EditCards from './components/EditCards';
 import Comunidad from './components/Comunidad';
 import Challenges from './components/Challenges';
@@ -20,32 +25,40 @@ function App() {
 
   return (
     <Router>
-      
+
       <Navbar />
-      
+
       <main className="content-container">
 
         <Routes>
 
-          <Route path="/login" element={<Login />} />
-          
-          <Route 
-            path="/" 
-            element={
-              <Home 
-                capturedPhoto={sharedPhoto} 
-                setCapturedPhoto={setSharedPhoto} 
-              />
-            } 
+          <Route
+            path="/login"
+            element={<Login />}
           />
-          
-          <Route 
-            path="/album/:categoria" 
+
+          <Route
+            path="/reset-password"
+            element={<ResetPassword />}
+          />
+
+          <Route
+            path="/"
             element={
-              <Album 
-                setSharedPhoto={setSharedPhoto} 
+              <Home
+                capturedPhoto={sharedPhoto}
+                setCapturedPhoto={setSharedPhoto}
               />
-            } 
+            }
+          />
+
+          <Route
+            path="/album/:categoria"
+            element={
+              <Album
+                setSharedPhoto={setSharedPhoto}
+              />
+            }
           />
 
           <Route
@@ -54,6 +67,7 @@ function App() {
           />
 
           {/* Rutas de premios y listones */}
+
           <Route
             path="/premios"
             element={<Premios />}
@@ -69,31 +83,31 @@ function App() {
             element={<AdminDashboard />}
           />
 
-          <Route 
-            path="/create" 
+          <Route
+            path="/create"
             element={
-              <Create 
-                capturedPhoto={sharedPhoto} 
-                setCapturedPhoto={setSharedPhoto} 
+              <Create
+                capturedPhoto={sharedPhoto}
+                setCapturedPhoto={setSharedPhoto}
               />
-            } 
+            }
           />
 
-          <Route 
-            path="/edit/:id" 
-            element={<EditCards />} 
+          <Route
+            path="/edit/:id"
+            element={<EditCards />}
           />
-          
-          <Route 
-            path="/comunidad" 
-            element={<Comunidad />} 
-          /> 
+
+          <Route
+            path="/comunidad"
+            element={<Comunidad />}
+          />
 
         </Routes>
 
       </main>
-      
-      <Footer /> 
+
+      <Footer />
 
     </Router>
   );
