@@ -41,13 +41,7 @@ function CardCreator({
   // =========================================================
   // CATEGORÍA SUGERIDA
   // =========================================================
-  //
-  // Si viene desde un álbum, dejamos esa categoría
-  // preseleccionada.
-  //
   // PERO:
-  // el usuario igualmente verá SIEMPRE la pantalla
-  // de selección de categoría antes del crop.
   // =========================================================
 
   const categoriaSugerida =
@@ -658,10 +652,6 @@ function CardCreator({
 
             // =============================================
             // CAMBIO IMPORTANTE
-            //
-            // SIEMPRE preguntamos categoría.
-            //
-            // Aunque venga desde /album/perros.
             // =============================================
 
             setPaso(
@@ -780,8 +770,6 @@ function CardCreator({
       );
 
 
-      // Limpia campos que podrían haber quedado
-      // de otra categoría durante la creación.
 
       if (!cardToEdit) {
 
@@ -1418,13 +1406,7 @@ function CardCreator({
 
   // =========================================================
   // PROMPT IA
-  //
   // SOLO:
-  // - categoría
-  // - nombre
-  // - diseño
-  //
-  // NO mandamos los textos largos.
   // =========================================================
 
   const construirPromptSpot =
@@ -1461,13 +1443,6 @@ function CardCreator({
         );
 
       }
-
-
-      const categoriaTexto =
-        categoria
-          .toUpperCase();
-
-
       const nombre =
         formValues.nombre
           .trim();
@@ -1479,15 +1454,15 @@ function CardCreator({
 
         `Use reference photo, preserve subject. ` +
 
-        `Top text exactly "${categoriaTexto}". ` +
-
         `Large ornate portrait. ` +
 
-        `Ribbon below with exactly "${nombre}". ` +
+        `Single ribbon with exactly "${nombre}". ` +
+
+        `The name "${nombre}" must be the only visible text. ` +
 
         `Decorative icons and stars only. ` +
 
-        `No other text, numbers, labels or words.`;
+        `No category text, no other text, numbers, labels or words.`;
 
 
       console.log(
@@ -1551,7 +1526,6 @@ function CardCreator({
 
       } catch {
 
-        // nada
 
       }
 
@@ -2383,11 +2357,7 @@ function CardCreator({
 
         // =====================================================
         // DATOS
-        //
         // IMPORTANTE:
-        // categoria = categoría ELEGIDA por el usuario.
-        //
-        // No importa desde qué álbum comenzó.
         // =====================================================
 
         const payload = {
@@ -2634,8 +2604,6 @@ function CardCreator({
 
         // =====================================================
         // REDIRECCIÓN
-        //
-        // Va al álbum de la categoría que eligió.
         // =====================================================
 
         navigate(
@@ -3920,7 +3888,7 @@ function CardCreator({
                   "
                 >
 
-                  No cierres esta pantalla.
+                  No cierres, ni salgas de esta pantalla.
                   La IA está preparando tu card.
 
                 </small>
