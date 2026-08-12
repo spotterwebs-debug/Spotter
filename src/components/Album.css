@@ -1,685 +1,1117 @@
-/* =====================================
-   CONTENEDOR PRINCIPAL
-===================================== */
+/* =========================================================
+   ALBUM - CONTENEDOR GENERAL
+========================================================= */
 
 .album-container {
     position: relative;
     min-height: 100vh;
+
     background-image: var(--bg);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    padding-bottom: 50px;
+
+    padding-top: 20px;
+    padding-bottom: 100px;
+
+    overflow-x: hidden;
 }
 
+
+/* =========================================================
+   OVERLAY DEL FONDO
+========================================================= */
 
 .album-overlay {
-    position:absolute;
-    inset:0;
-    background:rgba(255,255,255,.4);
-    z-index:1;
+    position: absolute;
+    inset: 0;
+
+    background: rgba(255, 255, 255, 0.4);
+
+    z-index: 1;
+
+    pointer-events: none;
 }
 
+
+/* =========================================================
+   CONTENIDO
+========================================================= */
 
 .album-content {
-    position:relative;
-    z-index:2;
+    position: relative;
+    z-index: 2;
 }
 
 
+/* =========================================================
+   TÍTULO
+========================================================= */
 
-/* =====================================
-   TITULO
-===================================== */
+.album-content h1,
+.title-green {
+    width: 100%;
 
-.album-content h1 {
+    margin-bottom: 1.5rem;
 
-    color:#2d5a27 !important;
-    font-weight:800;
-    margin-bottom:1.5rem;
-    text-align:center;
+    color: #2d5a27 !important;
 
+    font-weight: 800;
+    text-align: center;
+
+    word-break: break-word;
 }
 
 
-
-/* =====================================
-   ICONOS
-===================================== */
-
+/* =========================================================
+   ICONOS SUPERIORES
+========================================================= */
 
 .album-top-icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    display:flex;
-    justify-content:center;
-    gap:12px;
-    margin-bottom:15px;
+    gap: 12px;
 
+    margin-bottom: 15px;
 }
 
 
 .icon-btn {
+    width: 40px;
+    height: 40px;
 
-    background:rgba(255,255,255,.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    border:none;
+    border: none;
+    border-radius: 50%;
 
-    border-radius:50%;
+    background: rgba(255, 255, 255, 0.88);
 
-    width:38px;
-    height:38px;
+    font-size: 1.2rem;
 
-    font-size:1.2rem;
+    cursor: pointer;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    box-shadow:
+        0 3px 8px
+        rgba(0, 0, 0, 0.12);
 
-    cursor:pointer;
-
-    box-shadow:0 2px 5px rgba(0,0,0,.1);
-
-    transition:.3s;
-
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 
 .icon-btn:hover {
+    transform: translateY(-2px) scale(1.05);
 
-    transform:scale(1.1);
-    background:white;
+    background: #ffffff;
 
+    box-shadow:
+        0 5px 12px
+        rgba(0, 0, 0, 0.16);
 }
 
 
-
-/* =====================================
-   BOTONES ALBUM
-===================================== */
-
+/* =========================================================
+   BOTONES DEL ÁLBUM
+========================================================= */
 
 .album-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    display:flex;
+    gap: 10px;
 
-    justify-content:center;
+    flex-wrap: wrap;
 
-    gap:10px;
+    margin-bottom: 30px;
 
-    margin-bottom:30px;
-
-    padding:0 10px;
-
+    padding: 0 10px;
 }
-
 
 
 .album-small-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    background:white;
+    gap: 7px;
 
-    border:none;
+    padding: 8px 16px;
 
-    padding:8px 16px;
+    border: none;
+    border-radius: 22px;
 
-    border-radius:20px;
+    background: rgba(255, 255, 255, 0.94);
 
-    font-size:.85rem;
+    color: #58506d;
 
-    font-weight:600;
+    font-size: 0.85rem;
+    font-weight: 700;
 
-    color:#58506d;
+    cursor: pointer;
 
-    box-shadow:0 4px 6px rgba(0,0,0,.08);
+    box-shadow:
+        0 4px 8px
+        rgba(0, 0, 0, 0.09);
 
-    cursor:pointer;
-
-    transition:.2s;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:8px;
-
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
-
 
 
 .album-small-btn:hover {
+    transform: translateY(-2px);
 
-    transform:translateY(-2px);
-
+    box-shadow:
+        0 6px 12px
+        rgba(0, 0, 0, 0.13);
 }
 
 
-
-/* =====================================
-   GRID ALBUM
-===================================== */
-
+/* =========================================================
+   GRID DEL ÁLBUM
+========================================================= */
 
 .album-grid {
+    display: grid;
 
-    display:grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
 
-    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap: 16px;
 
-    gap:15px;
+    width: 100%;
+    max-width: 560px;
 
-    padding:0 15px;
+    margin: 0 auto;
 
-    max-width:500px;
-
-    margin:auto;
-
+    padding: 0 14px;
 }
-
 
 
 .album-grid .card-item-wrapper {
-
-    width:100%;
-    min-width:0;
-
+    width: 100%;
+    min-width: 0;
 }
 
 
+/* =========================================================
+   BLOQUE CARD + ESTADO PUBLICACIÓN
+========================================================= */
+
+.album-card-block {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+}
 
 
-/* MINI CARD */
+/* =========================================================
+   CARD IA DEL GRID
+========================================================= */
 
 .album-grid .trading-card-final {
+    width: 100% !important;
+    height: auto !important;
 
-    width:100%!important;
+    aspect-ratio: 2 / 3;
 
-    height:220px!important;
+    margin: 0 !important;
+    padding: 0 !important;
 
-    padding:0!important;
+    overflow: hidden;
 
-    overflow:hidden;
+    border-radius: 14px;
 
-    cursor:pointer;
+    background: transparent;
 
-    margin:0!important;
+    cursor: pointer;
 
-    transform:none!important;
+    transform: none !important;
 
-    border-radius:12px;
-
-    box-shadow:0 4px 12px rgba(0,0,0,.1);
-
+    box-shadow:
+        0 5px 14px
+        rgba(0, 0, 0, 0.16);
 }
 
 
+.album-grid .card-image-box,
+.album-grid .card-image-box-full {
+    width: 100% !important;
+    height: 100% !important;
 
-.album-grid .card-info-box,
-.album-grid .card-dato-curioso,
-.album-grid .card-actions {
+    overflow: hidden;
 
-    display:none!important;
-
+    border-radius: inherit;
 }
 
 
+.album-grid .card-image-box img,
+.album-grid .trading-card-ai-image {
+    display: block;
 
-.album-grid .card-image-box {
+    width: 100% !important;
+    height: 100% !important;
 
-    width:100%!important;
-    height:100%!important;
+    object-fit: contain !important;
 
+    border-radius: inherit;
 }
 
 
-
-.album-grid .card-image-box img {
-
-    width:100%!important;
-    height:100%!important;
-
-    object-fit:cover!important;
-
-}
-
-
-
-
-/* =====================================
-   LISTA
-===================================== */
-
+/* =========================================================
+   VISTA LISTA
+========================================================= */
 
 .album-list {
+    display: flex;
+    flex-direction: column;
 
-    display:flex;
+    gap: 22px;
 
-    flex-direction:column;
+    width: 100%;
+    max-width: 420px;
 
-    gap:20px;
+    margin: 0 auto;
 
-    padding:0 20px;
-
+    padding: 0 20px;
 }
 
 
+.album-list .card-item-wrapper {
+    width: 100%;
+}
 
 
-/* =====================================
-   MODAL GENERAL
-===================================== */
+.album-list .trading-card-final {
+    width: 100% !important;
 
+    max-width: 320px;
+
+    aspect-ratio: 2 / 3;
+
+    margin: 0 auto !important;
+
+    overflow: hidden;
+
+    border-radius: 16px;
+
+    background: transparent;
+}
+
+
+.album-list .card-image-box,
+.album-list .card-image-box-full {
+    width: 100%;
+    height: 100%;
+}
+
+
+.album-list .card-image-box img,
+.album-list .trading-card-ai-image {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+}
+
+
+/* =========================================================
+   BOTÓN PUBLICAR EN COMUNIDAD
+========================================================= */
+
+.album-publish-btn {
+    width: 100%;
+
+    padding: 9px 7px;
+
+    border: none;
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #16a34a,
+            #22c55e
+        );
+
+    color: white;
+
+    font-size: 0.7rem;
+    font-weight: 800;
+
+    line-height: 1.2;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 5px 12px
+        rgba(22, 163, 74, 0.22);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.album-publish-btn:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 16px
+        rgba(22, 163, 74, 0.3);
+}
+
+
+/* =========================================================
+   ESTADO: YA COMPARTIDA
+========================================================= */
+
+.album-published-status {
+    width: 100%;
+
+    padding: 7px 8px;
+
+    border:
+        1px solid
+        rgba(22, 163, 74, 0.2);
+
+    border-radius: 12px;
+
+    background:
+        rgba(255, 255, 255, 0.9);
+
+    color: #15803d;
+
+    font-size: 0.68rem;
+    font-weight: 800;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   OVERLAY DEL MODAL
+========================================================= */
 
 .custom-modal-overlay {
+    position: fixed;
 
-    position:fixed;
+    inset: 0;
 
-    inset:0;
+    width: 100vw;
+    height: 100dvh;
 
-    background:rgba(0,0,0,.85);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
 
-    z-index:999999;
+    padding:
+        20px
+        14px
+        120px;
 
-    display:flex;
+    background:
+        rgba(0, 0, 0, 0.88);
 
-    justify-content:center;
+    overflow-y: auto;
+    overflow-x: hidden;
 
-    align-items:center;
+    -webkit-overflow-scrolling: touch;
 
-    padding:20px;
-
-    overflow-y:auto;
-
-    -webkit-overflow-scrolling:touch;
-
+    z-index: 2147483000;
 }
 
 
+/* =========================================================
+   CONTENEDOR MODAL
+========================================================= */
 
 .custom-modal-content {
+    width: min(90vw, 440px);
 
-    background:white;
+    margin: 0 auto;
 
-    width:90vw;
+    padding: 12px;
 
-    max-width:330px;
+    border-radius: 18px;
 
-    border-radius:20px;
+    background: #ffffff;
 
-    padding:15px;
+    box-sizing: border-box;
 
-    box-sizing:border-box;
-
-    max-height:none;
-
-    overflow:visible;
-
-    margin:auto;
-
-    box-shadow:0 10px 30px rgba(0,0,0,.5);
-
+    box-shadow:
+        0 16px 45px
+        rgba(0, 0, 0, 0.55);
 }
 
 
+/* =========================================================
+   MODAL DEL SPOT
+========================================================= */
 
-/* =====================================
-   CARD COMPLETA MODAL
-===================================== */
+.spot-detail-modal {
+    position: relative;
 
+    width: min(90vw, 440px);
 
-.modal-card-wrapper {
+    max-height: 78dvh;
 
-    display:flex;
+    overflow-y: auto;
+    overflow-x: hidden;
 
-    justify-content:center;
+    padding: 12px;
 
+    border-radius: 18px;
+
+    scrollbar-width: thin;
 }
 
 
+/* =========================================================
+   BOTÓN CERRAR
+========================================================= */
 
-.modal-card-wrapper .trading-card-final {
+.spot-modal-close {
+    position: absolute;
 
-    width:290px!important;
+    top: 9px;
+    right: 9px;
 
-    height:410px!important;
+    z-index: 30;
 
-    transform:none!important;
+    width: 38px;
+    height: 38px;
 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: none;
+    border-radius: 50%;
+
+    background:
+        rgba(0, 0, 0, 0.78);
+
+    color: white;
+
+    font-size: 18px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 3px 10px
+        rgba(0, 0, 0, 0.25);
 }
 
 
+/* =========================================================
+   IMAGEN DEL SPOT EN EL MODAL
+========================================================= */
 
-.modal-card-wrapper .card-info-box,
-.modal-card-wrapper .card-dato-curioso,
-.modal-card-wrapper .card-actions {
+.spot-modal-image-wrapper {
+    position: relative;
 
-    display:block!important;
+    width: 100%;
 
+    overflow: hidden;
+
+    border-radius: 14px;
+
+    cursor: zoom-in;
+
+    background: #f4f4f4;
 }
 
 
+.spot-modal-image {
+    display: block;
+
+    width: 100%;
+
+    max-height: 36dvh;
+
+    object-fit: contain;
+
+    border-radius: 14px;
+}
 
 
-/* =====================================
-   BOTONES MODAL
-===================================== */
+/* =========================================================
+   AYUDA "TOCAR PARA AMPLIAR"
+========================================================= */
 
+.spot-image-hint {
+    position: absolute;
+
+    left: 50%;
+    bottom: 9px;
+
+    transform: translateX(-50%);
+
+    padding: 5px 11px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(0, 0, 0, 0.72);
+
+    color: white;
+
+    font-size: 0.7rem;
+    font-weight: 600;
+
+    white-space: nowrap;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   PANEL DE INFORMACIÓN
+========================================================= */
+
+.spot-info-panel {
+    margin-top: 10px;
+
+    padding: 12px;
+
+    border:
+        1px solid
+        rgba(15, 23, 42, 0.07);
+
+    border-radius: 14px;
+
+    background:
+        rgba(248, 250, 252, 0.98);
+
+    color: #1f2937;
+}
+
+
+/* =========================================================
+   CABECERA INFORMACIÓN
+========================================================= */
+
+.spot-info-heading {
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+
+    border-bottom:
+        1px solid
+        rgba(0, 0, 0, 0.09);
+}
+
+
+.spot-info-heading h2 {
+    margin: 3px 0 0;
+
+    color: #111827;
+
+    font-size: 1.3rem;
+    font-weight: 800;
+
+    line-height: 1.15;
+}
+
+
+/* =========================================================
+   CATEGORÍA
+========================================================= */
+
+.spot-category-label {
+    display: inline-block;
+
+    color: #198754;
+
+    font-size: 0.68rem;
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   LIKES
+========================================================= */
+
+.spot-modal-likes {
+    flex-shrink: 0;
+
+    padding: 5px 9px;
+
+    border-radius: 20px;
+
+    background: #f3f4f6;
+
+    color: #111827;
+
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   CONTENIDO DE INFORMACIÓN
+========================================================= */
+
+.spot-info-content {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+/* =========================================================
+   FILA
+========================================================= */
+
+.spot-info-row {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 9px;
+
+    padding: 9px 10px;
+
+    border-radius: 11px;
+
+    background: #ffffff;
+
+    border:
+        1px solid
+        rgba(15, 23, 42, 0.05);
+}
+
+
+.spot-info-icon {
+    flex-shrink: 0;
+
+    font-size: 1.15rem;
+
+    line-height: 1.3;
+}
+
+
+.spot-info-row > div {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+}
+
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+.spot-info-label {
+    margin-bottom: 2px;
+
+    color: #6b7280;
+
+    font-size: 0.66rem;
+    font-weight: 800;
+
+    letter-spacing: 0.4px;
+
+    text-transform: uppercase;
+}
+
+
+.spot-info-row strong {
+    color: #111827;
+
+    font-size: 0.9rem;
+    font-weight: 700;
+
+    line-height: 1.3;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   BOTONES DEL MODAL
+========================================================= */
 
 .custom-modal-content .d-grid {
+    display: grid;
 
-    display:grid;
+    gap: 7px;
 
-    gap:8px;
+    margin-top: 10px !important;
 
-    margin-top:15px!important;
-
-    padding-bottom:25px;
-
+    padding-bottom: 4px;
 }
-
 
 
 .custom-modal-content .btn {
+    min-height: 38px;
 
-    border-radius:18px!important;
+    padding: 7px 12px !important;
 
-    padding:9px 14px!important;
+    border-radius: 15px !important;
 
-    font-size:.85rem!important;
+    font-size: 0.79rem !important;
+    font-weight: 700 !important;
 
-    font-weight:600!important;
+    box-shadow:
+        0 2px 6px
+        rgba(0, 0, 0, 0.07);
 
-    transition:.25s;
-
-    box-shadow:0 3px 8px rgba(0,0,0,.08);
-
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
-
 
 
 .custom-modal-content .btn:hover {
-
-    transform:translateY(-2px);
-
+    transform: translateY(-1px);
 }
 
 
+/* =========================================================
+   COLORES BOTONES MODAL
+========================================================= */
 
-.btn-outline-primary {
+.custom-modal-content .btn-outline-primary {
+    background: #eff6ff !important;
 
-    background:#eff6ff!important;
+    color: #2563eb !important;
 
-    color:#3b82f6!important;
-
-    border-color:#bfdbfe!important;
-
+    border-color: #bfdbfe !important;
 }
 
 
-.btn-outline-warning {
+.custom-modal-content .btn-outline-warning {
+    background: #fffbeb !important;
 
-    background:#fffbeb!important;
+    color: #b45309 !important;
 
-    color:#b45309!important;
-
-    border-color:#fde68a!important;
-
+    border-color: #fde68a !important;
 }
 
 
-.btn-info {
+.custom-modal-content .btn-primary {
+    background: #2563eb !important;
 
-    background:#d1fae5!important;
+    color: white !important;
 
-    color:#047857!important;
-
-    border-color:#a7f3d0!important;
-
+    border-color: #2563eb !important;
 }
 
 
-.btn-success {
+.custom-modal-content .btn-info {
+    background: #d1fae5 !important;
 
-    background:#dcfce7!important;
+    color: #047857 !important;
 
-    color:#15803d!important;
-
-    border-color:#bbf7d0!important;
-
+    border-color: #a7f3d0 !important;
 }
 
 
-.btn-danger {
+.custom-modal-content .btn-success {
+    background: #dcfce7 !important;
 
-    background:#fee2e2!important;
+    color: #15803d !important;
 
-    color:#dc2626!important;
-
-    border-color:#fecaca!important;
-
+    border-color: #bbf7d0 !important;
 }
 
 
+.custom-modal-content .btn-danger {
+    background: #fee2e2 !important;
 
+    color: #dc2626 !important;
 
-/* =====================================
-   TEXTOS
-===================================== */
-
-
-.card-info-box p {
-
-    overflow-wrap:break-word;
-
-    word-break:break-word;
-
+    border-color: #fecaca !important;
 }
 
 
+/* =========================================================
+   ALERTA "COMPARTIDA EN COMUNIDAD"
+========================================================= */
+
+.custom-modal-content .alert-success {
+    padding: 8px 10px;
+
+    border-radius: 14px;
+
+    font-size: 0.76rem;
+
+    background: #ecfdf5;
+
+    color: #15803d;
+
+    border-color: #bbf7d0;
+}
 
 
-/* =====================================
-   TABLET
-===================================== */
+/* =========================================================
+   VISOR DE IMAGEN A PANTALLA COMPLETA
+========================================================= */
+
+.image-viewer-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    width: 100vw;
+    height: 100dvh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 18px;
+
+    background:
+        rgba(0, 0, 0, 0.95);
+
+    z-index: 2147483600;
+
+    cursor: zoom-out;
+}
 
 
-@media(min-width:768px){
+.image-viewer-full {
+    display: block;
+
+    width: auto;
+    height: auto;
+
+    max-width: 94vw;
+    max-height: 92dvh;
+
+    object-fit: contain;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 15px 50px
+        rgba(0, 0, 0, 0.65);
+}
+
+
+.image-close-btn {
+    position: fixed;
+
+    top: 18px;
+    right: 18px;
+
+    z-index: 2147483640;
+
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 50%;
+
+    background:
+        rgba(0, 0, 0, 0.75);
+
+    color: white;
+
+    font-size: 1.2rem;
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   TABLET / DESKTOP
+========================================================= */
+
+@media (min-width: 768px) {
 
     .album-grid {
+        grid-template-columns:
+            repeat(
+                auto-fill,
+                minmax(170px, 1fr)
+            );
 
-        grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+        max-width: 860px;
 
-        max-width:800px;
-
+        gap: 20px;
     }
 
+
+    .spot-detail-modal {
+        max-height: 80dvh;
+    }
+
+
+    .spot-modal-image {
+        max-height: 38dvh;
+    }
 }
 
 
+/* =========================================================
+   MÓVIL
+========================================================= */
 
+@media (max-width: 767px) {
 
-/* =====================================
-   MOBILE
-===================================== */
-
-
-@media(max-width:767px){
+    .album-container {
+        padding-bottom: 110px;
+    }
 
 
     .album-content {
-
-        padding-top:20px;
-
+        padding-top: 10px;
     }
 
 
     .title-green,
     .album-content h1 {
+        font-size: 1.9rem !important;
 
-        font-size:1.9rem!important;
-
-        line-height:1.25;
-
-        width:100%;
-
-        word-break:break-word;
-
+        line-height: 1.2;
     }
 
+
+    .album-grid {
+        gap: 12px;
+
+        padding: 0 10px;
+    }
 
 
     .album-buttons {
-
-        flex-wrap:wrap;
-
+        margin-bottom: 22px;
     }
-
 
 
     .custom-modal-overlay {
+        align-items: flex-start;
 
-        align-items:flex-start;
-
-        padding-top:20px;
-
-        padding-bottom:40px;
-
+        padding:
+            12px
+            10px
+            130px;
     }
 
 
-
-    .custom-modal-content {
-
-        margin-bottom:60px;
-
+    .custom-modal-content,
+    .spot-detail-modal {
+        width: 92vw;
     }
 
 
-}
+    .spot-detail-modal {
+        max-height: 74dvh;
 
-/* ==========================================
-   BLOQUE CARD + PUBLICAR
-========================================== */
-
-.album-card-block {
-  width: 100%;
-
-  display: flex;
-  flex-direction: column;
-
-  gap: 7px;
-}
+        padding: 10px;
+    }
 
 
-/* ==========================================
-   PUBLICAR EN COMUNIDAD
-========================================== */
+    .spot-modal-image {
+        max-height: 31dvh;
+    }
 
-.album-publish-btn {
-  width: 100%;
 
-  border: none;
+    .spot-info-panel {
+        padding: 10px;
+    }
 
-  padding:
-    9px
-    8px;
 
-  border-radius:
-    12px;
+    .spot-info-heading {
+        margin-bottom: 8px;
+        padding-bottom: 8px;
+    }
 
-  background:
-    linear-gradient(
-      135deg,
-      #16a34a,
-      #22c55e
-    );
 
-  color:
-    white;
+    .spot-info-heading h2 {
+        font-size: 1.18rem;
+    }
 
-  font-size:
-    .72rem;
 
-  font-weight:
-    800;
+    .spot-info-row {
+        padding: 8px 9px;
+    }
 
-  cursor:
-    pointer;
 
-  box-shadow:
-    0 5px 12px
-    rgba(22, 163, 74, .22);
+    .custom-modal-content .btn {
+        min-height: 36px;
 
-  transition:
-    transform .2s ease,
-    box-shadow .2s ease;
+        padding: 6px 10px !important;
+
+        font-size: 0.75rem !important;
+    }
 }
 
 
-.album-publish-btn:hover {
-  transform:
-    translateY(-2px);
+/* =========================================================
+   MÓVIL PEQUEÑO
+========================================================= */
 
-  box-shadow:
-    0 8px 16px
-    rgba(22, 163, 74, .3);
-}
+@media (max-width: 420px) {
 
-
-/* ==========================================
-   YA PUBLICADA
-========================================== */
-
-.album-published-status {
-  width:
-    100%;
-
-  padding:
-    7px
-    8px;
-
-  border-radius:
-    12px;
-
-  background:
-    rgba(255,255,255,.82);
-
-  color:
-    #15803d;
-
-  border:
-    1px solid
-    rgba(22,163,74,.18);
-
-  text-align:
-    center;
-
-  font-size:
-    .68rem;
-
-  font-weight:
-    800;
-}
+    .album-grid {
+        gap: 10px;
+    }
 
 
-/* ==========================================
-   MOBILE
-========================================== */
+    .album-publish-btn {
+        padding: 7px 4px;
 
-@media (max-width: 576px) {
-
-  .album-publish-btn {
-    padding:
-      8px
-      5px;
-
-    font-size:
-      .62rem;
-  }
+        font-size: 0.6rem;
+    }
 
 
-  .album-published-status {
-    font-size:
-      .6rem;
-  }
+    .album-published-status {
+        padding: 6px 4px;
 
+        font-size: 0.59rem;
+    }
+
+
+    .spot-detail-modal {
+        max-height: 72dvh;
+    }
+
+
+    .spot-modal-image {
+        max-height: 29dvh;
+    }
+
+
+    .spot-image-hint {
+        padding: 4px 9px;
+
+        font-size: 0.64rem;
+    }
 }

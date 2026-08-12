@@ -1,477 +1,1012 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {
+  useEffect,
+  useState
+} from 'react';
+
 import { supabase } from '../supabaseClient';
 import CategoryCarousel from './CategoryCarousel';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import "./Comunidad.css";
 
-// Frases divertidas para la pantalla de carga
+import './Comunidad.css';
+
+
+// =========================================================
+// MENSAJES DE CARGA
+// =========================================================
+
 const MENSAJES_CARGA = [
-  "Maquillando mascotas...",
-  "Preparando las aves para la foto...",
-  "Buscando los mejores paisajes...",
-  "Acariciando a los gatitos...",
-  "Ordenando el mazo de desafíos...",
-  "Casi listo en la Comunidad Spotter..."
+  'Maquillando mascotas...',
+  'Preparando las aves para la foto...',
+  'Buscando los mejores paisajes...',
+  'Acariciando a los gatitos...',
+  'Ordenando las Aventuras del Día...',
+  'Casi listo en la Comunidad Spotter...'
 ];
 
+
 function Comunidad() {
+
   const navigate = useNavigate();
+
+
+  // =========================================================
+  // ESTADOS
+  // =========================================================
 
   const [posts, setPosts] = useState([]);
   const [likes, setLikes] = useState([]);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  
-  // Estados para la animación de carga divertida
-  const [mensajeIndex, setMensajeIndex] = useState(0);
-  const [progreso, setProgreso] = useState(10);
-  
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [cardsPremiosComunidad, setCardsPremiosComunidad] = useState([]);
-  const [fotoEnGrande, setFotoEnGrande] = useState(null);
 
-  const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
 
-  // Efecto para rotar los mensajes y simular progreso mientras carga
+  // =========================================================
+  // LOADING
+  // =========================================================
+
+  const [
+    mensajeIndex,
+    setMensajeIndex
+  ] = useState(0);
+
+  const [
+    progreso,
+    setProgreso
+  ] = useState(10);
+
+
+  // =========================================================
+  // FOTO GRANDE
+  // =========================================================
+
+  const [
+    fotoEnGrande,
+    setFotoEnGrande
+  ] = useState(null);
+
+
+  // =========================================================
+  // ANIMACIÓN DE CARGA
+  // =========================================================
+
   useEffect(() => {
-    if (!loading) return;
 
-    const intervaloMensaje = setInterval(() => {
-      setMensajeIndex((prev) => (prev + 1) % MENSAJES_CARGA.length);
-    }, 1500);
-
-    const intervaloProgreso = setInterval(() => {
-      setProgreso((prev) => (prev < 90 ? prev + 10 : prev));
-    }, 400);
-
-    return () => {
-      clearInterval(intervaloMensaje);
-      clearInterval(intervaloProgreso);
-    };
-  }, [loading]);
-
-  useEffect(() => {
-    cargarDatos();
-  }, []);
-
-  const cargarDatos = async () => {
-    setLoading(true);
-    setProgreso(10);
-
-    try {
-      const [
-        authResponse,
-        cardsResponse,
-        likesResponse,
-        premiosResponse
-      ] = await Promise.all([
-        supabase.auth.getUser(),
-        supabase
-          .from("cards")
-          .select("*")
-          .eq("is_public", true)
-          .order("created_at", { ascending: false }),
-        supabase
-          .from("likes")
-          .select("*"),
-        supabase
-          .from('user_challenges')
-          .select(`
-            card:card_id (*),
-            challenge:challenge_id (
-              titulo,
-              descripcion
-            )
-          `)
-          .limit(30)
-      ]);
-
-      setUser(authResponse.data?.user || null);
-
-      if (!cardsResponse.error) {
-        setPosts(cardsResponse.data || []);
-      }
-
-      if (!likesResponse.error) {
-        setLikes(likesResponse.data || []);
-      }
-
-      if (!premiosResponse.error && premiosResponse.data) {
-        const unicasCards = [];
-        const idsVistos = new Set();
-        
-        premiosResponse.data.forEach(item => {
-          if (item.card && item.card.is_public && !idsVistos.has(item.card.id)) {
-            idsVistos.add(item.card.id);
-            unicasCards.push({
-              ...item.card,
-              consigna: item.challenge?.titulo || item.challenge?.descripcion || "Desafío completado"
-            });
-          }
-        });
-
-        setCardsPremiosComunidad(unicasCards);
-      }
-
-    } catch (error) {
-      console.error("Error cargando datos de la comunidad:", error);
-    } finally {
-      setProgreso(100);
-      setTimeout(() => setLoading(false), 300);
-    }
-  };
-
-  const toggleLike = async (cardId) => {
-    if (!user) {
-      Swal.fire({
-        icon: 'warning',
-        title: '¡Acceso denegado!',
-        text: 'Debes iniciar sesión para dar Me Gusta.',
-        confirmButtonText: 'Iniciar sesión',
-        confirmButtonColor: '#ffc107',
-        allowOutsideClick: false
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate('/login');
-        }
-      });
+    if (!loading) {
       return;
     }
 
-    const existe = likes.find(
-      like =>
-        like.card_id == cardId &&
-        like.user_id == user?.id
-    );
 
-    if (existe) {
-      const { error } = await supabase
-        .from("likes")
-        .delete()
-        .eq("id", existe.id);
+    const intervaloMensaje =
+      setInterval(() => {
 
-      if (!error) {
-        setLikes(prev =>
-          prev.filter(like => like.id !== existe.id)
+        setMensajeIndex(
+          (prev) =>
+            (
+              prev + 1
+            ) %
+            MENSAJES_CARGA.length
         );
+
+      }, 1500);
+
+
+    const intervaloProgreso =
+      setInterval(() => {
+
+        setProgreso(
+          (prev) =>
+            prev < 90
+              ? prev + 10
+              : prev
+        );
+
+      }, 400);
+
+
+    return () => {
+
+      clearInterval(
+        intervaloMensaje
+      );
+
+      clearInterval(
+        intervaloProgreso
+      );
+
+    };
+
+  }, [loading]);
+
+
+  // =========================================================
+  // CARGAR DATOS
+  // =========================================================
+
+  useEffect(() => {
+
+    cargarDatos();
+
+  }, []);
+
+
+  const cargarDatos =
+    async () => {
+
+      setLoading(true);
+      setProgreso(10);
+
+
+      try {
+
+        const [
+          authResponse,
+          cardsResponse,
+          likesResponse
+        ] =
+          await Promise.all([
+
+            // USUARIO
+            supabase.auth
+              .getUser(),
+
+
+            // SOLO CARDS COMPARTIDAS
+            supabase
+              .from('cards')
+              .select('*')
+              .eq(
+                'is_public',
+                true
+              )
+              .order(
+                'created_at',
+                {
+                  ascending:
+                    false
+                }
+              ),
+
+
+            // LIKES
+            supabase
+              .from('likes')
+              .select('*')
+
+          ]);
+
+
+        // =====================================================
+        // USUARIO
+        // =====================================================
+
+        setUser(
+          authResponse.data
+            ?.user ||
+          null
+        );
+
+
+        // =====================================================
+        // CARDS
+        // =====================================================
+
+        if (
+          !cardsResponse.error
+        ) {
+
+          setPosts(
+            cardsResponse.data ||
+            []
+          );
+
+        } else {
+
+          console.error(
+            'Error cargando cards:',
+            cardsResponse.error
+          );
+
+        }
+
+
+        // =====================================================
+        // LIKES
+        // =====================================================
+
+        if (
+          !likesResponse.error
+        ) {
+
+          setLikes(
+            likesResponse.data ||
+            []
+          );
+
+        } else {
+
+          console.error(
+            'Error cargando likes:',
+            likesResponse.error
+          );
+
+        }
+
+
+      } catch (error) {
+
+        console.error(
+          'Error cargando Comunidad:',
+          error
+        );
+
+
+      } finally {
+
+        setProgreso(100);
+
+
+        setTimeout(
+          () =>
+            setLoading(false),
+          300
+        );
+
       }
-    } else {
-      const { data, error } = await supabase
-        .from("likes")
-        .insert({
-          card_id: cardId,
-          user_id: user?.id
-        })
-        .select()
-        .single();
 
-      if (!error && data) {
-        setLikes(prev => [...prev, data]);
+    };
+
+
+  // =========================================================
+  // LIKE
+  // =========================================================
+
+  const toggleLike =
+    async (cardId) => {
+
+      if (!user) {
+
+        Swal.fire({
+
+          icon:
+            'warning',
+
+          title:
+            '¡Acceso denegado!',
+
+          text:
+            'Debes iniciar sesión para dar Me Gusta.',
+
+          confirmButtonText:
+            'Iniciar sesión',
+
+          confirmButtonColor:
+            '#ffc107',
+
+          allowOutsideClick:
+            false
+
+        }).then(
+          (result) => {
+
+            if (
+              result.isConfirmed
+            ) {
+
+              navigate(
+                '/login'
+              );
+
+            }
+
+          }
+        );
+
+
+        return;
+
       }
-    }
-  };
 
-  const handleNext = () => {
-    if (cardsPremiosComunidad.length === 0) return;
-    if (currentIndex < cardsPremiosComunidad.length - 1) {
-      setCurrentIndex(prev => prev + 1);
-    } else {
-      setCurrentIndex(0);
-    }
-  };
 
-  const handlePrev = () => {
-    if (cardsPremiosComunidad.length === 0) return;
-    if (currentIndex > 0) {
-      setCurrentIndex(prev => prev - 1);
-    } else {
-      setCurrentIndex(cardsPremiosComunidad.length - 1);
-    }
-  };
+      // =======================================================
+      // VER SI YA DIO LIKE
+      // =======================================================
 
-  const handleTouchStart = (e) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
+      const existe =
+        likes.find(
+          (like) =>
 
-  const handleTouchMove = (e) => {
-    touchEndX.current = e.touches[0].clientX;
-  };
+            String(
+              like.card_id
+            ) ===
+            String(
+              cardId
+            ) &&
 
-  const handleTouchEnd = () => {
-    if (!touchStartX.current || !touchEndX.current) return;
-    const distance = touchStartX.current - touchEndX.current;
-    const minSwipeDistance = 50;
+            String(
+              like.user_id
+            ) ===
+            String(
+              user.id
+            )
+        );
 
-    if (distance > minSwipeDistance) {
-      handleNext();
-    } else if (distance < -minSwipeDistance) {
-      handlePrev();
-    }
 
-    touchStartX.current = 0;
-    touchEndX.current = 0;
-  };
+      // =======================================================
+      // QUITAR LIKE
+      // =======================================================
 
-  const handleMouseDown = (e) => {
-    touchStartX.current = e.clientX;
-  };
+      if (existe) {
 
-  const handleMouseUp = (e) => {
-    touchEndX.current = e.clientX;
-    if (!touchStartX.current || !touchEndX.current) return;
-    const distance = touchStartX.current - touchEndX.current;
-    const minSwipeDistance = 50;
+        const {
+          error
+        } =
+          await supabase
+            .from('likes')
+            .delete()
+            .eq(
+              'id',
+              existe.id
+            );
 
-    if (distance > minSwipeDistance) {
-      handleNext();
-    } else if (distance < -minSwipeDistance) {
-      handlePrev();
-    }
 
-    touchStartX.current = 0;
-    touchEndX.current = 0;
-  };
+        if (!error) {
+
+          setLikes(
+            (prev) =>
+              prev.filter(
+                (like) =>
+                  like.id !==
+                  existe.id
+              )
+          );
+
+        } else {
+
+          console.error(
+            'Error quitando like:',
+            error
+          );
+
+        }
+
+
+        return;
+
+      }
+
+
+      // =======================================================
+      // AGREGAR LIKE
+      // =======================================================
+
+      const {
+        data,
+        error
+      } =
+        await supabase
+          .from('likes')
+          .insert({
+            card_id:
+              cardId,
+
+            user_id:
+              user.id
+          })
+          .select()
+          .single();
+
+
+      if (
+        !error &&
+        data
+      ) {
+
+        setLikes(
+          (prev) => [
+            ...prev,
+            data
+          ]
+        );
+
+      } else {
+
+        console.error(
+          'Error agregando like:',
+          error
+        );
+
+      }
+
+    };
+
+
+  // =========================================================
+  // LOADING
+  // =========================================================
 
   if (loading) {
+
     return (
+
       <div className="comunidad-loading-container">
+
         <div className="comunidad-loading-box">
-          <h3 className="mb-3 text-white">🐾 Spotter</h3>
-          <p className="loading-phrase">{MENSAJES_CARGA[mensajeIndex]}</p>
+
+
+          <h3 className="mb-3 text-white">
+
+            🐾 Spotter
+
+          </h3>
+
+
+          <p className="loading-phrase">
+
+            {
+              MENSAJES_CARGA[
+                mensajeIndex
+              ]
+            }
+
+          </p>
+
+
           <div className="progress-bar-custom">
-            <div className="progress-fill" style={{ width: `${progreso}%` }}></div>
+
+            <div
+
+              className="progress-fill"
+
+              style={{
+                width:
+                  `${progreso}%`
+              }}
+
+            />
+
           </div>
-          <small className="text-muted mt-3 d-block">{progreso}%</small>
+
+
+          <small className="text-muted mt-3 d-block">
+
+            {progreso}%
+
+          </small>
+
+
         </div>
+
       </div>
+
     );
+
   }
 
+
+  // =========================================================
+  // AVENTURAS DEL DÍA
+  // =========================================================
+
+  const aventuras =
+    posts.filter(
+      (post) =>
+        post.origen ===
+        'aventura'
+    );
+
+
+  // =========================================================
+  // CATEGORÍAS NORMALES
+  //
+  // IMPORTANTE:
+  // excluimos origen === aventura
+  // para que NO se dupliquen.
+  // =========================================================
+
   const categorias = {
-    perros: posts.filter(post => post.categoria === "perros"),
-    gatos: posts.filter(post => post.categoria === "gatos"),
-    plantas: posts.filter(post => post.categoria === "plantas"),
-    aves: posts.filter(post => post.categoria === "aves"),
-    paisajes: posts.filter(post => post.categoria === "paisajes")
+
+    perros:
+      posts.filter(
+        (post) =>
+          post.categoria ===
+            'perros' &&
+          post.origen !==
+            'aventura'
+      ),
+
+
+    gatos:
+      posts.filter(
+        (post) =>
+          post.categoria ===
+            'gatos' &&
+          post.origen !==
+            'aventura'
+      ),
+
+
+    aves:
+      posts.filter(
+        (post) =>
+          post.categoria ===
+            'aves' &&
+          post.origen !==
+            'aventura'
+      ),
+
+
+    plantas:
+      posts.filter(
+        (post) =>
+          post.categoria ===
+            'plantas' &&
+          post.origen !==
+            'aventura'
+      ),
+
+
+    paisajes:
+      posts.filter(
+        (post) =>
+          post.categoria ===
+            'paisajes' &&
+          post.origen !==
+            'aventura'
+      )
+
   };
 
-  const scrollTo = (id) => {
-    document.getElementById(id)?.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-  };
+
+  // =========================================================
+  // VISTA
+  // =========================================================
 
   return (
+
     <div className="comunidad-page">
+
+
       <div className="container comunidad-content">
 
-        <h2 className="comunidad-title">
-          Comunidad Spotter
-        </h2>
 
-        <div className="swipe-deck-wrapper position-relative d-flex flex-column align-items-center justify-content-center mb-5">
-          <h4 className="mb-3 text-white">✨ ¡Mazo de desafíos de la comunidad!</h4>
-          
-          {cardsPremiosComunidad.length > 0 ? (
-            <div className="d-flex flex-column align-items-center w-100">
-              <div 
-                className="deck-container position-relative my-2" 
-                style={{ minHeight: '340px', width: '250px', touchAction: 'pan-y' }}
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={handleTouchEnd}
-                onMouseDown={handleMouseDown}
-                onMouseUp={handleMouseUp}
-              >
-                {cardsPremiosComunidad.map((card, index) => {
-                  const offset = index - currentIndex;
-                  if (Math.abs(offset) > 2) return null;
+        {/* ===================================================
+            TÍTULO
+        =================================================== */}
 
-                  const isLiked = likes.some(l => l.card_id === card.id && l.user_id === user?.id);
+        <div className="comunidad-header">
 
-                  return (
-                    <div 
-                      key={card.id}
-                      className={`swipe-card trading-card-final ${index === currentIndex ? 'active-card' : 'stacked-card'}`}
-                      style={{
-                        transform: `translateX(${offset * 15}px) translateY(${offset * 10}px) scale(${1 - Math.abs(offset) * 0.05})`,
-                        zIndex: cardsPremiosComunidad.length - Math.abs(offset),
-                        opacity: Math.abs(offset) > 1 ? 0.4 : 1,
-                        transition: 'all 0.3s ease-in-out',
-                        position: index === currentIndex ? 'relative' : 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        cursor: 'grab'
-                      }}
-                    >
-                      <div className="card-inner-border">
-                        <div 
-                          className="card-image-box"
-                          style={{ cursor: card?.imagen_url ? 'pointer' : 'default' }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (card?.imagen_url) {
-                              setFotoEnGrande(card.imagen_url);
-                            }
-                          }}
-                          title="Click para ver la foto en grande"
-                        >
-                          {card?.imagen_url ? (
-                            <img src={card.imagen_url} alt={card.nombre || 'Tarjeta'} />
-                          ) : (
-                            <div className="bg-secondary d-flex align-items-center justify-content-center h-100">
-                              <span className="fs-1">🖼️</span>
-                            </div>
-                          )}
-                        </div>
-                        <div className="card-info-box p-2 d-flex flex-column justify-content-between">
-                          <div>
-                            <h6 className="mb-0 fw-bold text-dark text-truncate">{card?.nombre || 'Sin nombre'}</h6>
-                            <p className="text-muted small mb-1 text-capitalize">
-                              {card?.raza || card?.lugar || card?.caracteristica || card?.categoria}
-                            </p>
-                            <div className="bg-light p-1 rounded mt-1 border" style={{ fontSize: '0.65rem' }}>
-                              <span className="fw-bold text-dark">Consigna: </span>
-                              <span className="text-muted text-truncate d-inline-block w-100" style={{ verticalAlign: 'middle' }}>
-                                {card.consigna}
-                              </span>
-                            </div>
-                          </div>
-                          <div className="border-top pt-1 mt-1 d-flex justify-content-between align-items-center">
-                            <small className="text-warning fw-bold text-truncate" style={{ fontSize: '0.7rem' }}>
-                              🎖️ Premio Desafío
-                            </small>
-                            <button 
-                              className="btn btn-sm p-0 border-0 bg-transparent"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                toggleLike(card.id);
-                              }}
-                              style={{ fontSize: '1rem' }}
-                            >
-                              {isLiked ? '❤️' : '🤍'}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+          <h2 className="comunidad-title">
 
-              <div className="d-flex gap-3 mt-3 align-items-center">
-                <button 
-                  className="btn btn-outline-warning rounded-circle px-3 py-2 fw-bold"
-                  onClick={handlePrev}
-                >
-                  ⬅️
-                </button>
-                <span className="text-white fw-bold">
-                  {currentIndex + 1} / {cardsPremiosComunidad.length}
-                </span>
-                <button 
-                  className="btn btn-warning rounded-circle px-3 py-2 fw-bold"
-                  onClick={handleNext}
-                >
-                  ➡️
-                </button>
-              </div>
-            </div>
-          ) : (
-            <p className="text-muted">No hay premios de desafíos compartidos en este momento.</p>
-          )}
+            Comunidad Spotter
+
+          </h2>
+
+
+          <p className="comunidad-subtitle">
+
+            Descubrí los Spots compartidos por la comunidad.
+
+          </p>
+
         </div>
 
-        <div className="community-nav">
-          <button className="cat-perros" onClick={() => scrollTo("perros")}>🐶 Perros</button>
-          <button className="cat-gatos" onClick={() => scrollTo("gatos")}>🐱 Gatos</button>
-          <button className="cat-plantas" onClick={() => scrollTo("plantas")}>🌿 Plantas</button>
-          <button className="cat-aves" onClick={() => scrollTo("aves")}>🐦 Aves</button>
-          <button className="cat-paisajes" onClick={() => scrollTo("paisajes")}>🏞️ Paisajes</button>
-        </div>
+
+        {/* ===================================================
+            AVENTURAS DEL DÍA
+        =================================================== */}
 
         <CategoryCarousel
+
+          id="aventuras"
+
+          title="✨ Aventuras del Día"
+
+          cards={
+            aventuras
+          }
+
+          likes={
+            likes
+          }
+
+          user={
+            user
+          }
+
+          onToggleLike={
+            toggleLike
+          }
+
+          onImageClick={
+            (url) =>
+              setFotoEnGrande(
+                url
+              )
+          }
+
+        />
+
+
+        {/* ===================================================
+            PERROS
+        =================================================== */}
+
+        <CategoryCarousel
+
           id="perros"
+
           title="🐶 Perros"
-          cards={categorias.perros}
-          likes={likes}
-          user={user}
-          onToggleLike={toggleLike}
-          onImageClick={(url) => setFotoEnGrande(url)}
+
+          cards={
+            categorias.perros
+          }
+
+          likes={
+            likes
+          }
+
+          user={
+            user
+          }
+
+          onToggleLike={
+            toggleLike
+          }
+
+          onImageClick={
+            (url) =>
+              setFotoEnGrande(
+                url
+              )
+          }
+
         />
 
+
+        {/* ===================================================
+            GATOS
+        =================================================== */}
+
         <CategoryCarousel
+
           id="gatos"
+
           title="🐱 Gatos"
-          cards={categorias.gatos}
-          likes={likes}
-          user={user}
-          onToggleLike={toggleLike}
-          onImageClick={(url) => setFotoEnGrande(url)}
+
+          cards={
+            categorias.gatos
+          }
+
+          likes={
+            likes
+          }
+
+          user={
+            user
+          }
+
+          onToggleLike={
+            toggleLike
+          }
+
+          onImageClick={
+            (url) =>
+              setFotoEnGrande(
+                url
+              )
+          }
+
         />
 
-        <CategoryCarousel
-          id="plantas"
-          title="🌿 Plantas"
-          cards={categorias.plantas}
-          likes={likes}
-          user={user}
-          onToggleLike={toggleLike}
-          onImageClick={(url) => setFotoEnGrande(url)}
-        />
+
+        {/* ===================================================
+            AVES
+        =================================================== */}
 
         <CategoryCarousel
+
           id="aves"
+
           title="🐦 Aves"
-          cards={categorias.aves}
-          likes={likes}
-          user={user}
-          onToggleLike={toggleLike}
-          onImageClick={(url) => setFotoEnGrande(url)}
+
+          cards={
+            categorias.aves
+          }
+
+          likes={
+            likes
+          }
+
+          user={
+            user
+          }
+
+          onToggleLike={
+            toggleLike
+          }
+
+          onImageClick={
+            (url) =>
+              setFotoEnGrande(
+                url
+              )
+          }
+
         />
 
+
+        {/* ===================================================
+            PLANTAS
+        =================================================== */}
+
         <CategoryCarousel
-          id="paisajes"
-          title="🏞️ Paisajes"
-          cards={categorias.paisajes}
-          likes={likes}
-          user={user}
-          onToggleLike={toggleLike}
-          onImageClick={(url) => setFotoEnGrande(url)}
+
+          id="plantas"
+
+          title="🌿 Plantas"
+
+          cards={
+            categorias.plantas
+          }
+
+          likes={
+            likes
+          }
+
+          user={
+            user
+          }
+
+          onToggleLike={
+            toggleLike
+          }
+
+          onImageClick={
+            (url) =>
+              setFotoEnGrande(
+                url
+              )
+          }
+
         />
+
+
+        {/* ===================================================
+            PAISAJES
+        =================================================== */}
+
+        <CategoryCarousel
+
+          id="paisajes"
+
+          title="🏞️ Paisajes"
+
+          cards={
+            categorias.paisajes
+          }
+
+          likes={
+            likes
+          }
+
+          user={
+            user
+          }
+
+          onToggleLike={
+            toggleLike
+          }
+
+          onImageClick={
+            (url) =>
+              setFotoEnGrande(
+                url
+              )
+          }
+
+        />
+
+
+        {/* ===================================================
+            COMUNIDAD VACÍA
+        =================================================== */}
+
+        {posts.length === 0 && (
+
+          <div
+            className="
+              text-center
+              text-white
+              py-5
+            "
+          >
+
+            <h4>
+
+              🌎 La comunidad está esperando sus primeros Spots
+
+            </h4>
+
+
+            <p className="opacity-75 mt-2">
+
+              Cuando los usuarios compartan sus cards,
+              aparecerán acá.
+
+            </p>
+
+          </div>
+
+        )}
+
 
       </div>
 
+
+      {/* =====================================================
+          VISOR GRANDE
+      ===================================================== */}
+
       {fotoEnGrande && (
-        <div 
-          className="modal-foto-grande position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-          style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)', zIndex: 9999, cursor: 'zoom-out' }}
-          onClick={() => setFotoEnGrande(null)}
+
+        <div
+
+          className="
+            modal-foto-grande
+            position-fixed
+            top-0
+            start-0
+            w-100
+            h-100
+            d-flex
+            align-items-center
+            justify-content-center
+          "
+
+          style={{
+
+            backgroundColor:
+              'rgba(0, 0, 0, 0.92)',
+
+            zIndex:
+              99999,
+
+            cursor:
+              'zoom-out',
+
+            padding:
+              '20px'
+
+          }}
+
+          onClick={() =>
+            setFotoEnGrande(
+              null
+            )
+          }
+
         >
-          <div className="position-relative p-2 text-center" onClick={(e) => e.stopPropagation()}>
-            <button 
-              className="btn btn-dark position-absolute top-0 end-0 m-3 rounded-circle"
-              onClick={() => setFotoEnGrande(null)}
-              style={{ width: '40px', height: '40px', fontSize: '1.2rem', zIndex: 10000 }}
+
+
+          <div
+
+            className="
+              position-relative
+              text-center
+            "
+
+            onClick={
+              (e) =>
+                e.stopPropagation()
+            }
+
+            style={{
+
+              maxWidth:
+                '94vw',
+
+              maxHeight:
+                '90vh'
+
+            }}
+
+          >
+
+
+            {/* =================================================
+                CERRAR
+            ================================================= */}
+
+            <button
+
+              type="button"
+
+              className="
+                btn
+                btn-dark
+                position-absolute
+                top-0
+                end-0
+                m-2
+                rounded-circle
+              "
+
+              onClick={() =>
+                setFotoEnGrande(
+                  null
+                )
+              }
+
+              style={{
+
+                width:
+                  '40px',
+
+                height:
+                  '40px',
+
+                fontSize:
+                  '1.2rem',
+
+                zIndex:
+                  100000
+
+              }}
+
             >
+
               ✕
+
             </button>
-            <img 
-              src={fotoEnGrande} 
-              alt="Foto en grande" 
-              className="img-fluid rounded shadow-lg"
-              style={{ maxHeight: '85vh', maxWidth: '90vw', objectFit: 'contain' }}
+
+
+            {/* =================================================
+                IMAGEN
+            ================================================= */}
+
+            <img
+
+              src={
+                fotoEnGrande
+              }
+
+              alt="Spot en grande"
+
+              className="
+                img-fluid
+                rounded
+                shadow-lg
+              "
+
+              style={{
+
+                maxHeight:
+                  '88vh',
+
+                maxWidth:
+                  '92vw',
+
+                objectFit:
+                  'contain'
+
+              }}
+
             />
+
+
           </div>
+
+
         </div>
+
       )}
 
+
     </div>
+
   );
+
 }
+
 
 export default Comunidad;

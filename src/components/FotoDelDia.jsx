@@ -807,6 +807,18 @@ Do not replace it with another animal.
             dato:
               `Aventura especial: ${aventuraActual.nombre}`,
 
+            // ======================================
+            // IMPORTANTE:
+            // MARCAMOS QUE ES UNA AVENTURA DEL DÍA
+            // ======================================
+
+            origen:
+              'aventura',
+
+            // ======================================
+            // NACE PRIVADA
+            // ======================================
+
             publica:
               false,
 
@@ -894,7 +906,6 @@ Do not replace it with another animal.
             ✨ Aventura del día
           </span>
 
-          
           <p>
             Convertí a tu mascota en protagonista
             de una aventura.
@@ -966,10 +977,6 @@ Do not replace it with another animal.
 
         ) : aventuraActual.id === null ? (
 
-          /* ==================================
-             SIN AVENTURA PROGRAMADA
-          ================================== */
-
           <div className="foto-dia-limit">
 
             <span>
@@ -990,6 +997,7 @@ Do not replace it with another animal.
         ) : (
 
           <>
+
             {/* ===============================
                 INTENTOS
             =============================== */}
@@ -1009,6 +1017,7 @@ Do not replace it with another animal.
               ) : (
 
                 <>
+
                   <div className="foto-dia-dots">
 
                     <span
@@ -1032,6 +1041,7 @@ Do not replace it with another animal.
                   <strong>
                     {intentosRestantes} de 2
                   </strong>
+
                 </>
 
               )}
@@ -1052,6 +1062,7 @@ Do not replace it with another animal.
                     !loading && (
 
                       <>
+
                         <div className="foto-dia-upload-icon">
                           📸
                         </div>
@@ -1064,6 +1075,7 @@ Do not replace it with another animal.
                           Usá una imagen clara donde
                           se vea bien su cara.
                         </p>
+
                       </>
 
                     )}

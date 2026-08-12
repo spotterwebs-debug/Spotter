@@ -301,3 +301,140 @@ Categorias
         margin-bottom:40px;
     }
 }
+
+/* =========================================================
+   MAZO NUEVO DE DESAFÍOS
+========================================================= */
+
+.challenge-spot-card {
+    position: relative;
+
+    width: 100%;
+
+    overflow: hidden;
+
+    border-radius: 18px;
+
+    cursor: zoom-in;
+}
+
+.challenge-spot-image {
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    border-radius: 18px;
+
+    object-fit: contain;
+}
+
+.challenge-spot-placeholder {
+    width: 100%;
+    height: 330px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #334155;
+
+    border-radius: 18px;
+
+    font-size: 3rem;
+}
+
+
+/* =========================================================
+   LIKE DEL DESAFÍO
+========================================================= */
+
+.challenge-spot-like {
+    position: absolute;
+
+    top: 10px;
+    right: 10px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 4px;
+
+    padding: 6px 9px;
+
+    border: none;
+
+    border-radius: 30px;
+
+    background: rgba(0, 0, 0, 0.68);
+
+    color: white;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.challenge-spot-like.liked {
+    background: rgba(150, 20, 35, 0.85);
+}
+
+
+/* =========================================================
+   BADGE DESAFÍO
+========================================================= */
+
+.challenge-spot-badge {
+    position: absolute;
+
+    left: 10px;
+    bottom: 10px;
+
+    padding: 5px 9px;
+
+    border-radius: 20px;
+
+    background: rgba(0, 0, 0, 0.7);
+
+    color: #ffc107;
+
+    font-size: 0.72rem;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   INFO DEL DESAFÍO
+========================================================= */
+
+.challenge-spot-info {
+    margin-top: 9px;
+
+    padding: 9px 12px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+
+    border-radius: 12px;
+
+    background: rgba(15, 23, 42, 0.75);
+
+    color: white;
+
+    text-align: center;
+}
+
+.challenge-spot-info strong {
+    font-size: 0.95rem;
+}
+
+.challenge-spot-info span {
+    color: rgba(255, 255, 255, 0.72);
+
+    font-size: 0.75rem;
+
+    line-height: 1.25;
+}

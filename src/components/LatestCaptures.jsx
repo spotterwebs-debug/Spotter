@@ -1,6 +1,12 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useRef
+} from 'react';
+
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
+
 
 function LatestCaptures() {
 
@@ -8,249 +14,619 @@ function LatestCaptures() {
 
   const [captures, setCaptures] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null);
 
-  // Estado para el índice del mazo estilo swipe/carrusel de tarjetas
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Referencias para detectar el gesto táctil
+  // Referencias para detectar swipe táctil
   const touchStartX = useRef(null);
   const touchEndX = useRef(null);
 
-  useEffect(() => {
-    const getSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
 
-      setUser(session?.user || null);
-    };
+  // =========================================================
+  // CARGAR ÚLTIMOS SPOTS PÚBLICOS
+  // =========================================================
+
+  useEffect(() => {
 
     const fetchLatest = async () => {
+
       setLoading(true);
 
-      const { data, error } = await supabase
+      const {
+        data,
+        error
+      } = await supabase
         .from('cards')
         .select('*')
         .eq('is_public', true)
-        .order('created_at', { ascending: false })
+        .order(
+          'created_at',
+          {
+            ascending: false
+          }
+        )
         .limit(5);
 
+
       if (error) {
-        console.error("Error al cargar las últimas capturas:", error);
+
+        console.error(
+          'Error al cargar los últimos Spots:',
+          error
+        );
+
         setCaptures([]);
+
       } else {
-        setCaptures(data || []);
+
+        setCaptures(
+          data || []
+        );
+
       }
 
       setLoading(false);
+
     };
 
-    getSession();
+
     fetchLatest();
+
   }, []);
 
-  // Funciones de navegación para el mazo
+
+  // =========================================================
+  // SIGUIENTE CARD
+  // =========================================================
+
   const handleNext = () => {
-    if (captures.length === 0) return;
 
-    if (currentIndex < captures.length - 1) {
-      setCurrentIndex((prev) => prev + 1);
-    } else {
-      setCurrentIndex(0);
-    }
-  };
-
-  const handlePrev = () => {
-    if (captures.length === 0) return;
-
-    if (currentIndex > 0) {
-      setCurrentIndex((prev) => prev - 1);
-    } else {
-      setCurrentIndex(captures.length - 1);
-    }
-  };
-
-  // ==========================
-  // SWIPE CON EL DEDO
-  // ==========================
-  const handleTouchStart = (e) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchMove = (e) => {
-    touchEndX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = () => {
     if (
-      touchStartX.current === null ||
-      touchEndX.current === null
+      captures.length === 0
     ) {
       return;
     }
 
-    const distance = touchStartX.current - touchEndX.current;
 
-    if (distance > 50) {
-      handleNext();
-    } else if (distance < -50) {
-      handlePrev();
+    if (
+      currentIndex <
+      captures.length - 1
+    ) {
+
+      setCurrentIndex(
+        (prev) => prev + 1
+      );
+
+    } else {
+
+      setCurrentIndex(0);
+
     }
+
+  };
+
+
+  // =========================================================
+  // CARD ANTERIOR
+  // =========================================================
+
+  const handlePrev = () => {
+
+    if (
+      captures.length === 0
+    ) {
+      return;
+    }
+
+
+    if (
+      currentIndex > 0
+    ) {
+
+      setCurrentIndex(
+        (prev) => prev - 1
+      );
+
+    } else {
+
+      setCurrentIndex(
+        captures.length - 1
+      );
+
+    }
+
+  };
+
+
+  // =========================================================
+  // SWIPE CON EL DEDO
+  // =========================================================
+
+  const handleTouchStart = (e) => {
+
+    touchStartX.current =
+      e.touches[0].clientX;
+
+  };
+
+
+  const handleTouchMove = (e) => {
+
+    touchEndX.current =
+      e.touches[0].clientX;
+
+  };
+
+
+  const handleTouchEnd = () => {
+
+    if (
+      touchStartX.current === null ||
+      touchEndX.current === null
+    ) {
+
+      return;
+
+    }
+
+
+    const distance =
+      touchStartX.current -
+      touchEndX.current;
+
+
+    // Swipe hacia la izquierda
+    if (
+      distance > 50
+    ) {
+
+      handleNext();
+
+    }
+
+    // Swipe hacia la derecha
+    else if (
+      distance < -50
+    ) {
+
+      handlePrev();
+
+    }
+
 
     touchStartX.current = null;
     touchEndX.current = null;
+
   };
 
+
+  // =========================================================
+  // CARGANDO
+  // =========================================================
+
   if (loading) {
+
     return (
+
       <div className="text-center py-5">
+
         Cargando lo más nuevo...
+
       </div>
+
     );
+
   }
 
+
+  // =========================================================
+  // VISTA
+  // =========================================================
+
   return (
+
     <section className="bg-light py-5 w-100">
+
       <div className="container-fluid px-4">
 
+
+        {/* ===================================================
+            TÍTULO
+        =================================================== */}
+
         <h2 className="h4 fw-bold mb-4 text-dark text-uppercase border-bottom pb-2">
+
           <i className="bi bi-clock-history me-2 text-danger"></i>
-          Últimas Capturas
+
+          Últimos Spots
+
         </h2>
 
-        {captures.length === 0 ? (
-          <p className="text-muted">Aún no hay capturas para mostrar.</p>
-        ) : (
-          <div className="swipe-deck-wrapper position-relative d-flex flex-column align-items-center justify-content-center my-3">
 
-            <div className="d-flex flex-column align-items-center w-100">
+        {/* ===================================================
+            SIN SPOTS
+        =================================================== */}
+
+        {captures.length === 0 ? (
+
+          <p className="text-muted">
+
+            Aún no hay Spots para mostrar.
+
+          </p>
+
+        ) : (
+
+          <div
+            className="
+              swipe-deck-wrapper
+              position-relative
+              d-flex
+              flex-column
+              align-items-center
+              justify-content-center
+              my-3
+            "
+          >
+
+            <div
+              className="
+                d-flex
+                flex-column
+                align-items-center
+                w-100
+              "
+            >
+
+
+              {/* =================================================
+                  MAZO DE SPOTS
+              ================================================= */}
 
               <div
-                className="deck-container position-relative my-2"
+
+                className="
+                  deck-container
+                  position-relative
+                  my-2
+                "
+
                 style={{
-                  minHeight: '340px',
-                  width: '250px',
-                  touchAction: 'pan-y'
+
+                  minHeight:
+                    '390px',
+
+                  width:
+                    '260px',
+
+                  touchAction:
+                    'pan-y'
+
                 }}
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={handleTouchEnd}
+
+                onTouchStart={
+                  handleTouchStart
+                }
+
+                onTouchMove={
+                  handleTouchMove
+                }
+
+                onTouchEnd={
+                  handleTouchEnd
+                }
+
               >
 
-                {captures.map((card, index) => {
-                  const offset = index - currentIndex;
 
-                  if (Math.abs(offset) > 2) return null;
+                {captures.map(
+                  (
+                    card,
+                    index
+                  ) => {
 
-                  return (
-                    <div
-                      key={card.id}
-                      className={`swipe-card trading-card-final ${
-                        index === currentIndex
-                          ? 'active-card'
-                          : 'stacked-card'
-                      }`}
-                      style={{
-                        transform: `translateX(${offset * 15}px) translateY(${offset * 10}px) scale(${1 - Math.abs(offset) * 0.05})`,
-                        zIndex: captures.length - Math.abs(offset),
-                        opacity: Math.abs(offset) > 1 ? 0.4 : 1,
-                        transition: 'all 0.3s ease-in-out',
-                        position:
+                    const offset =
+                      index -
+                      currentIndex;
+
+
+                    // Solo mostramos las cards cercanas
+                    if (
+                      Math.abs(offset) > 2
+                    ) {
+
+                      return null;
+
+                    }
+
+
+                    return (
+
+                      <div
+
+                        key={
+                          card.id
+                        }
+
+                        className={`swipe-card ${
                           index === currentIndex
-                            ? 'relative'
-                            : 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                      }}
-                    >
+                            ? 'active-card'
+                            : 'stacked-card'
+                        }`}
 
-                      <div className="card-inner-border">
+                        style={{
 
-                        <div className="card-image-box">
+                          transform:
+                            `translateX(${offset * 15}px) translateY(${offset * 10}px) scale(${1 - Math.abs(offset) * 0.05})`,
+
+                          zIndex:
+                            captures.length -
+                            Math.abs(offset),
+
+                          opacity:
+                            Math.abs(offset) > 1
+                              ? 0.4
+                              : 1,
+
+                          transition:
+                            'all 0.3s ease-in-out',
+
+                          position:
+                            index === currentIndex
+                              ? 'relative'
+                              : 'absolute',
+
+                          top:
+                            0,
+
+                          left:
+                            0,
+
+                          width:
+                            '100%',
+
+                          cursor:
+                            'pointer'
+
+                        }}
+
+                        onClick={() =>
+                          navigate(
+                            '/comunidad'
+                          )
+                        }
+
+                      >
+
+
+                        {/* =====================================
+                            SOLO MOSTRAMOS LA CARD IA
+                        ===================================== */}
+
+                        <div
+
+                          className="latest-spot-card"
+
+                          style={{
+
+                            width:
+                              '100%',
+
+                            aspectRatio:
+                              '2 / 3',
+
+                            borderRadius:
+                              '18px',
+
+                            overflow:
+                              'hidden',
+
+                            background:
+                              'transparent',
+
+                            boxShadow:
+                              '0 10px 28px rgba(0,0,0,.18)'
+
+                          }}
+
+                        >
+
+
                           {card?.imagen_url ? (
+
                             <img
-                              src={card.imagen_url}
-                              alt={card.nombre || 'Tarjeta'}
+
+                              src={
+                                card.imagen_url
+                              }
+
+                              alt={
+                                card.nombre ||
+                                'Spot'
+                              }
+
+                              style={{
+
+                                display:
+                                  'block',
+
+                                width:
+                                  '100%',
+
+                                height:
+                                  '100%',
+
+                                objectFit:
+                                  'contain',
+
+                                objectPosition:
+                                  'center'
+
+                              }}
+
                             />
+
                           ) : (
-                            <div className="bg-secondary d-flex align-items-center justify-content-center h-100">
-                              <span className="fs-1">🖼️</span>
-                            </div>
-                          )}
-                        </div>
-                                                <div className="card-info-box p-2 d-flex flex-column justify-content-between">
 
-                          <div>
-                            <h6 className="mb-0 fw-bold text-dark text-truncate">
-                              {card?.nombre || 'Sin nombre'}
-                            </h6>
-
-                            <p className="text-muted small mb-1 text-capitalize">
-                              {card?.raza ||
-                                card?.lugar ||
-                                card?.caracteristica ||
-                                card?.categoria}
-                            </p>
-                          </div>
-
-                          <div className="border-top pt-1 mt-1 d-flex justify-content-between align-items-center">
-                            <small
-                              className="text-success fw-bold text-truncate"
-                              style={{ fontSize: '0.7rem' }}
+                            <div
+                              className="
+                                bg-secondary
+                                d-flex
+                                align-items-center
+                                justify-content-center
+                                h-100
+                              "
                             >
-                              🌍 Comunidad
-                            </small>
-                          </div>
+
+                              <span className="fs-1">
+
+                                🖼️
+
+                              </span>
+
+                            </div>
+
+                          )}
+
 
                         </div>
+
 
                       </div>
 
-                    </div>
-                  );
-                })}
+                    );
+
+                  }
+                )}
+
 
               </div>
 
 
-              {/* Controles de deslizamiento */}
-              <div className="d-flex gap-3 mt-3 align-items-center">
+              {/* =================================================
+                  CONTROLES DEL SWIPE
+                  AMBOS BOTONES IGUALES
+              ================================================= */}
+
+              <div
+                className="
+                  d-flex
+                  gap-3
+                  mt-3
+                  align-items-center
+                "
+              >
+
+
+                {/* ANTERIOR */}
 
                 <button
-                  className="btn btn-outline-danger rounded-circle px-3 py-2 fw-bold shadow-sm"
-                  onClick={handlePrev}
+
+                  type="button"
+
+                  className="
+                    btn
+                    btn-outline-danger
+                    rounded-circle
+                    px-3
+                    py-2
+                    fw-bold
+                    shadow-sm
+                  "
+
+                  onClick={
+                    handlePrev
+                  }
+
+                  aria-label="Spot anterior"
+
                 >
+
                   ⬅️
+
                 </button>
 
 
+                {/* CONTADOR */}
+
                 <span className="text-dark fw-bold">
-                  {currentIndex + 1} / {captures.length}
+
+                  {currentIndex + 1}
+
+                  {' / '}
+
+                  {captures.length}
+
                 </span>
 
 
+                {/* SIGUIENTE */}
+
                 <button
-                  className="btn btn-danger rounded-circle px-3 py-2 fw-bold shadow-sm"
-                  onClick={handleNext}
+
+                  type="button"
+
+                  className="
+                    btn
+                    btn-outline-danger
+                    rounded-circle
+                    px-3
+                    py-2
+                    fw-bold
+                    shadow-sm
+                  "
+
+                  onClick={
+                    handleNext
+                  }
+
+                  aria-label="Siguiente Spot"
+
                 >
+
                   ➡️
+
                 </button>
+
 
               </div>
 
 
-              {/* NUEVO BOTÓN: Ir a Comunidad */}
+              {/* =================================================
+                  IR A COMUNIDAD
+              ================================================= */}
+
               <div className="mt-4">
 
+
                 <button
-                  className="btn btn-success px-4 py-2 rounded-pill fw-semibold shadow"
-                  onClick={() => navigate('/comunidad')}
+
+                  type="button"
+
+                  className="
+                    btn
+                    btn-success
+                    px-4
+                    py-2
+                    rounded-pill
+                    fw-semibold
+                    shadow
+                  "
+
+                  onClick={() =>
+                    navigate(
+                      '/comunidad'
+                    )
+                  }
+
                 >
+
                   <i className="bi bi-people-fill me-2"></i>
+
                   Ver comunidad
+
                 </button>
+
 
               </div>
 
@@ -258,12 +634,17 @@ function LatestCaptures() {
             </div>
 
           </div>
+
         )}
+
 
       </div>
 
     </section>
+
   );
+
 }
+
 
 export default LatestCaptures;
