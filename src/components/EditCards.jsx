@@ -1,8 +1,9 @@
 // src/pages/EditCards.jsx
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
-import CardCreator from '../components/CardCreator';
+import CardCreator from '../components/cardcreator/CardCreator';
 
 function EditCards() {
   const { id } = useParams();
@@ -11,19 +12,32 @@ function EditCards() {
 
   useEffect(() => {
     const fetchCarta = async () => {
-      const { data } = await supabase.from('cards').select('*').eq('id', id).single();
+      const { data } = await supabase
+        .from('cards')
+        .select('*')
+        .eq('id', id)
+        .single();
+
       setCarta(data);
     };
+
     fetchCarta();
   }, [id]);
 
-  if (!carta) return <div className="text-center mt-5 text-white">Cargando editor...</div>;
+  if (!carta) {
+    return (
+      <div className="text-center mt-5 text-white">
+        Cargando editor...
+      </div>
+    );
+  }
 
   return (
-    <CardCreator 
-      cardToEdit={carta} 
-      
-      onCancel={() => navigate(`/album/${carta.categoria}`)} 
+    <CardCreator
+      cardToEdit={carta}
+      onCancel={() =>
+        navigate(`/album/${carta.categoria}`)
+      }
     />
   );
 }
