@@ -13,6 +13,7 @@ export const FotoDelDia = () => {
   const [loading, setLoading] = useState(false);
   const [resultado, setResultado] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [fotoSeleccionada, setFotoSeleccionada] = useState(null);
 
   const [intentosRestantes, setIntentosRestantes] = useState(2);
   const [cargandoIntentos, setCargandoIntentos] = useState(true);
@@ -431,9 +432,7 @@ export const FotoDelDia = () => {
   // GENERAR FOTO
   // ==========================================
 
-  const procesarTransformacion = async (e) => {
-    const file = e.target.files[0];
-
+  const procesarTransformacion = async (file) => {
     if (!file) return;
 
     // ========================================
@@ -502,11 +501,6 @@ export const FotoDelDia = () => {
     setEstadoGeneracion(
       '📸 Preparando tu fotografía...'
     );
-
-    const previewUrl =
-      URL.createObjectURL(file);
-
-    setPreview(previewUrl);
 
     try {
       // ======================================
@@ -688,9 +682,41 @@ Do not replace it with another animal.
       setLoading(false);
 
       setEstadoGeneracion('');
-
-      e.target.value = '';
     }
+  };
+
+  const seleccionarFoto = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (preview) URL.revokeObjectURL(preview);
+
+    const previewUrl = URL.createObjectURL(file);
+    setFotoSeleccionada(file);
+    setPreview(previewUrl);
+    setResultado(null);
+    setGuardada(false);
+    setCategoriaGuardada(null);
+    setEstadoGeneracion('');
+    setProgresoGeneracion(0);
+    e.target.value = '';
+  };
+
+  const confirmarAventura = async () => {
+    if (!fotoSeleccionada || loading) return;
+    await procesarTransformacion(fotoSeleccionada);
+  };
+
+  const volverAElegirFoto = () => {
+    if (preview) URL.revokeObjectURL(preview);
+
+    setFotoSeleccionada(null);
+    setPreview(null);
+    setResultado(null);
+    setGuardada(false);
+    setCategoriaGuardada(null);
+    setEstadoGeneracion('');
+    setProgresoGeneracion(0);
   };
 
   // ==========================================
@@ -926,8 +952,11 @@ Do not replace it with another animal.
   // ==========================================
 
   const crearOtra = () => {
+    if (preview) URL.revokeObjectURL(preview);
+
     setResultado(null);
     setPreview(null);
+    setFotoSeleccionada(null);
     setGuardada(false);
     setCategoriaGuardada(null);
     setEstadoGeneracion('');
@@ -1149,7 +1178,7 @@ Do not replace it with another animal.
                         type="file"
                         accept="image/*"
                         onChange={
-                          procesarTransformacion
+                          seleccionarFoto
                         }
                       />
 
@@ -1176,6 +1205,39 @@ Do not replace it with another animal.
 
                     </div>
 
+                  )}
+
+                  {/* ===========================
+                      CONFIRMAR FOTO
+                  =========================== */}
+
+                  {preview && fotoSeleccionada && !loading && (
+                    <div className="foto-dia-confirmacion">
+                      <h3>¿Comenzar aventura con esta foto?</h3>
+
+                      <p>
+                        Revisala bien antes de continuar.
+                        El intento se usa recién cuando confirmás la aventura.
+                      </p>
+
+                      <div className="foto-dia-confirmacion-actions">
+                        <button
+                          type="button"
+                          className="foto-dia-save-btn"
+                          onClick={confirmarAventura}
+                        >
+                          ✨ Sí, comenzar aventura
+                        </button>
+
+                        <button
+                          type="button"
+                          className="foto-dia-secondary-btn"
+                          onClick={volverAElegirFoto}
+                        >
+                          ← Volver
+                        </button>
+                      </div>
+                    </div>
                   )}
 
                   {/* ===========================
