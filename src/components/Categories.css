@@ -1,31 +1,103 @@
+/* src/components/Categories.css */
+
+
+/* ========================================
+   TÍTULO
+======================================== */
+
+.categories-title {
+  color: #212529;
+
+  transition: color 0.3s ease;
+}
+
+
+/* MODO NOCTURNO */
+
+[data-theme="dark"] .categories-title {
+  color: #f1f3f4;
+}
+
+
+/* ========================================
+   BOTONES DE CATEGORÍAS
+======================================== */
+
 /* Aseguramos que el botón sea un círculo perfecto */
+
 .image-btn {
-  width: 100px; 
+  width: 100px;
   height: 100px;
+
   border-radius: 50%;
   border: none;
-  background: linear-gradient(135deg, #007bff, #28a745);
+
+  background: linear-gradient(
+    135deg,
+    #007bff,
+    #28a745
+  );
+
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+
+  box-shadow:
+    0 10px 20px rgba(0, 0, 0, 0.2);
+
   cursor: pointer;
+
   padding: 0;
-  overflow: hidden; /* Esto es vital para que la imagen no se salga del círculo */
+
+  overflow: hidden;
 }
 
+
+/* ========================================
+   IMAGEN
+======================================== */
+
 /* Forzamos a la imagen a ser el círculo completo */
+
 .btn-icon {
   width: 100% !important;
   height: 100% !important;
-  object-fit: cover !important; /* Recorta la imagen para llenar el espacio */
+
+  object-fit: cover !important;
+
   pointer-events: none;
+
   display: block;
 }
 
-/* Hover effect */
+
+/* ========================================
+   HOVER
+======================================== */
+
 .image-btn:hover {
   transform: scale(1.1);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+
+  box-shadow:
+    0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+
+/* ========================================
+   MODO NOCTURNO - BOTONES
+======================================== */
+
+[data-theme="dark"] .image-btn {
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.5);
+}
+
+
+[data-theme="dark"] .image-btn:hover {
+  box-shadow:
+    0 15px 32px rgba(0, 0, 0, 0.65);
 }

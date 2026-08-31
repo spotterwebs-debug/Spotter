@@ -16,6 +16,7 @@ export const FotoDelDia = () => {
 
   const [intentosRestantes, setIntentosRestantes] = useState(2);
   const [cargandoIntentos, setCargandoIntentos] = useState(true);
+  const [esIlimitado, setEsIlimitado] = useState(false);
 
   const [guardando, setGuardando] = useState(false);
   const [guardada, setGuardada] = useState(false);
@@ -176,12 +177,51 @@ export const FotoDelDia = () => {
     const fetchIntentos = async () => {
       if (!usuario) {
         setIntentosRestantes(0);
+        setEsIlimitado(false);
         setCargandoIntentos(false);
         return;
       }
 
       try {
         setCargandoIntentos(true);
+
+        // ======================================
+        // CONSULTAR PERFIL
+        // ======================================
+
+        const {
+          data: profile,
+          error: profileError,
+        } = await supabase
+          .from('profiles')
+          .select('unlimited_creations')
+          .eq('id', usuario.id)
+          .maybeSingle();
+
+        if (profileError) {
+          console.error(
+            'Error consultando perfil:',
+            profileError
+          );
+        }
+
+        const usuarioIlimitado =
+          profile?.unlimited_creations === true;
+
+        setEsIlimitado(usuarioIlimitado);
+
+        // ======================================
+        // USUARIO ILIMITADO
+        // ======================================
+
+        if (usuarioIlimitado) {
+          setIntentosRestantes(null);
+          return;
+        }
+
+        // ======================================
+        // USUARIO NORMAL
+        // ======================================
 
         const fechaHoy =
           obtenerFechaUruguay();
@@ -434,7 +474,10 @@ export const FotoDelDia = () => {
     // INTENTOS
     // ========================================
 
-    if (intentosRestantes <= 0) {
+    if (
+      !esIlimitado &&
+      intentosRestantes <= 0
+    ) {
       await Swal.fire({
         icon: 'warning',
         title: 'Sin intentos disponibles',
@@ -601,7 +644,11 @@ Do not replace it with another animal.
       // 6. ACTUALIZAR INTENTOS
       // ======================================
 
-      if (
+      if (data?.unlimited === true) {
+        setEsIlimitado(true);
+        setIntentosRestantes(null);
+
+      } else if (
         typeof data.attemptsRemaining ===
         'number'
       ) {
@@ -1014,6 +1061,12 @@ Do not replace it with another animal.
                   ...
                 </strong>
 
+              ) : esIlimitado ? (
+
+                <strong>
+                  ∞ Ilimitados
+                </strong>
+
               ) : (
 
                 <>
@@ -1053,7 +1106,11 @@ Do not replace it with another animal.
             =============================== */}
 
             {!resultado &&
-              (intentosRestantes > 0 || loading) &&
+              (
+                esIlimitado ||
+                intentosRestantes > 0 ||
+                loading
+              ) &&
               !cargandoIntentos && (
 
                 <div className="foto-dia-upload-area">
@@ -1208,13 +1265,29 @@ Do not replace it with another animal.
 
                 <p className="foto-dia-result-text">
 
-                  Te quedan{' '}
+                  {esIlimitado ? (
 
-                  <strong>
-                    {intentosRestantes}
-                  </strong>{' '}
+                    <>
+                      ∞ Tenés{' '}
+                      <strong>
+                        intentos ilimitados
+                      </strong>
+                      .
+                    </>
 
-                  de 2 intentos.
+                  ) : (
+
+                    <>
+                      Te quedan{' '}
+
+                      <strong>
+                        {intentosRestantes}
+                      </strong>{' '}
+
+                      de 2 intentos.
+                    </>
+
+                  )}
 
                 </p>
 
@@ -1249,7 +1322,7 @@ Do not replace it with another animal.
 
                 )}
 
-                {intentosRestantes > 0 && (
+                {(esIlimitado || intentosRestantes > 0) && (
 
                   <button
                     type="button"
@@ -1272,6 +1345,7 @@ Do not replace it with another animal.
             =============================== */}
 
             {!cargandoIntentos &&
+              !esIlimitado &&
               intentosRestantes === 0 &&
               !resultado &&
               !loading && (

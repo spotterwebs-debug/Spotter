@@ -1,3 +1,5 @@
+// src/components/LatestCaptures.jsx
+
 import React, {
   useEffect,
   useState,
@@ -6,6 +8,8 @@ import React, {
 
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
+
+import './LatestCaptures.css';
 
 
 function LatestCaptures() {
@@ -81,9 +85,7 @@ function LatestCaptures() {
 
   const handleNext = () => {
 
-    if (
-      captures.length === 0
-    ) {
+    if (captures.length === 0) {
       return;
     }
 
@@ -112,16 +114,12 @@ function LatestCaptures() {
 
   const handlePrev = () => {
 
-    if (
-      captures.length === 0
-    ) {
+    if (captures.length === 0) {
       return;
     }
 
 
-    if (
-      currentIndex > 0
-    ) {
+    if (currentIndex > 0) {
 
       setCurrentIndex(
         (prev) => prev - 1
@@ -176,18 +174,14 @@ function LatestCaptures() {
 
 
     // Swipe hacia la izquierda
-    if (
-      distance > 50
-    ) {
+    if (distance > 50) {
 
       handleNext();
 
     }
 
     // Swipe hacia la derecha
-    else if (
-      distance < -50
-    ) {
+    else if (distance < -50) {
 
       handlePrev();
 
@@ -208,7 +202,7 @@ function LatestCaptures() {
 
     return (
 
-      <div className="text-center py-5">
+      <div className="latest-captures-loading text-center py-5">
 
         Cargando lo más nuevo...
 
@@ -225,7 +219,7 @@ function LatestCaptures() {
 
   return (
 
-    <section className="bg-light py-5 w-100">
+    <section className="latest-captures-section py-5 w-100">
 
       <div className="container-fluid px-4">
 
@@ -234,7 +228,17 @@ function LatestCaptures() {
             TÍTULO
         =================================================== */}
 
-        <h2 className="h4 fw-bold mb-4 text-dark text-uppercase border-bottom pb-2">
+        <h2
+          className="
+            latest-captures-title
+            h4
+            fw-bold
+            mb-4
+            text-uppercase
+            border-bottom
+            pb-2
+          "
+        >
 
           <i className="bi bi-clock-history me-2 text-danger"></i>
 
@@ -249,7 +253,7 @@ function LatestCaptures() {
 
         {captures.length === 0 ? (
 
-          <p className="text-muted">
+          <p className="latest-captures-empty">
 
             Aún no hay Spots para mostrar.
 
@@ -284,7 +288,6 @@ function LatestCaptures() {
               ================================================= */}
 
               <div
-
                 className="
                   deck-container
                   position-relative
@@ -292,30 +295,14 @@ function LatestCaptures() {
                 "
 
                 style={{
-
-                  minHeight:
-                    '390px',
-
-                  width:
-                    '260px',
-
-                  touchAction:
-                    'pan-y'
-
+                  minHeight: '390px',
+                  width: '260px',
+                  touchAction: 'pan-y'
                 }}
 
-                onTouchStart={
-                  handleTouchStart
-                }
-
-                onTouchMove={
-                  handleTouchMove
-                }
-
-                onTouchEnd={
-                  handleTouchEnd
-                }
-
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
               >
 
 
@@ -343,10 +330,7 @@ function LatestCaptures() {
                     return (
 
                       <div
-
-                        key={
-                          card.id
-                        }
+                        key={card.id}
 
                         className={`swipe-card ${
                           index === currentIndex
@@ -376,17 +360,12 @@ function LatestCaptures() {
                               ? 'relative'
                               : 'absolute',
 
-                          top:
-                            0,
+                          top: 0,
+                          left: 0,
 
-                          left:
-                            0,
+                          width: '100%',
 
-                          width:
-                            '100%',
-
-                          cursor:
-                            'pointer'
+                          cursor: 'pointer'
 
                         }}
 
@@ -395,7 +374,6 @@ function LatestCaptures() {
                             '/comunidad'
                           )
                         }
-
                       >
 
 
@@ -403,74 +381,27 @@ function LatestCaptures() {
                             SOLO MOSTRAMOS LA CARD IA
                         ===================================== */}
 
-                        <div
-
-                          className="latest-spot-card"
-
-                          style={{
-
-                            width:
-                              '100%',
-
-                            aspectRatio:
-                              '2 / 3',
-
-                            borderRadius:
-                              '18px',
-
-                            overflow:
-                              'hidden',
-
-                            background:
-                              'transparent',
-
-                            boxShadow:
-                              '0 10px 28px rgba(0,0,0,.18)'
-
-                          }}
-
-                        >
+                        <div className="latest-spot-card">
 
 
                           {card?.imagen_url ? (
 
                             <img
-
-                              src={
-                                card.imagen_url
-                              }
+                              src={card.imagen_url}
 
                               alt={
                                 card.nombre ||
                                 'Spot'
                               }
 
-                              style={{
-
-                                display:
-                                  'block',
-
-                                width:
-                                  '100%',
-
-                                height:
-                                  '100%',
-
-                                objectFit:
-                                  'contain',
-
-                                objectPosition:
-                                  'center'
-
-                              }}
-
+                              className="latest-spot-image"
                             />
 
                           ) : (
 
                             <div
                               className="
-                                bg-secondary
+                                latest-spot-placeholder
                                 d-flex
                                 align-items-center
                                 justify-content-center
@@ -479,9 +410,7 @@ function LatestCaptures() {
                             >
 
                               <span className="fs-1">
-
                                 🖼️
-
                               </span>
 
                             </div>
@@ -505,7 +434,6 @@ function LatestCaptures() {
 
               {/* =================================================
                   CONTROLES DEL SWIPE
-                  AMBOS BOTONES IGUALES
               ================================================= */}
 
               <div
@@ -521,7 +449,6 @@ function LatestCaptures() {
                 {/* ANTERIOR */}
 
                 <button
-
                   type="button"
 
                   className="
@@ -534,12 +461,9 @@ function LatestCaptures() {
                     shadow-sm
                   "
 
-                  onClick={
-                    handlePrev
-                  }
+                  onClick={handlePrev}
 
                   aria-label="Spot anterior"
-
                 >
 
                   ⬅️
@@ -549,7 +473,7 @@ function LatestCaptures() {
 
                 {/* CONTADOR */}
 
-                <span className="text-dark fw-bold">
+                <span className="latest-captures-counter fw-bold">
 
                   {currentIndex + 1}
 
@@ -563,7 +487,6 @@ function LatestCaptures() {
                 {/* SIGUIENTE */}
 
                 <button
-
                   type="button"
 
                   className="
@@ -576,12 +499,9 @@ function LatestCaptures() {
                     shadow-sm
                   "
 
-                  onClick={
-                    handleNext
-                  }
+                  onClick={handleNext}
 
                   aria-label="Siguiente Spot"
-
                 >
 
                   ➡️
@@ -598,9 +518,7 @@ function LatestCaptures() {
 
               <div className="mt-4">
 
-
                 <button
-
                   type="button"
 
                   className="
@@ -618,7 +536,6 @@ function LatestCaptures() {
                       '/comunidad'
                     )
                   }
-
                 >
 
                   <i className="bi bi-people-fill me-2"></i>
@@ -626,7 +543,6 @@ function LatestCaptures() {
                   Ver comunidad
 
                 </button>
-
 
               </div>
 

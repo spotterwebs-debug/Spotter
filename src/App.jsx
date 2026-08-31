@@ -1,6 +1,6 @@
 // src/App.jsx
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -23,10 +23,47 @@ import AdminDashboard from './components/AdminDashboard';
 function App() {
   const [sharedPhoto, setSharedPhoto] = useState(null);
 
+  const [theme, setTheme] = useState(() => {
+    const savedTheme = localStorage.getItem('spotter-theme');
+
+    if (savedTheme) {
+      return savedTheme;
+    }
+
+    const prefersDark = window.matchMedia(
+      '(prefers-color-scheme: dark)'
+    ).matches;
+
+    return prefersDark ? 'dark' : 'light';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute(
+      'data-theme',
+      theme
+    );
+
+    localStorage.setItem(
+      'spotter-theme',
+      theme
+    );
+  }, [theme]);
+
+  function toggleTheme() {
+    setTheme((prevTheme) =>
+      prevTheme === 'light'
+        ? 'dark'
+        : 'light'
+    );
+  }
+
   return (
     <Router>
 
-      <Navbar />
+      <Navbar
+        theme={theme}
+        toggleTheme={toggleTheme}
+      />
 
       <main className="content-container">
 
@@ -65,8 +102,6 @@ function App() {
             path="/challenges/:categoria"
             element={<Challenges />}
           />
-
-          {/* Rutas de premios y listones */}
 
           <Route
             path="/premios"

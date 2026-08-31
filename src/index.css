@@ -1,5 +1,140 @@
+/* ========================================
+   RESET
+======================================== */
+
 * {
-margin: 0;
-padding: 0;
-box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+/* ========================================
+   SPOTTER - MODO CLARO
+======================================== */
+
+:root {
+  --spotter-bg: #f5f7f8;
+
+  --spotter-surface: #ffffff;
+  --spotter-surface-2: #eef1f3;
+
+  --spotter-text: #1f2529;
+  --spotter-text-soft: #667078;
+
+  --spotter-border: #dfe4e7;
+
+  --spotter-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+
+/* ========================================
+   SPOTTER - MODO OSCURO
+======================================== */
+
+[data-theme="dark"] {
+  --spotter-bg: #101416;
+
+  --spotter-surface: #191f22;
+  --spotter-surface-2: #22292d;
+
+  --spotter-text: #f1f3f4;
+  --spotter-text-soft: #aeb8bd;
+
+  --spotter-border: #30383d;
+
+  --spotter-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+
+/* ========================================
+   ESTRUCTURA GENERAL
+======================================== */
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+
+  background-color: var(--spotter-bg);
+  color: var(--spotter-text);
+
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+#root {
+  background-color: var(--spotter-bg);
+  color: var(--spotter-text);
+}
+
+.content-container {
+  min-height: calc(100vh - 120px);
+
+  background-color: var(--spotter-bg);
+  color: var(--spotter-text);
+
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+
+/* ========================================
+   BOOTSTRAP EN MODO OSCURO
+======================================== */
+
+[data-theme="dark"] .card,
+[data-theme="dark"] .modal-content,
+[data-theme="dark"] .dropdown-menu {
+  background-color: var(--spotter-surface);
+  color: var(--spotter-text);
+
+  border-color: var(--spotter-border);
+}
+
+[data-theme="dark"] .text-muted {
+  color: var(--spotter-text-soft) !important;
+}
+
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+  background-color: var(--spotter-surface-2);
+  color: var(--spotter-text);
+
+  border-color: var(--spotter-border);
+}
+
+[data-theme="dark"] .form-control::placeholder {
+  color: var(--spotter-text-soft);
+}
+
+[data-theme="dark"] .form-control:focus,
+[data-theme="dark"] .form-select:focus {
+  background-color: var(--spotter-surface-2);
+  color: var(--spotter-text);
+
+  border-color: var(--spotter-border);
+}
+
+
+/* ========================================
+   TRANSICIONES
+======================================== */
+
+.card,
+.modal-content,
+.form-control,
+.form-select {
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease;
 }
