@@ -21,6 +21,10 @@ function Navbar({ theme, toggleTheme }) {
     'paisajes'
   ];
 
+  // ==========================================
+  // USUARIO Y ROL
+  // ==========================================
+
   useEffect(() => {
     const fetchUserAndRole = async (sessionUser) => {
       setUser(sessionUser ?? null);
@@ -32,23 +36,31 @@ function Navbar({ theme, toggleTheme }) {
           .eq('id', sessionUser.id)
           .single();
 
-        setIsAdmin(profile?.role === 'admin');
+        setIsAdmin(
+          profile?.role === 'admin'
+        );
       } else {
         setIsAdmin(false);
       }
     };
 
-    supabase.auth.getSession().then(
-      ({ data: { session } }) => {
-        fetchUserAndRole(session?.user);
-      }
-    );
+    supabase.auth
+      .getSession()
+      .then(
+        ({ data: { session } }) => {
+          fetchUserAndRole(
+            session?.user
+          );
+        }
+      );
 
     const {
       data: { subscription }
     } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        fetchUserAndRole(session?.user);
+        fetchUserAndRole(
+          session?.user
+        );
       }
     );
 
@@ -56,6 +68,83 @@ function Navbar({ theme, toggleTheme }) {
       subscription.unsubscribe();
     };
   }, []);
+
+
+  // ==========================================
+  // CERRAR MENÚ SI TOCAMOS FUERA
+  // ==========================================
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Solo nos interesa en versión mobile/tablet
+      if (window.innerWidth >= 992) {
+        return;
+      }
+
+      const navbarCollapse =
+        document.querySelector('#navbarNav');
+
+      const navbarToggler =
+        document.querySelector(
+          '.spooter-navbar .navbar-toggler'
+        );
+
+      if (!navbarCollapse || !navbarToggler) {
+        return;
+      }
+
+      const menuEstaAbierto =
+        navbarCollapse.classList.contains('show');
+
+      if (!menuEstaAbierto) {
+        return;
+      }
+
+      // Si tocamos dentro del menú,
+      // no hacemos nada.
+      const clickDentroDelMenu =
+        navbarCollapse.contains(event.target);
+
+      // Si tocamos la hamburguesa,
+      // dejamos que Bootstrap haga su trabajo.
+      const clickEnHamburguesa =
+        navbarToggler.contains(event.target);
+
+      if (
+        !clickDentroDelMenu &&
+        !clickEnHamburguesa
+      ) {
+        navbarToggler.click();
+      }
+    };
+
+    document.addEventListener(
+      'mousedown',
+      handleClickOutside
+    );
+
+    document.addEventListener(
+      'touchstart',
+      handleClickOutside
+    );
+
+    return () => {
+      document.removeEventListener(
+        'mousedown',
+        handleClickOutside
+      );
+
+      document.removeEventListener(
+        'touchstart',
+        handleClickOutside
+      );
+    };
+  }, []);
+
+
+  // ==========================================
+  // LOGOUT
+  // ==========================================
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -65,109 +154,156 @@ function Navbar({ theme, toggleTheme }) {
     navigate('/login');
   };
 
+
+  // ==========================================
+  // CERRAR MENÚ MOBILE
+  // ==========================================
+
   const closeNavbar = () => {
     const navbarCollapse =
-      document.querySelector('.navbar-collapse');
+      document.querySelector(
+        '#navbarNav'
+      );
 
     const navbarToggler =
-      document.querySelector('.navbar-toggler');
+      document.querySelector(
+        '.spooter-navbar .navbar-toggler'
+      );
 
     if (
-      navbarCollapse?.classList.contains('show')
+      navbarCollapse?.classList.contains(
+        'show'
+      )
     ) {
       navbarToggler?.click();
     }
   };
+
+
+  // ==========================================
+  // NOMBRE USUARIO
+  // ==========================================
 
   const userAlias =
     user?.user_metadata?.username ||
     user?.email?.split('@')[0] ||
     'Usuario';
 
+
   return (
     <nav className="navbar navbar-expand-lg spooter-navbar">
-      <div className="container-fluid px-3 px-md-4">
 
-        {/* LOGO */}
-        <NavLink
-          className="navbar-brand m-0"
-          to="/"
-        >
-          <img
-            src="/logo.png"
-            alt="Spotter"
-            height="40"
-          />
-        </NavLink>
+      <div className="container-fluid px-3 px-md-4 navbar-main-container">
 
+        {/* ====================================
+            CABECERA MOBILE + LOGO
+        ==================================== */}
 
-        {/* ZONA DERECHA SUPERIOR */}
-        <div className="ms-auto me-2 d-flex align-items-center gap-2">
+        <div className="navbar-top">
 
-          {/* BOTÓN MODO OSCURO */}
-          <button
-            type="button"
-            className="theme-toggle"
-            onClick={toggleTheme}
-            aria-label={
-              theme === 'dark'
-                ? 'Activar modo claro'
-                : 'Activar modo oscuro'
-            }
-            title={
-              theme === 'dark'
-                ? 'Modo claro'
-                : 'Modo oscuro'
-            }
+          {/* LOGO */}
+          <NavLink
+            className="navbar-brand m-0"
+            to="/"
+            onClick={closeNavbar}
           >
-            {theme === 'dark'
-              ? '☀️'
-              : '🌙'}
-          </button>
+            <img
+              src="/logo.png"
+              alt="Spotter"
+            />
+          </NavLink>
 
 
-          {/* USUARIO / LOGIN */}
+          {/* CONTROLES SUPERIORES */}
+          <div className="navbar-top-controls">
+
+            {/* MODO CLARO / OSCURO */}
+            <button
+              type="button"
+              className="theme-toggle"
+              onClick={toggleTheme}
+              aria-label={
+                theme === 'dark'
+                  ? 'Activar modo claro'
+                  : 'Activar modo oscuro'
+              }
+              title={
+                theme === 'dark'
+                  ? 'Modo claro'
+                  : 'Modo oscuro'
+              }
+            >
+              {theme === 'dark'
+                ? '☀️'
+                : '🌙'}
+            </button>
+
+
+            {/* HAMBURGUESA */}
+            <button
+              className="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarNav"
+              aria-controls="navbarNav"
+              aria-expanded="false"
+              aria-label="Abrir menú"
+            >
+              <span className="navbar-toggler-icon" />
+            </button>
+
+          </div>
+
+        </div>
+
+
+        {/* ====================================
+            USUARIO / LOGIN
+        ==================================== */}
+
+        <div className="navbar-user-area">
+
           {user ? (
-            <span className="badge bg-success rounded-pill px-3 py-2 fw-semibold text-white">
+
+            <span className="navbar-user-badge">
+
               👋 Hola:{' '}
+
               <span className="text-capitalize">
                 {userAlias}
               </span>
+
             </span>
+
           ) : (
+
             <NavLink
               to="/login"
-              className="btn btn-primary btn-sm rounded-pill px-3 fw-bold shadow-sm"
+              className="navbar-login-btn"
+              onClick={closeNavbar}
             >
               🔑 Login
             </NavLink>
+
           )}
 
         </div>
 
 
-        {/* HAMBURGUESA */}
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Abrir menú"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
+        {/* ====================================
+            NAVEGACIÓN
+        ==================================== */}
 
-
-        {/* MENÚ DESPLEGABLE */}
         <div
           className="collapse navbar-collapse"
           id="navbarNav"
         >
-          <ul className="navbar-nav ms-auto align-items-center">
 
+          <ul className="navbar-nav ms-auto">
+
+            {/* HOME */}
             <li className="nav-item">
+
               <NavLink
                 className="nav-link"
                 to="/"
@@ -176,10 +312,13 @@ function Navbar({ theme, toggleTheme }) {
               >
                 Home
               </NavLink>
+
             </li>
 
 
+            {/* COMUNIDAD */}
             <li className="nav-item">
+
               <NavLink
                 className="nav-link"
                 to="/comunidad"
@@ -187,60 +326,81 @@ function Navbar({ theme, toggleTheme }) {
               >
                 Comunidad
               </NavLink>
+
             </li>
 
 
-            {albumCategorias.map((cat) => (
-              <li
-                className="nav-item"
-                key={cat}
-              >
-                <NavLink
-                  className="nav-link text-capitalize"
-                  to={`/album/${cat}`}
-                  onClick={closeNavbar}
+            {/* ÁLBUMES */}
+            {albumCategorias.map(
+              (cat) => (
+
+                <li
+                  className="nav-item"
+                  key={cat}
                 >
-                  {cat}
-                </NavLink>
-              </li>
-            ))}
+
+                  <NavLink
+                    className="nav-link text-capitalize"
+                    to={`/album/${cat}`}
+                    onClick={closeNavbar}
+                  >
+                    {cat}
+                  </NavLink>
+
+                </li>
+
+              )
+            )}
 
 
             {/* ADMIN */}
             {isAdmin && (
+
               <li className="nav-item">
+
                 <NavLink
-                  className="nav-link text-warning fw-bold"
+                  className="nav-link admin-link"
                   to="/admin"
                   onClick={closeNavbar}
                 >
                   ⚙️ Admin
                 </NavLink>
+
               </li>
+
             )}
 
 
-            {/* LOGOUT */}
+            {/* CERRAR SESIÓN */}
             {user && (
-              <li className="nav-item mt-3 mt-lg-0">
+
+              <li className="nav-item navbar-logout-item">
+
                 <button
-                  className="btn btn-outline-light w-100"
-                  onClick={() => {
-                    handleLogout();
+                  type="button"
+                  className="navbar-logout-btn"
+                  onClick={async () => {
                     closeNavbar();
+                    await handleLogout();
                   }}
                 >
-                  <i className="bi bi-box-arrow-right"></i>
+                  <i className="bi bi-box-arrow-right" />
+
                   {' '}
-                  Cerrar Sesión
+
+                  Cerrar sesión
                 </button>
+
               </li>
+
             )}
 
           </ul>
+
         </div>
 
       </div>
+
     </nav>
   );
 }
